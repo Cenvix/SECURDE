@@ -53,6 +53,75 @@ public class BookService {
 
         return out;
 	}
+	public static boolean editBookStatus(int bookId, String bookStatus){
+		String sql = "UPDATE "+Book.TABLE_NAME + " "
+				+"SET " + Book.COLUMN_STATUS + "=? "+
+				"WHERE "+ Book.COLUMN_ID +"=?;";
+		boolean out = false;
+		Connection connection = DBPool.getInstance().getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement(sql);
+            
+            pstmt.setString(1, bookStatus);
+            pstmt.setInt(2, bookId);
+
+            pstmt.executeUpdate();
+            out=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                pstmt.close();
+                connection.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+		
+		return out;
+	}
+	public static boolean editBook(Book b){
+		
+		String sql = "update "+Book.TABLE_NAME + 
+				" set "+Book.COLUMN_AUTHOR + "=?,"+
+						Book.COLUMN_BOOKNAME+ "=?,"+
+						Book.COLUMN_PUBLISHER+ "=?,"+
+						Book.COLUMN_STATUS+ "=?,"+
+						Book.COLUMN_YEAR+ "=?" +
+				" where " + Book.COLUMN_ID +"=?;";
+		
+			Boolean out=false;
+			Connection connection = DBPool.getInstance().getConnection();
+	        PreparedStatement pstmt = null;
+
+	        
+	        
+	        try {
+	            pstmt = connection.prepareStatement(sql);
+   
+	            pstmt.setString(1, b.getAuthor());
+	            pstmt.setString(2, b.getName());
+	            pstmt.setString(3, b.getPublisher());
+	            pstmt.setString(4, b.getStatus());
+	            pstmt.setString(5, b.getYear());
+	            pstmt.setInt(6, b.getId());
+
+	            pstmt.executeUpdate();
+	            out=true;
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                pstmt.close();
+	                connection.close();
+	            } catch(SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+		return out;
+	}
 	public static ArrayList<Book> getAllBooks(){
 		ArrayList<Book> books = new ArrayList();
 		String sql = "SELECT * FROM "+ Book.TABLE_NAME+";";
