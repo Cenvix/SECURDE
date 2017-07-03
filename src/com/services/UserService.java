@@ -47,39 +47,40 @@ public class UserService {
             return out;
     }
     
-//    public static String loginUser(User u) {
-//    	String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_USERID + "= ? AND " + User.COLUMN_PASSWORD + "= ?";
-//    	
-//    	Connection conn = DBPool.getInstance().getConnection();
-//        PreparedStatement pstmt = null;
-//        ResultSet rs = null;
-//        String returnVal = null;
-//        
-//        try {
-//            pstmt = conn.prepareStatement(sql);
-//            pstmt.setString(1, u.getUserID());
-//            pstmt.setString(2, u.getPassword());
-//            
-//            rs = pstmt.executeQuery();
-//            
-//            if(rs.next()) {
-//                returnVal = u.getUserID();
-//            }
-//            
-//        } catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				pstmt.close();
-//				conn.close();
-//                rs.close();
-//			} catch(SQLException e) {
-//				e.printStackTrace();
-//			}
-//        }
-//        return returnVal;
-//    }
-//    
+    public static ArrayList<String> loginUser(User u) {
+    	String sql = "SELECT "+User.COLUMN_ID+" , "+ User.COLUMN_USERTYPE+" FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ? AND " + User.COLUMN_PASSWORD + "= ?";
+    	
+    	Connection conn = DBPool.getInstance().getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArrayList<String> returnVal = new ArrayList<>();
+        
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, u.getEmail());
+            pstmt.setString(2, u.getPassword());
+            
+            rs = pstmt.executeQuery();
+            
+            if(rs.next()) {
+                returnVal.add(rs.getString(1));
+                returnVal.add(rs.getString(2));
+            }
+            
+        } catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+                rs.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+        }
+        return returnVal;
+    }
+    
     public static boolean checkUser(User u) {
         String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ?";
         

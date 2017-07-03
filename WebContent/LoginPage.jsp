@@ -27,7 +27,7 @@
 				$pass = $("#loginPassword").val();
 				
 				if($email ==null || $email=="" ||$pass==null||$pass=="")					
-					setRegMessage("Creating account!");
+					setLogMessage("Wrong Username OR Password");
 				else{
 					$.ajax({
 			            url: 'Login',
@@ -96,8 +96,9 @@
 				$("#registerMessage").html(mes);
 			}
 			
-			function setRegMessage(mes){
+			function setLogMessage(mes){
 				$("#logMessage").show();
+				$("#logMessage").html(mes);
 			}
 		</script>
 	
