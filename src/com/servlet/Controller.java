@@ -3,6 +3,7 @@ package com.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -69,8 +70,21 @@ public class Controller extends HttpServlet {
 	}
 	public void login(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Login");
-		
 
+		User user = new User(request.getParameter("email"),request.getParameter("password"));
+		ArrayList<String> out = UserService.loginUser(user);
+		
+		boolean status = false;
+		
+		if(out.size()>0){
+			user.setId(Integer.parseInt(out.get(0)));
+			user.setUserType(out.get(1));
+			
+			setUserSessions(request, response, user);
+			status = true;
+		}
+		PrintWriter pw = response.getWriter();
+		pw.write(status+"");
 	}
 	
 	public void logout(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
@@ -96,11 +110,12 @@ public class Controller extends HttpServlet {
 		}
 		
 		
-		PrintWriter pw = response.getWriter();
-		pw.write(status+"");
+		
 		
 		setUserSessions(request, response, newUser);
 
+		PrintWriter pw = response.getWriter();
+		pw.write(status+"");
 	}
 	
 	public void setUserSessions(HttpServletRequest request, HttpServletResponse response, User user)throws ServletException, IOException{
