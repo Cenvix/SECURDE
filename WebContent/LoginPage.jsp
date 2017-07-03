@@ -15,29 +15,39 @@
 		<script type="text/javascript">
 		
 		$(document).ready(function(){
+
+			$("#logMessage").hide();
 			$("#registerMessage").hide();
+			var userID ='<%= session.getAttribute("userID")%>';
+			console.log(userID);
 		});
 		
 			function login(){
-				/*
-				$.ajax({
-		            url: 'Login',
-		            data: {
-		                hapID:hap.hapID
-		            },
-		            type: 'POST',
-					success:function(jsonobject){
-						
-								if(jsonobject=="true"){
-									alert("Hap " + hap.name + " Flagged");
-		  		            	 	document.getElementById("flagBtn").innerHTML="FLAGGED";
-		  		               		document.getElementById("flagBtn").disabled=true;
-								} else
-									alert("FLAG FAILED");
-							   	
-							}
-		        });
-				*/
+				$email = $("#loginEmail").val();
+				$pass = $("#loginPassword").val();
+				
+				if($email ==null || $email=="" ||$pass==null||$pass=="")					
+					setRegMessage("Creating account!");
+				else{
+					$.ajax({
+			            url: 'Login',
+			            data: {
+			                email:$email,
+			                password:$pass
+			            },
+			            type: 'POST',
+						success:function(jsonobject){
+									if(jsonobject=="true"){
+										window.location = "Home";
+									} else{
+									setLogMessage("Wrong Username OR Password");
+								   	
+								}
+						}
+			        });
+					
+					
+				}
 			}
 			
 			function register(){
@@ -68,8 +78,6 @@
 							
 								
 									if(jsonobject=="true"){
-										alert("CREATED!");
-										alert('<%= session.getAttribute("userID")%>');//SESSIONNNNNSSSSS SHEEET
 										window.location = "Home";
 									} else{
 										alert("Register FAILED");
@@ -86,6 +94,10 @@
 			function setRegMessage(mes){
 				$("#registerMessage").show();
 				$("#registerMessage").html(mes);
+			}
+			
+			function setRegMessage(mes){
+				$("#logMessage").show();
 			}
 		</script>
 	
@@ -134,6 +146,7 @@
 			<div class="col-sm-4 text-center well" style="min-height:300px">
 				<form id="login">
 					<div class="col-sm-12" style="margin-bottom:30px"><h1>Login</h1></div>
+					<div class="col-sm-12" style="margin-bottom:20px" id="logMessage"></div>
 					<div class="col-sm-12" style="margin-bottom:20px"><input class="form-control" type="text" id="loginEmail" placeholder="Email"></input></div>
 					<div class="col-sm-12" style="margin-bottom:10px"><input class="form-control" type="password" id="loginPassword" placeholder="Password"></input></div>
 					<div class="col-sm-12" style="margin-bottom:20px"><a href="#">Forgot your password?</a></div>
