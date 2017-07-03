@@ -27,6 +27,7 @@ public class BookService {
         PreparedStatement pstmt = null;
         Boolean out=false;
 
+        
         try {
             pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, b.getId());
