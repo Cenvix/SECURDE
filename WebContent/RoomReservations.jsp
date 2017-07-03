@@ -12,7 +12,14 @@
 		<script type="text/javascript" src="js/jquery-3.0.0.min.js" ></script>
 		<%@  taglib  prefix="c"   uri="http://java.sun.com/jsp/jstl/core"  %>
 		
-		<script type="text/javascript" src="js/jquery-3.0.0.min.js" ></script>
+		
+		<script type="text/javascript">
+
+		$(document).ready(function(){
+			var userID ='<%= session.getAttribute("userID")%>';
+			console.log(userID);
+		});
+		</script>
 	</head>
 
 	<body>
