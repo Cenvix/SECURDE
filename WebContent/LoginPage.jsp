@@ -69,7 +69,7 @@
 									if(jsonobject=="true"){
 										alert("CREATED!");
 										alert('<%= session.getAttribute("userID")%>');//SESSIONNNNNSSSSS SHEEET
-										//TODO Redirect
+										window.location = "Home";
 									} else{
 										alert("Register FAILED");
 									setRegMessage("Account failed to create");

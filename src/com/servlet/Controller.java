@@ -17,7 +17,7 @@ import com.services.UserService;
 /**
  * Servlet implementation class Controller
  */
-@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register"})
+@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home"})
 public class Controller extends HttpServlet {
 	
 	
@@ -59,9 +59,14 @@ public class Controller extends HttpServlet {
 		case "/Login": login(request,response); break;
 		case "/Logout": logout(request,response); break;
 		case "/Register": register(request,response); break;
+		default: home(request,response); break;
 		}
 	}
 	
+	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("Home");
+		response.sendRedirect("Home.jsp");
+	}
 	public void login(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Login");
 		
@@ -69,7 +74,10 @@ public class Controller extends HttpServlet {
 	}
 	
 	public void logout(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		
+		
 		HttpSession session = request.getSession();
+		System.out.println("Sign Out: "+session.getAttribute(sessionUserID));
 		session.invalidate();
 		response.sendRedirect("Home.jsp");
 	}
@@ -107,13 +115,11 @@ public class Controller extends HttpServlet {
 	    Date lastAccessTime = new Date(session.getLastAccessedTime());
 	
         session.setAttribute("userID", user.getId());
-        
-        test(session);
+       
+
+		
 	}
-	
-	public void test(HttpSession session){
-		System.out.println(session.getAttribute("userID"));
-	}
+
 	
 	
 
