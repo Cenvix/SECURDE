@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<title>SECURDE Library</title>
+
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="stylesheet.css" rel="stylesheet">
+	</head>
+
+	<body>
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+					<a class="navbar-brand" href="Home.jsp">SECURDE Library</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="Home.jsp">Home</a></li>
+						<li><a href="LibraryPage.jsp">Search Library</a></li>
+						<li><a href="RoomReservations.jsp">Room Reservation</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="LoginPage.jsp"><span class="glyphicon glyphicon-log-in"></span> Login / Register</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="jumbotron">
+			<div class="container text-center">
+				<h1>Welcome to SECURDE Library</h1>      
+				<p>Some library with half-decent security protocols</p>
+			</div>
+		</div>
+		  
+		<div class="container-fluid bg-3 text-center">    
+			<h3>Featured Books</h3><br>
+			<div class="row">
+				<div class="col-sm-3">
+					<p id="sampleBookTitle1">Book Something</p>
+				</div>
+				<div class="col-sm-3"> 
+					<p id="sampleBookTitle2">Book Something</p>
+				</div>
+				<div class="col-sm-3"> 
+					<p id="sampleBookTitle3">Book Something</p>
+				</div>
+				<div class="col-sm-3">
+					<p id="sampleBookTitle4">Book Something</p>
+				</div>
+			</div>
+		</div><br>
+
+		<div class="container-fluid bg-3 text-center">    
+			<div class="row">
+				<div class="col-sm-3">
+					<p id="sampleBookTitle5">Book Something</p>
+				</div>
+				<div class="col-sm-3"> 
+					<p id="sampleBookTitle6">Book Something</p>
+				</div>
+				<div class="col-sm-3"> 
+					<p id="sampleBookTitle7">Book Something</p>
+				</div>
+				<div class="col-sm-3">
+					<p id="sampleBookTitle8">Book Something</p>
+				</div>
+			</div>
+		</div><br><br>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="js/bootstrap.min.js"></script>
+	</body>
+</html>
