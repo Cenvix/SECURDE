@@ -18,7 +18,7 @@ import com.services.UserService;
 /**
  * Servlet implementation class Controller
  */
-@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home"})
+@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee"})
 public class Controller extends HttpServlet {
 	
 	
@@ -60,6 +60,7 @@ public class Controller extends HttpServlet {
 		case "/Login": login(request,response); break;
 		case "/Logout": logout(request,response); break;
 		case "/Register": register(request,response); break;
+		case "/AddEmployee": addEmployee(request,response); break;
 		default: home(request,response); break;
 		}
 	}
@@ -88,8 +89,6 @@ public class Controller extends HttpServlet {
 	}
 	
 	public void logout(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
-		
-		
 		HttpSession session = request.getSession();
 		System.out.println("Sign Out: "+session.getAttribute(sessionUserID));
 		session.invalidate();
@@ -133,6 +132,32 @@ public class Controller extends HttpServlet {
        
 
 		
+	}
+	
+	
+	
+	public void addEmployee(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("AddEmployee");
+		
+		User newUser = new User(request.getParameter("email"),request.getParameter("password"));
+		newUser.setFirstName(request.getParameter("fName"));
+		newUser.setMiddleName(request.getParameter("mName"));
+		newUser.setLastName(request.getParameter("lName"));
+		newUser.setUserType(request.getParameter("type"));
+		
+		boolean status=false;
+		
+		if(UserService.checkUser(newUser)){
+			if(UserService.addUser(newUser)){
+				status = true;
+				System.out.println("Added");
+			}
+		}
+		
+		//setUserSessions(request, response, newUser);
+
+		PrintWriter pw = response.getWriter();
+		pw.write(status+"");
 	}
 
 	

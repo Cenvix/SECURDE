@@ -55,6 +55,7 @@ public class User implements Serializable {
     	this.id = Integer.parseInt(id); 
     	this.email = email;
     	this.password = password;
+    	this.userType = "0";
     }
     
 

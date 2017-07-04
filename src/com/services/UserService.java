@@ -16,8 +16,13 @@ public class UserService {
             String sql = "INSERT INTO " + User.TABLE_NAME + " ( "
                 + User.COLUMN_ID + ", "
                 + User.COLUMN_EMAIL +", "
-                + User.COLUMN_PASSWORD + ") "
-                + "VALUES (?,?,?)";
+                + User.COLUMN_PASSWORD + ", "
+                + User.COLUMN_FIRSTNAME + ", "
+                + User.COLUMN_MIDDLENAME + ", "
+                + User.COLUMN_LASTNAME +", "
+                + User.COLUMN_USERTYPE +", "
+                + User.COLUMN_USERNUMBER +") "
+                + "VALUES (?,?,?,?,?,?,?,?)";
 
          //   String url = "jdbc:mysql://localhost:3306/userID";
 
@@ -30,7 +35,12 @@ public class UserService {
                 pstmt.setInt(1, u.getId());
                 pstmt.setString(2, u.getEmail());
                 pstmt.setString(3, u.getPassword());
-
+                pstmt.setString(4, u.getFirstName());
+                pstmt.setString(5, u.getMiddleName());
+                pstmt.setString(6, u.getLastName());
+                pstmt.setString(7, u.getUserType());
+                pstmt.setString(8, u.getUserNumber());
+                
                 pstmt.executeUpdate();
                 out=true;
             } catch (SQLException e) {
