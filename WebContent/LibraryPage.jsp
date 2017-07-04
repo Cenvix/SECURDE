@@ -13,11 +13,61 @@
 		<%@  taglib  prefix="c"   uri="http://java.sun.com/jsp/jstl/core"  %>
 		
 		<script type="text/javascript">
+		var books = [];
 
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
+			
+			initBooks();
+			loadBooks();
 		});
+		
+		class Book {
+			constructor(name, publisher, author, id) {
+				this.name = name;
+				this.publisher = publisher;
+				this.author = author;
+				this.id = id;
+			};
+		}
+		
+		function addBook(name, publisher, author, id) {
+			var book = new Book(name, publisher, author, id);
+			books.push(book);
+		}
+		
+		function initBooks(){
+			console.log("Initializing books");
+			<c:forEach items="${books}" var="b">
+        	addBook("${b.name}", "${b.publisher}", "${b.author}", "${b.id}");
+        	</c:forEach>
+        	
+        }
+		
+		function loadBooks() {
+			document.getElementById('resultsContainer').innerHTML = "";
+			var results = "";
+			
+			for(var i = 0; i < books.length; i++) {
+				console.log(results);
+				results += "<div class='row'>" +
+								"<div class='col-sm-10'>" +
+									"<div class='well'>" +
+										"<a href='ProductPage.jsp'><h3 id='productTitle_" + books[i].id + "'>" + books[i].name + "</h3></a>" +
+										"<label>Author: </label> <span id='productAuthor_" + books[i].id + "'>" + books[i].author + "</span><br>" +
+										"<label>Publisher: </label><span id='productPublisher_" + books[i].id + "'>" + books[i].publisher + "</span>" +
+									"</div>" +
+								"</div>" +
+								"<div class='col-sm-2 well'>" +
+									"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "'>Reserve</button>" +
+									"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "'>Edit</button>" +
+								"</div>" + 
+							"</div>";
+			}
+			
+			document.getElementById('resultsContainer').innerHTML = results;
+		}
 		</script>
 	</head>
 	
@@ -79,7 +129,7 @@
 			
 			<!--TODO when we compile everything: Automate generation of search results-->
 			<!--TODO when we compile everything: Make edit button dependent on user authorization-->
-			<div class="col-sm-9">
+			<div class="col-sm-9" id="resultsContainer">
 				<div class="row">
 					<div class="col-sm-10">
 						<div class="well">

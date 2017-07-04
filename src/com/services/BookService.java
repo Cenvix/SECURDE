@@ -135,13 +135,9 @@ public class BookService {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()){
-				Book b = new Book();
-				b.setAuthor(rs.getString(Book.COLUMN_AUTHOR));
-				b.setId(rs.getInt(Book.COLUMN_ID));
-				b.setName(rs.getString(Book.COLUMN_BOOKNAME));
-				b.setPublisher(rs.getString(Book.COLUMN_PUBLISHER));
-				b.setStatus(rs.getString(Book.COLUMN_PUBLISHER));
-				b.setYear(rs.getString(Book.COLUMN_YEAR));
+				Book b = new Book(rs.getInt(Book.COLUMN_ID), rs.getString(Book.COLUMN_BOOKNAME), 
+						rs.getString(Book.COLUMN_AUTHOR), rs.getString(Book.COLUMN_PUBLISHER), 
+						rs.getString(Book.COLUMN_YEAR), rs.getString(Book.COLUMN_PUBLISHER));
 				
 				books.add(b);
 			}
@@ -159,9 +155,6 @@ public class BookService {
 			}
 		}
 		
-		
-		
 		return books;
-		
 	}
 }
