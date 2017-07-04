@@ -52,11 +52,21 @@
 			
 			function register(){
 				
+				
+				$fName = $("#registerFName").val();
+				$mName = $("#registerMName").val();
+				$lName = $("#registerLName").val();
+				$idNumber = $("#registerIDNumber").val();
 				$email = $("#registerEmail").val();
 				$pass = $("#registerPassword").val();
-				$passCon = $("#registerConfirm").val();
+				$passCon = $("#registerConfirmPassword").val();
 				
-				if(!/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test($email))//REGEX for EMAILL
+				if($fName==""||$mName==""||$lName==""){
+					alert("Input Name Input!");
+				}else if($idNumber==""){
+					alert("No ID Number");
+				}
+				else if(!/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test($email))//REGEX for EMAILL
 				{
 					setRegMessage("Input Valid Email!");
 				}else if(!/.{8,}$/.test($pass)){ //REGEX FOR 8 Char min
@@ -70,6 +80,10 @@
 					$.ajax({
 			            url: 'Register',
 			            data: {
+			            	fName:$fName,
+			            	mName:$mName,
+			            	lName:$lName,
+			            	idNumber:$idNumber,
 			                email:$email,
 			                password:$pass
 			            },
@@ -159,9 +173,20 @@
 				<form id="register">
 					<div class="col-sm-12" style="margin-bottom:30px"><h1>Register</h1></div>
 					<div class="col-sm-12" style="margin-bottom:20px" id="registerMessage"></div>
-					<div class="col-sm-12" style="margin-bottom:20px"><input class="form-control" type="text" id="registerEmail" placeholder="Email"></input></div>
-					<div class="col-sm-12" style="margin-bottom:20px"><input class="form-control" type="password" id="registerPassword" placeholder="Password"></input></div>
-					<div class="col-sm-12" style="margin-bottom:20px"><input class="form-control" type="password" id="registerConfirm" placeholder="Confirm Password"></input></div>
+					First Name:<br>
+					<input class="form-control" type="text" id="registerFName" placeholder="Name" value=""><br>
+					Middle Name:<br>
+					<input class="form-control" type="text" id="registerMName" placeholder="Name" value=""><br>
+					Last Name:<br>
+					<input class="form-control" type="text" id="registerLName" placeholder="Name" value=""><br>
+					Email:<br>
+					<input class="form-control" type="text" id="registerEmail" placeholder="Email" value=""><br>
+					ID Number:<br>
+					<input class="form-control" type="text" id="registerIDNumber" placeholder="Email" value=""><br>
+					Password:<br>
+					<input class="form-control" type="password" id="registerPassword" placeholder="Password" value=""><br>
+					Confirm Password:<br>
+					<input class="form-control" type="password" id="registerConfirmPassword" placeholder="Confirm Password" value=""><br>
 					<div class="col-sm-12" style="margin-bottom:20px"><button type="button" class="btn btn-primary" id="registerButton" onClick="register()">Register</button></div>
 				</form>
 			</div>

@@ -100,7 +100,12 @@ public class Controller extends HttpServlet {
 		
 		
 		User newUser = new User(request.getParameter("email"),request.getParameter("password"));
-
+		newUser.setFirstName(request.getParameter("fName"));
+		newUser.setMiddleName(request.getParameter("mName"));
+		newUser.setLastName(request.getParameter("lName"));
+		newUser.setUserNumber(request.getParameter("idNumber"));
+		
+		
 		boolean status=false;
 		
 		if(UserService.checkUser(newUser)){
@@ -144,6 +149,7 @@ public class Controller extends HttpServlet {
 		newUser.setMiddleName(request.getParameter("mName"));
 		newUser.setLastName(request.getParameter("lName"));
 		newUser.setUserType(request.getParameter("type"));
+		newUser.setUserNumber(request.getParameter("idNumber"));
 		
 		boolean status=false;
 		

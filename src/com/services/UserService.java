@@ -92,7 +92,8 @@ public class UserService {
     }
     
     public static boolean checkUser(User u) {
-        String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ?";
+        String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ?"+
+        				" OR " + User.COLUMN_USERNUMBER +"= ?";
         
         Connection conn = DBPool.getInstance().getConnection();
         PreparedStatement pstmt = null;
@@ -102,6 +103,7 @@ public class UserService {
         try {
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, u.getEmail());
+            pstmt.setString(2, u.getUserNumber());
             
             rs = pstmt.executeQuery();
             

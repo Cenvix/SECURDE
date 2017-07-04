@@ -23,6 +23,7 @@
 			$fName = $("#fName").val();
 			$mName = $("#mName").val();
 			$lName = $("#lName").val();
+			$idNumber = $("#idNumber").val();
 			$email = $("#email").val();
 			$pass = $("#password").val();
 			$passCon = $("#confirmPassword").val();
@@ -30,6 +31,8 @@
 			
 			if($fName==""||$mName==""||$lName==""){
 				alert("Input Name Input!");
+			}else if($idNumber==""){
+				alert("No ID Number");
 			}
 			else if(!/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test($email))//REGEX for EMAILL
 			{
@@ -48,6 +51,7 @@
 		            	fName:$fName,
 		            	mName:$mName,
 		            	lName:$lName,
+		            	idNumber:$idNumber,
 		                email:$email,
 		                password:$pass,
 		                type:$type,
@@ -58,8 +62,9 @@
 							
 								if(jsonobject=="true"){
 									alert("Employee Added");
+									window.location = "AdminPage.jsp";
 								} else{
-									alert("Employee Added");
+									alert("Employee Add FAILED");
 							   	
 							}
 					}
@@ -113,6 +118,8 @@
 					<input class="form-control" type="text" id="lName" placeholder="Name" value=""><br>
 					Email:<br>
 					<input class="form-control" type="text" id="email" placeholder="Email" value=""><br>
+					ID Number:<br>
+					<input class="form-control" type="text" id="idNumber" placeholder="Email" value=""><br>
 					Password:<br>
 					<input class="form-control" type="password" id="password" placeholder="Password" value=""><br>
 					Confirm Password:<br>
