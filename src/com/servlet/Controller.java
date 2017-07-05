@@ -224,6 +224,7 @@ public class Controller extends HttpServlet {
 		editedBook.setPublisher(request.getParameter("bookpublisher"));
 		editedBook.setStatus(request.getParameter("bookstatus"));
 		editedBook.setYear(request.getParameter("bookyear"));
+		editedBook.setType(request.getParameter("booktype"));
 		boolean status=false;
 
 		if(BookService.checkBook(editedBook.getId())){

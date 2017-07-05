@@ -16,7 +16,7 @@ public class Book implements Serializable {
     public final static String COLUMN_YEAR = "year";
     public final static String COLUMN_STATUS = "status";
     public final static String COLUMN_DESCRIPTION = "description";
-    
+    public final static String COLUMN_TYPE = "type";
     private String id;
     private String name;
     private String author;
@@ -24,20 +24,33 @@ public class Book implements Serializable {
     private String year;
     private String description;
     private String status;
+    private String type; 
     
-    public Book(String id, String name, String author, String publisher, String year, String status, String description) {
-    	this.id = id;
-        this.name = name;
-        this.author = author;
-        this.publisher = publisher;
-        this.year = year;
-        this.status = status;
-        this.description = description;
-    }
-    public Book(){
+    public Book(String id, String name, String author, String publisher, String year, String description, String status,
+			String type) {
+	
+		this.id = id;
+		this.name = name;
+		this.author = author;
+		this.publisher = publisher;
+		this.year = year;
+		this.description = description;
+		this.status = status;
+		this.type = type;
+	}
+
+	public Book(){
     	
     }
     
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public String getDescription() {
 		return description;
 	}

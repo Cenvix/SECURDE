@@ -19,6 +19,7 @@ public class BookService {
             + Book.COLUMN_PUBLISHER +", "
             + Book.COLUMN_YEAR +", "
             + Book.COLUMN_STATUS +", "
+             + Book.COLUMN_STATUS +", "
             + Book.COLUMN_DESCRIPTION + ") "
             + "VALUES (?,?,?,?,?,?,?)";
 
@@ -38,7 +39,8 @@ public class BookService {
             pstmt.setString(4, b.getPublisher());
             pstmt.setString(5, b.getYear());
             pstmt.setString(6, b.getStatus());
-            pstmt.setString(7, b.getDescription());
+            pstmt.setString(7,  b.getType());
+            pstmt.setString(8, b.getDescription());
             pstmt.executeUpdate();
             out=true;
         } catch (SQLException e) {
@@ -124,6 +126,7 @@ public class BookService {
 						Book.COLUMN_PUBLISHER+ "=?,"+
 						Book.COLUMN_STATUS+ "=?,"+
 						Book.COLUMN_DESCRIPTION+ "=?,"+
+						Book.COLUMN_TYPE+ "=?,"+
 						Book.COLUMN_YEAR+ "=?" +
 				" where " + Book.COLUMN_ID +"=?;";
 		
@@ -141,8 +144,9 @@ public class BookService {
 	            pstmt.setString(3, b.getPublisher());
 	            pstmt.setString(4, b.getStatus());
 	            pstmt.setString(5, b.getDescription());
-	            pstmt.setString(6, b.getYear());
-	            pstmt.setString(7, b.getId());
+	            pstmt.setString(6, b.getType());
+	            pstmt.setString(7, b.getYear());
+	            pstmt.setString(8, b.getId());
 
 	            pstmt.executeUpdate();
 	            out=true;
@@ -178,6 +182,7 @@ public class BookService {
 				b.setPublisher(rs.getString(Book.COLUMN_PUBLISHER));
 				b.setStatus(rs.getString(Book.COLUMN_STATUS));
 				b.setYear(rs.getString(Book.COLUMN_YEAR));
+				b.setType(rs.getString(Book.COLUMN_TYPE));;
 				b.setDescription(rs.getString(Book.COLUMN_DESCRIPTION));
 				books.add(b);
 			}
