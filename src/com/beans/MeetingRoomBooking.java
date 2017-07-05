@@ -26,6 +26,10 @@ public class MeetingRoomBooking implements Serializable {
         this.timeEnd = timeEnd;
     }
 
+	public MeetingRoomBooking() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() {
 		return id;
 	}
