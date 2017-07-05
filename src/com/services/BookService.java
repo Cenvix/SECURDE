@@ -176,7 +176,7 @@ public class BookService {
 				b.setId(rs.getString(Book.COLUMN_ID));
 				b.setName(rs.getString(Book.COLUMN_BOOKNAME));
 				b.setPublisher(rs.getString(Book.COLUMN_PUBLISHER));
-				b.setStatus(rs.getString(Book.COLUMN_PUBLISHER));
+				b.setStatus(rs.getString(Book.COLUMN_STATUS));
 				b.setYear(rs.getString(Book.COLUMN_YEAR));
 				b.setDescription(rs.getString(Book.COLUMN_DESCRIPTION));
 				books.add(b);
@@ -195,9 +195,37 @@ public class BookService {
 			}
 		}
 		
-		
-		
 		return books;
+	}
+	
+	public static boolean reserveBook(String id) {
+		String sql = "UPDATE "+Book.TABLE_NAME + " "
+				+ "SET " + Book.COLUMN_STATUS + "='Reserved' "+
+				"WHERE "+ Book.COLUMN_ID +"=?;";
 		
+		Boolean result = false;
+		
+		Connection connection = DBPool.getInstance().getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement(sql);
+            
+            pstmt.setString(1, id);
+
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                pstmt.close();
+                connection.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return result;
 	}
 }

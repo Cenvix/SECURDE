@@ -20,7 +20,9 @@ import com.services.UserService;
 /**
  * Servlet implementation class Controller
  */
-@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee","/EditBook"})
+
+@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee","/EditBook", "/LibraryInit", "/ReserveBook"})
+
 public class Controller extends HttpServlet {
 	
 	
@@ -64,10 +66,27 @@ public class Controller extends HttpServlet {
 		case "/Register": register(request,response); break;
 		case "/AddEmployee": addEmployee(request,response); break;
 		case "/EditBook": editBook(request,response);break;
+		case "/LibraryInit": libraryInit(request, response); break;
+		case "/ReserveBook": reserveBook(request,response); break;
 		default: home(request,response); break;
 		}
 	}
 	
+	private void reserveBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// TODO Auto-generated method stub
+		boolean out = BookService.reserveBook(request.getParameter("idbook"));
+		
+		PrintWriter pw = response.getWriter();
+		pw.write(out+"");
+	}
+
+	private void libraryInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		ArrayList<Book> books = BookService.getAllBooks();
+		request.setAttribute("books", books);
+		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
+	}
+
 	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Home");
 		response.sendRedirect("Home.jsp");
@@ -118,8 +137,6 @@ public class Controller extends HttpServlet {
 		}
 		
 		
-		
-		
 		setUserSessions(request, response, newUser);
 
 		PrintWriter pw = response.getWriter();
@@ -138,9 +155,6 @@ public class Controller extends HttpServlet {
 	    Date lastAccessTime = new Date(session.getLastAccessedTime());
 	
         session.setAttribute("userID", user.getId());
-       
-
-		
 	}
 	
 	

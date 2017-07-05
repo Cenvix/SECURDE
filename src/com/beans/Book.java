@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Book implements Serializable {
     
+
     public final static String TABLE_NAME = " books ";
     public final static String COLUMN_ID = " idbooks ";
     public final static String COLUMN_BOOKNAME = " bookname ";
@@ -15,6 +16,7 @@ public class Book implements Serializable {
     public final static String COLUMN_YEAR = " year ";
     public final static String COLUMN_STATUS = " status ";
     public final static String COLUMN_DESCRIPTION = " description ";
+    
     private String id;
     private String name;
     private String author;
