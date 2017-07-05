@@ -17,7 +17,45 @@
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
+			var bookID = '<%= session.getAttribute("productID")%>';
+			
+			console.log(bookID);
+			initBook(bookID);
 		});
+
+		
+			function initBook(bookID){
+				$.ajax({
+		            url: 'GetBook',
+		            data: {
+		              bookID:bookID
+		            },
+		            type: 'POST',
+					success:function(jsonobject){
+								if(jsonobject!=null){
+									var book = (JSON.parse(jsonobject));
+									
+									$("#productdds").val(book.dds);
+									$("#productTitle").val(book.name);
+									$("#productAuthor").val(book.author);
+									$("#productPublisher").val(book.publisher);
+
+				
+									$("#productYear").val(book.year);
+									if(book.status=="Available")
+										$("#productStatus").prop('checked',true);
+									else
+										$("#productStatus").prop('checked',false);
+									$("#productDescription").val(book.description);
+								} else{
+								setLogMessage("Book Cannot be Found");
+							   	
+							}
+					}
+		        });
+			}
+		
+
 			function removebook(){
 				$bookID = $("#productID").val();
 				if($bookid==""){
@@ -42,15 +80,19 @@
 				}
 				
 			}		
-			function editbook(){
-				$bookid = $("#productID").val();
+			function editbook(bookID){
+				$bookid = bookID;
 				$bookdds = $("#productdds").val();
 				$bookname = $("#productTitle").val();
 				$bookauthor = $("#productAuthor").val();
 				$bookpublisher = $("#productPublisher").val();
 				$booktype = $("#productType").val();
 				$bookyear = $("#productYear").val();
-				$bookstatus = $("#productStatus").val();
+				
+				if($("#productStatus").is(':checked'))
+				$bookstatus = "Available";
+				else
+				$bookstatus = "Reserved";
 				$bookdescription = $("#productDescription").val();
 				console.log($bookid);
 				if($bookid == "" ||$bookdds == "" || $bookname=="" ||$bookauthor==""||$bookpublisher == "" ||$booktype==""||$bookyear==""||$bookstatus==""||$bookdescription=="")					
@@ -59,7 +101,8 @@
 					$.ajax({
 			            url: 'EditBook',
 			            data: {
-			              bookid:$bookid,
+
+				          bookid:$bookid,
 			              bookdds:$bookdds,
 			              bookname:$bookname,
 			              bookauthor:$bookauthor,
@@ -107,8 +150,8 @@
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="Home.jsp">Home</a></li>
-						<li><a href="LibraryPage.jsp">Search Library</a></li>
-						<li><a href="RoomReservations.jsp">Room Reservation</a></li>
+						<li><a href="LibraryInit">Search Library</a></li>
+						<li><a href="BookingsInit">Room Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>
@@ -127,22 +170,26 @@
 		<div class="container">
 			<div class="row well">
 				<div class="col-sm-4">
+<<<<<<< HEAD
+				
+					Dewey Decimal Number:<br>
+					<input class="form-control" type="text" id="productdds" placeholder="DDC" ><br>
+=======
 					Book ID:<br>
 					<input class="form-control" type="text" id="productID" placeholder="Book ID" value="123413241234"><br>
-					
 					Dewey Decimal Number:<br>
 					<input class="form-control" type="text" id="productdds" placeholder="DDC" value="343/.52"><br>
-					
+>>>>>>> 383fc90b905c866f9f27020b18e7f44d8309341d
 					Title:<br>
-					<input class="form-control" type="text" id="productTitle" placeholder="Title" value="BOOK TITLE"><br>
+					<input class="form-control" type="text" id="productTitle" placeholder="Title"><br>
 					Author:<br>
-					<input class="form-control" type="text" id="productAuthor" placeholder="Author" value="Some guy"><br>
+					<input class="form-control" type="text" id="productAuthor" placeholder="Author"><br>
 					Published by:<br>
-					<input class="form-control" type="text" id="productPublisher" placeholder="Publisher" value="Some people"><br>
+					<input class="form-control" type="text" id="productPublisher" placeholder="Publisher"><br>
 					Year:<br>
-					<input class="form-control" type="text" id="productYear" placeholder="Year" value="2017"><br>
-					Status:<br>
-					<input class="form-control" type="text" id="productStatus" placeholder="Status" value="Available"><br>
+					<input class="form-control" type="text" id="productYear" placeholder="Year"><br>
+					Available:<br>
+					<input class="form-control" type="checkbox" id="productStatus" placeholder="Status"><br>
 					
 					Type:<br>
 					<div class="form-group">
@@ -157,7 +204,7 @@
 				<div class="col-sm-8">
 					Description:<br>
 					<textarea class="form-control" rows="16" id="productDescription">Some sort of description here about the product. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
-					<button type="button" class="btn btn-primary" style="width:100%;margin-top:10px" id="save" onClick="editbook()">Save Changes</button>
+					<button type="button" class="btn btn-primary" style="width:100%;margin-top:10px" id="save" onClick="editbook(<%= session.getAttribute("productID")%>)">Save Changes</button>
 					<button type="button" class="btn btn-danger" style="width:100%;margin-top:10px" id="delete" onClick = "removebook()">Delete</button>
 				</div>
 			</div>

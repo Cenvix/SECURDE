@@ -235,6 +235,49 @@ public class BookService {
 		return books;
 	}
 	
+	public static Book getBook(int id){
+		String sql = "select * from "+Book.TABLE_NAME+" where "+Book.COLUMN_ID+"=?;";
+		boolean exists = false;
+		
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		Book b = new Book();
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				
+				b.setAuthor(rs.getString(Book.COLUMN_AUTHOR));
+				b.setId(rs.getInt(Book.COLUMN_ID));
+				b.setDds(rs.getString(Book.COLUMN_DEWEY));
+				b.setName(rs.getString(Book.COLUMN_BOOKNAME));
+				b.setPublisher(rs.getString(Book.COLUMN_PUBLISHER));
+				b.setStatus(rs.getString(Book.COLUMN_STATUS));
+				b.setYear(rs.getString(Book.COLUMN_YEAR));
+				b.setType(rs.getString(Book.COLUMN_TYPE));;
+				b.setDescription(rs.getString(Book.COLUMN_DESCRIPTION));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				rs.close();
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return b;
+	}
+	
 	public static boolean reserveBook(String id) {
 		String sql = "UPDATE "+Book.TABLE_NAME + " "
 				+ "SET " + Book.COLUMN_STATUS + "='Reserved' "+
@@ -264,5 +307,61 @@ public class BookService {
         }
         
         return result;
+	}
+	
+	public static ArrayList<Book> searchBooks(String query, boolean filterMagazine, boolean filterThesis, boolean filterBook) {
+		ArrayList<Book> allBooks = BookService.getAllBooks();
+		ArrayList<Book> validResults = new ArrayList<Book>();
+		String[] queryTags = query.split(" ");
+		
+		for(int i = 0; i < allBooks.size(); i++) {
+			int matchVal = 0;
+			boolean validType = false;
+			String[] titleTags = allBooks.get(i).getName().split(" ");
+			String[] authorTags = allBooks.get(i).getAuthor().split(" ");
+			String[] publishTags = allBooks.get(i).getPublisher().split(" ");
+			
+			if(allBooks.get(i).getType().equals("magazine") && filterMagazine == true) {
+				validType = true;
+			}
+			if(allBooks.get(i).getType().equals("thesis") && filterThesis == true) {
+				validType = true;
+			}
+			if(allBooks.get(i).getType().equals("book") && filterBook == true) {
+				validType = true;
+			}
+			
+			if(validType) {
+				for(int j = 0; j < queryTags.length; j++) {
+					for(int k = 0; k < titleTags.length; k++) {
+						if(queryTags[j].toLowerCase().equals(titleTags[k].toLowerCase())) {
+							matchVal++;
+						}
+					}
+					
+					for(int k = 0; k < authorTags.length; k++) {
+						if(queryTags[j].toLowerCase().equals(authorTags[k].toLowerCase())) {
+							matchVal++;
+						}
+					}
+					
+					for(int k = 0; k < publishTags.length; k++) {
+						if(queryTags[j].toLowerCase().equals(publishTags[k].toLowerCase())) {
+							matchVal++;
+						}
+					}
+				}
+			}
+			
+			//System.out.println("MATCHVAL " + allBooks.get(i).getName() + ": " + matchVal);
+			matchVal = matchVal / queryTags.length*100;
+			//System.out.println("MATCHVAL " + allBooks.get(i).getName() + ": " + matchVal);
+			
+			if(matchVal > 50) {
+				validResults.add(allBooks.get(i));
+			}
+		}
+		
+		return validResults;
 	}
 }

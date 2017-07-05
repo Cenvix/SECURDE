@@ -39,6 +39,7 @@
 		}
 		
 		function initBooks(){
+			books = [];
 			console.log("Initializing books");
 			<c:forEach items="${books}" var="b">
         	addBook("${b.name}", "${b.publisher}", "${b.author}", "${b.id}", "${b.status}");
@@ -63,21 +64,33 @@
 									
 				console.log(books[i].status);
 				if(books[i].status == "reserved") {
-					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' disabled='true'>RESERVED</button>" +
-									"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
-								"</div>" + 
-							"</div>";
+					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' disabled='true'>RESERVED</button>";
+									
 				}
 				else {
-					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' onclick='reserveBook("+books[i].id+")'>Reserve</button>" +
-									"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
-								"</div>" + 
-							"</div>";
+					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' onclick='reserveBook("+books[i].id+")'>Reserve</button>";	
 				}
+				results +="<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
+				"</div>" + 
+			"</div>";
 			}
 			
 			document.getElementById('resultsContainer').innerHTML = results;
 		}
+		
+		function editBook(id){
+			$.ajax({
+                url: 'EditProduct',
+                data: {
+                    bookID: id
+                },
+                type: 'POST',
+				success:function(jsonobject){
+						window.location = "ProductEdit.jsp";
+					}
+            });
+		}
+		
 		
 		function reserveBook(id) {
 			$.ajax({
@@ -97,6 +110,32 @@
 						}
             });
 		}
+		
+		function searchBooks() {
+			$.ajax({
+                url: 'SearchBooks',
+                data: {
+                	query: document.getElementById("searchQuery").value,
+                    filterMagazine: $('filterMagazine').is(':checked'),
+					filterThesis: $('filterThesis').is(':checked'),
+					filterBook: $('filterBook').is(':checked')
+                },
+                type: 'POST',
+                success:function(jsonobject){
+					
+					if(jsonobject=="true"){
+						initBooks();
+		            	loadBooks();
+					} else {
+						alert("Search Failed");
+					initBooks();
+					loadBooks();
+					}
+				   	
+				}
+            });
+			
+		}
 		</script>
 	</head>
 	
@@ -114,8 +153,8 @@
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="Home.jsp">Home</a></li>
-						<li><a href="LibraryPage.jsp">Search Library</a></li>
-						<li><a href="RoomReservations.jsp">Room Reservation</a></li>
+						<li><a href="LibraryInit">Search Library</a></li>
+						<li><a href="BookingsInit">Room Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>
@@ -134,26 +173,28 @@
 		<div class="container">    
 		  <div class="row">
 			<div class="col-sm-3 well">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Search" id="searchQuery">
-					<div class="input-group-btn">
-						<button class="btn btn-default" type="submit" id="searchSubmit">
-							<i class="glyphicon glyphicon-search"></i>
-						</button>
+				<form action="SearchBooks" method="post">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search" id="searchQuery" name="query">
+						<div class="input-group-btn">
+							<button class="btn btn-default" type="submit" id="searchSubmit">
+								<i class="glyphicon glyphicon-search"></i>
+							</button>
+						</div>
 					</div>
-				</div>
-				
-				<div style="margin-left:50px">
-					<div class="checkbox">
-						<label><input type="checkbox" value="" id="filterBook">Book</label>
+					
+					<div style="margin-left:50px">
+						<div class="checkbox">
+							<label><input type="checkbox" value="filterBook" id="filterBook" name="filterBook">Book</label>
+						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" value="filterMagazine" id="filterMagazine" name="filterMagazine">Magazine</label>
+						</div>
+						<div class="checkbox disabled">
+							<label><input type="checkbox" value="filterThesis" id="filterThesis" name="filterThesis">Thesis</label>
+						</div>
 					</div>
-					<div class="checkbox">
-						<label><input type="checkbox" value="" id="filterMagazine">Magazine</label>
-					</div>
-					<div class="checkbox disabled">
-						<label><input type="checkbox" value="" id="filterThesis">Thesis</label>
-					</div>
-				</div>
+				</form>
 			</div>
 			
 			<!--TODO when we compile everything: Automate generation of search results-->

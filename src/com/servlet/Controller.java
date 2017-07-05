@@ -37,7 +37,10 @@ import com.services.UserService;
 							"/ReserveBook",
 							"/BookingsInit",
 							"/AdminInit",
-							"/ReserveRoom"
+							"/ReserveRoom",
+							"/EditProduct",
+							"/GetBook",
+							"/SearchBooks"
 							})
 
 public class Controller extends HttpServlet {
@@ -88,11 +91,32 @@ public class Controller extends HttpServlet {
 		case "/ReserveBook": reserveBook(request,response); break;
 		case "/BookingsInit": bookingsInit(request, response); break;
 		case "/ReserveRoom": reserveRoom(request, response); break;
+		case "/SearchBooks": searchBooks(request, response); break;
+		case "/EditProduct": editProduct(request, response); break;
 		case "/DeleteBook": deleteBook(request,response); break;
+		case "/GetBook": getBook(request,response); break;
 		default: home(request,response); break;
 		}
 	}
 	
+	private void searchBooks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//System.out.println("SEARCH BOOKS");
+		String query = request.getParameter("query");
+		boolean filterMagazine = request.getParameter("filterMagazine")!=null;
+		boolean filterThesis = request.getParameter("filterThesis")!=null;
+		boolean filterBook = request.getParameter("filterBook")!=null;
+		
+		ArrayList<Book> books = BookService.searchBooks(query, filterMagazine, filterThesis, filterBook);
+		request.setAttribute("books", books);
+		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
+		
+		//System.out.println(books.size());
+		
+		PrintWriter pw = response.getWriter();
+		pw.write("true");
+	}
+
 	private void reserveRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		MeetingRoomBooking mrb = new MeetingRoomBooking();
 		mrb.setTimeStart(Integer.parseInt(request.getParameter("timeStart")));
@@ -265,6 +289,26 @@ public class Controller extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 		pw.write(status+"");
 	}
+
+	public void getBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("GetBook");
+		
+		
+		int bookid = Integer.parseInt(request.getParameter("bookID"));
+		
+		Book book = null;
+		
+		if(BookService.checkBook(bookid)){
+			book = BookService.getBook(bookid);
+				System.out.println("Got");
+			
+		}
+
+		PrintWriter pw = response.getWriter();
+		pw.write(new Gson().toJson(book));
+	}
+		
+	
 	public void deleteBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("DeleteBook");
 		
@@ -286,6 +330,12 @@ public class Controller extends HttpServlet {
 
 	
 	
+	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("EditProduct");
 
+		request.getSession().setAttribute("productID", request.getParameter("bookID"));
+
+	
+	}
 
 }
