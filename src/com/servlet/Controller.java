@@ -37,8 +37,9 @@ import com.services.UserService;
 							"/ReserveBook",
 							"/BookingsInit",
 							"/AdminInit",
-							"/ReserveRoom"
-							,"/EditProduct"
+							"/ReserveRoom",
+							"/EditProduct",
+							"/GetBook"
 							})
 
 public class Controller extends HttpServlet {
@@ -91,6 +92,7 @@ public class Controller extends HttpServlet {
 		case "/ReserveRoom": reserveRoom(request, response); break;
 		case "/EditProduct": editProduct(request, response); break;
 		case "/DeleteBook": deleteBook(request,response); break;
+		case "/GetBook": getBook(request,response); break;
 		default: home(request,response); break;
 		}
 	}
@@ -268,6 +270,25 @@ public class Controller extends HttpServlet {
 		pw.write(status+"");
 	}
 
+	public void getBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("GetBook");
+		
+		
+		int bookid = Integer.parseInt(request.getParameter("bookID"));
+		
+		Book book = null;
+		
+		if(BookService.checkBook(bookid)){
+			book = BookService.getBook(bookid);
+				System.out.println("Got");
+			
+		}
+
+		PrintWriter pw = response.getWriter();
+		pw.write(new Gson().toJson(book));
+	}
+		
+	
 	public void deleteBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("DeleteBook");
 		

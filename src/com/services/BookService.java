@@ -235,6 +235,49 @@ public class BookService {
 		return books;
 	}
 	
+	public static Book getBook(int id){
+		String sql = "select * from "+Book.TABLE_NAME+" where "+Book.COLUMN_ID+"=?;";
+		boolean exists = false;
+		
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		Book b = new Book();
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				
+				b.setAuthor(rs.getString(Book.COLUMN_AUTHOR));
+				b.setId(rs.getInt(Book.COLUMN_ID));
+				b.setDds(rs.getString(Book.COLUMN_DEWEY));
+				b.setName(rs.getString(Book.COLUMN_BOOKNAME));
+				b.setPublisher(rs.getString(Book.COLUMN_PUBLISHER));
+				b.setStatus(rs.getString(Book.COLUMN_STATUS));
+				b.setYear(rs.getString(Book.COLUMN_YEAR));
+				b.setType(rs.getString(Book.COLUMN_TYPE));;
+				b.setDescription(rs.getString(Book.COLUMN_DESCRIPTION));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				rs.close();
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return b;
+	}
+	
 	public static boolean reserveBook(String id) {
 		String sql = "UPDATE "+Book.TABLE_NAME + " "
 				+ "SET " + Book.COLUMN_STATUS + "='Reserved' "+
