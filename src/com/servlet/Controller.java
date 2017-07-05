@@ -242,7 +242,7 @@ public class Controller extends HttpServlet {
 		
 		
 		Book editedBook = new Book();
-		editedBook.setId(request.getParameter("bookid"));
+		editedBook.setId(Integer.parseInt(request.getParameter("bookid")));
 		editedBook.setDds(request.getParameter("bookdds"));
 		editedBook.setAuthor(request.getParameter("bookauthor"));
 		editedBook.setDescription(request.getParameter("bookdescription"));
