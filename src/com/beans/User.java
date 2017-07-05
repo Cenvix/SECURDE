@@ -9,17 +9,17 @@ import java.util.Random;
 
 public class User implements Serializable {
     
-    public final static String TABLE_NAME = " users ";
-    public final static String COLUMN_ID = " idusers ";
-    public final static String COLUMN_FIRSTNAME = " firstname ";
-    public final static String COLUMN_MIDDLENAME = " middlename ";
-    public final static String COLUMN_LASTNAME = " lastname ";
-    public final static String COLUMN_EMAIL = " emailaddress ";
-    public final static String COLUMN_PASSWORD = " password ";
-    public final static String COLUMN_USERNUMBER = " usernumber ";
-    public final static String COLUMN_USERTYPE = " usertype ";
-    public final static String COLUMN_SECRETQUESTION = " secretquestion ";
-    public final static String COLUMN_SECRETANSWER = " secretanswer ";
+    public final static String TABLE_NAME = "users";
+    public final static String COLUMN_ID = "idusers";
+    public final static String COLUMN_FIRSTNAME = "firstname";
+    public final static String COLUMN_MIDDLENAME = "middlename";
+    public final static String COLUMN_LASTNAME = "lastname";
+    public final static String COLUMN_EMAIL = "emailaddress";
+    public final static String COLUMN_PASSWORD = "password";
+    public final static String COLUMN_USERNUMBER = "usernumber";
+    public final static String COLUMN_USERTYPE = "usertype";
+    public final static String COLUMN_SECRETQUESTION = "secretquestion";
+    public final static String COLUMN_SECRETANSWER = "secretanswer";
     
     private int id;
     private String firstName;

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import com.beans.Book;
 import com.beans.MeetingRoomBooking;
 import com.beans.User;
+import com.google.gson.Gson;
 import com.services.BookService;
 import com.services.MeetingRoomService;
 import com.services.UserService;
@@ -24,7 +25,24 @@ import com.services.UserService;
  * Servlet implementation class Controller
  */
 
+<<<<<<< HEAD
 @WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee","/EditBook", "/LibraryInit", "/ReserveBook", "/BookingsInit", "/ReserveRoom", "/SearchBooks"})
+=======
+@WebServlet(urlPatterns = {	"/Controller",
+							"/Login",
+							"/Logout",
+							"/Register",
+							"/Home",
+							"/AddEmployee",
+							"/EditBook",
+							"/DeleteBook",
+							"/LibraryInit",
+							"/ReserveBook",
+							"/BookingsInit",
+							"/AdminInit",
+							"/ReserveRoom"
+							})
+>>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 
 public class Controller extends HttpServlet {
 	
@@ -70,10 +88,15 @@ public class Controller extends HttpServlet {
 		case "/AddEmployee": addEmployee(request,response); break;
 		case "/EditBook": editBook(request,response);break;
 		case "/LibraryInit": libraryInit(request, response); break;
+		case "/AdminInit": adminInit(request, response); break;
 		case "/ReserveBook": reserveBook(request,response); break;
 		case "/BookingsInit": bookingsInit(request, response); break;
 		case "/ReserveRoom": reserveRoom(request, response); break;
+<<<<<<< HEAD
 		case "/SearchBooks": searchBooks(request, response); break;
+=======
+		case "/DeleteBook": deleteBook(request,response); break;
+>>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 		default: home(request,response); break;
 		}
 	}
@@ -130,6 +153,15 @@ public class Controller extends HttpServlet {
 		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
 	}
 
+	private void adminInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		ArrayList<User> admins = UserService.getAllAdmins();
+		String json = new Gson().toJson(admins);
+		request.setAttribute("admins", json);
+		request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+	}
+	
 	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Home");
 		response.sendRedirect("Home.jsp");
@@ -236,19 +268,39 @@ public class Controller extends HttpServlet {
 		
 		
 		Book editedBook = new Book();
-		editedBook.setId(request.getParameter("bookid"));
+		editedBook.setId(Integer.parseInt(request.getParameter("bookid")));
+		editedBook.setDds(request.getParameter("bookdds"));
 		editedBook.setAuthor(request.getParameter("bookauthor"));
 		editedBook.setDescription(request.getParameter("bookdescription"));
 		editedBook.setName(request.getParameter("bookname"));
 		editedBook.setPublisher(request.getParameter("bookpublisher"));
 		editedBook.setStatus(request.getParameter("bookstatus"));
 		editedBook.setYear(request.getParameter("bookyear"));
+		editedBook.setType(request.getParameter("booktype"));
 		boolean status=false;
 
 		if(BookService.checkBook(editedBook.getId())){
 			if(BookService.editBook(editedBook)){
 				status = true;
 				System.out.println("Edited");
+			}
+		}
+		
+		//setUserSessions(request, response, newUser);
+
+		PrintWriter pw = response.getWriter();
+		pw.write(status+"");
+	}
+	public void deleteBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("DeleteBook");
+		
+		int bookid = Integer.parseInt(request.getParameter("bookid"));
+		boolean status=false;
+
+		if(BookService.checkBook(bookid)){
+			if(BookService.deleteBook(bookid)){
+				status = true;
+				System.out.println("deleted");
 			}
 		}
 		

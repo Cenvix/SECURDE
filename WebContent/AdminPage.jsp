@@ -16,7 +16,33 @@
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
+			$admins = (JSON.parse('${admins}'));
+			console.log($admins);
+			initAdmins();
 		});
+		
+		function initAdmins(){
+			if($admins.length>0){
+				var finalOut="";
+				for(var i=0;i<$admins.length;i++){
+					var out = "";
+					out+=	"<div>"+$admins[i].userNumber + 
+							"<br>" + $admins[i].firstName +
+							" " + $admins[i].lastName +
+							"<br>" + $admins[i].email;
+							
+					if($admins[i].userType==1)
+						out+= "<br>" + "\(Library Staff\)";
+					else
+						out+= "<br>" + "\(Library Manager\)";
+					out+="<br><br><br><\div>";
+					
+					finalOut+=out;
+				}
+				
+				$("#adminTable").html(finalOut);
+			}
+		}
 		</script>
 	</head>
 
@@ -55,8 +81,9 @@
 			<h1>Welcome</h1>
 			<h3 style="margin-bottom:20px"> Admin <span id="name">Namehere</span></h3>
 			<p><a role="button" class="btn btn-primary" type="button" href="EmployeeAdd.jsp">Add New Staff</a></p>
-			<p><a role="button" class="btn btn-primary" type="button" href="EmployeeEdit.jsp">Edit / Delete Existing Staff</a></p>
+			<!-- <p><a role="button" class="btn btn-primary" type="button" href="EmployeeEdit.jsp">Edit / Delete Existing Staff</a></p>-->
 			
 		</div>
+		<div class="jumbotron text-center" id="adminTable"></div>
 	</body>
 </html>

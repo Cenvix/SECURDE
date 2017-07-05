@@ -32,6 +32,10 @@ public class Transaction implements Serializable {
         this.status = status;
     }
 
+	public Transaction() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() {
 		return id;
 	}

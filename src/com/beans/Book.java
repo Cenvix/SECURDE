@@ -16,39 +16,64 @@ public class Book implements Serializable {
     public final static String COLUMN_YEAR = "year";
     public final static String COLUMN_STATUS = "status";
     public final static String COLUMN_DESCRIPTION = "description";
+    public final static String COLUMN_TYPE = "type";
+    public final static String COLUMN_DEWEY = "deweydecimal";
     
-    private String id;
+    private int id;
+    private String dds;
     private String name;
     private String author;
     private String publisher;
     private String year;
     private String description;
     private String status;
+    private String type; 
     
-    public Book(String id, String name, String author, String publisher, String year, String status, String description) {
-    	this.id = id;
-        this.name = name;
-        this.author = author;
-        this.publisher = publisher;
-        this.year = year;
-        this.status = status;
-        this.description = description;
-    }
-    public Book(){
+    public Book(int id, String dds, String name, String author, String publisher, String year, String description, String status,
+			String type) {
+	
+		this.id = id;
+		this.dds = dds;
+		this.name = name;
+		this.author = author;
+		this.publisher = publisher;
+		this.year = year;
+		this.description = description;
+		this.status = status;
+		this.type = type;
+	}
+
+	public Book(){
     	
     }
     
+	public String getDds() {
+		return dds;
+	}
+
+	public void setDds(String dds) {
+		this.dds = dds;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
