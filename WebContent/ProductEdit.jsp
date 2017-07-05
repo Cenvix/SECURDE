@@ -47,6 +47,8 @@
 									else
 										$("#productStatus").prop('checked',false);
 									$("#productDescription").val(book.description);
+									
+									$("#productType").val(book.type);
 								} else{
 								setLogMessage("Book Cannot be Found");
 							   	
@@ -56,7 +58,7 @@
 			}
 		
 
-			function removebook(){
+			function removebook($bookid){
 				$bookID = $("#productID").val();
 				if($bookid==""){
 					setLogMessage("Missing Parameters");
@@ -69,7 +71,7 @@
 			            type: 'POST',
 						success:function(jsonobject){
 									if(jsonobject=="true"){
-										window.location = "Home";
+										window.location = "LibraryInit";
 									} else{
 									setLogMessage("Book Cannot be Found");
 								   	
@@ -116,7 +118,7 @@
 			            type: 'POST',
 						success:function(jsonobject){
 									if(jsonobject=="true"){
-										window.location = "Home";
+										window.location = "LibraryInit";
 									} else{
 									setLogMessage("Book Cannot be Found");
 								   	
@@ -170,16 +172,9 @@
 		<div class="container">
 			<div class="row well">
 				<div class="col-sm-4">
-<<<<<<< HEAD
 				
 					Dewey Decimal Number:<br>
 					<input class="form-control" type="text" id="productdds" placeholder="DDC" ><br>
-=======
-					Book ID:<br>
-					<input class="form-control" type="text" id="productID" placeholder="Book ID" value="123413241234"><br>
-					Dewey Decimal Number:<br>
-					<input class="form-control" type="text" id="productdds" placeholder="DDC" value="343/.52"><br>
->>>>>>> 383fc90b905c866f9f27020b18e7f44d8309341d
 					Title:<br>
 					<input class="form-control" type="text" id="productTitle" placeholder="Title"><br>
 					Author:<br>
@@ -194,9 +189,9 @@
 					Type:<br>
 					<div class="form-group">
 						<select class="form-control" id="productType">
-							<option>Book</option>
-							<option>Magazine</option>
-							<option>Thesis</option>
+							<option val="Book">Book</option>
+							<option val="Magazine">Magazine</option>
+							<option val="Thesis">Thesis</option>
 						</select>
 					</div>
 				</div>
@@ -205,7 +200,7 @@
 					Description:<br>
 					<textarea class="form-control" rows="16" id="productDescription">Some sort of description here about the product. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
 					<button type="button" class="btn btn-primary" style="width:100%;margin-top:10px" id="save" onClick="editbook(<%= session.getAttribute("productID")%>)">Save Changes</button>
-					<button type="button" class="btn btn-danger" style="width:100%;margin-top:10px" id="delete" onClick = "removebook()">Delete</button>
+					<button type="button" class="btn btn-danger" style="width:100%;margin-top:10px" id="delete" onClick = "removebook(<%= session.getAttribute("productID")%>)">Delete</button>
 				</div>
 			</div>
 		</div>

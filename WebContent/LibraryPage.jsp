@@ -63,7 +63,7 @@
 								"<div class='col-sm-2 well'>";
 									
 				console.log(books[i].status);
-				if(books[i].status == "reserved") {
+				if(books[i].status == "Reserved") {
 					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' disabled='true'>RESERVED</button>";
 									
 				}
