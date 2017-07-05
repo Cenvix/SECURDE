@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,7 +41,8 @@ import com.services.UserService;
 							"/ReserveRoom",
 							"/EditProduct",
 							"/GetBook",
-							"/SearchBooks"
+							"/SearchBooks",
+							"/AddBook"
 							})
 
 public class Controller extends HttpServlet {
@@ -95,6 +97,7 @@ public class Controller extends HttpServlet {
 		case "/EditProduct": editProduct(request, response); break;
 		case "/DeleteBook": deleteBook(request,response); break;
 		case "/GetBook": getBook(request,response); break;
+		case "/AddBook": addBook(request, response); break;
 		default: home(request,response); break;
 		}
 	}
@@ -250,6 +253,37 @@ public class Controller extends HttpServlet {
 		
 		if(UserService.checkUser(newUser)){
 			if(UserService.addUser(newUser)){
+				status = true;
+				System.out.println("Added");
+			}
+		}
+		
+		//setUserSessions(request, response, newUser);
+
+		PrintWriter pw = response.getWriter();
+		pw.write(status+"");
+	}
+	
+	public void addBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("AddBook");
+		
+		Book book=  new Book();
+		Random r =new Random();
+		book.setId(r.nextInt(9999));
+		book.setDds(request.getParameter("bookdds"));
+		book.setAuthor(request.getParameter("bookauthor"));
+		book.setDescription(request.getParameter("bookdescription"));
+		book.setName(request.getParameter("bookname"));
+		book.setPublisher(request.getParameter("bookpublisher"));
+		book.setStatus(request.getParameter("bookstatus"));
+		book.setYear(request.getParameter("bookyear"));
+		book.setType(request.getParameter("booktype"));
+		
+		boolean status=false;
+		
+		if(!BookService.checkBook(book.getId())){
+			System.out.println("Yes");
+			if(BookService.addBook(book)){
 				status = true;
 				System.out.println("Added");
 			}

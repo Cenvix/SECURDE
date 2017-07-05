@@ -201,6 +201,8 @@
 			<!--TODO when we compile everything: Make edit button dependent on user authorization-->
 			<div class="col-sm-9" id="resultsContainer"></div>
 			
+			<button type="button" class="btn btn-primary" style="width:100%;margin-top:10px" id="save" href="ProductAdd.jsp">Add a Book!</button>
+					
 		  </div>
 		</div>
 	  
