@@ -101,6 +101,7 @@
 					$.ajax({
 			            url: 'EditBook',
 			            data: {
+
 				          bookid:$bookid,
 			              bookdds:$bookdds,
 			              bookname:$bookname,
@@ -149,8 +150,8 @@
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="Home.jsp">Home</a></li>
-						<li><a href="LibraryPage.jsp">Search Library</a></li>
-						<li><a href="RoomReservations.jsp">Room Reservation</a></li>
+						<li><a href="LibraryInit">Search Library</a></li>
+						<li><a href="BookingsInit">Room Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>
@@ -169,9 +170,16 @@
 		<div class="container">
 			<div class="row well">
 				<div class="col-sm-4">
+<<<<<<< HEAD
 				
 					Dewey Decimal Number:<br>
 					<input class="form-control" type="text" id="productdds" placeholder="DDC" ><br>
+=======
+					Book ID:<br>
+					<input class="form-control" type="text" id="productID" placeholder="Book ID" value="123413241234"><br>
+					Dewey Decimal Number:<br>
+					<input class="form-control" type="text" id="productdds" placeholder="DDC" value="343/.52"><br>
+>>>>>>> 383fc90b905c866f9f27020b18e7f44d8309341d
 					Title:<br>
 					<input class="form-control" type="text" id="productTitle" placeholder="Title"><br>
 					Author:<br>
