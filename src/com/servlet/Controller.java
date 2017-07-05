@@ -168,6 +168,8 @@ public class Controller extends HttpServlet {
 		newUser.setLastName(request.getParameter("lName"));
 		newUser.setUserType(request.getParameter("type"));
 		newUser.setUserNumber(request.getParameter("idNumber"));
+		newUser.setSecretQuestion(request.getParameter("sQuestion"));
+		newUser.setSecretAnswer(request.getParameter("sAnswer"));
 		
 		boolean status=false;
 		

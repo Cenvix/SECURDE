@@ -21,8 +21,10 @@ public class UserService {
                 + User.COLUMN_MIDDLENAME + ", "
                 + User.COLUMN_LASTNAME +", "
                 + User.COLUMN_USERTYPE +", "
-                + User.COLUMN_USERNUMBER +") "
-                + "VALUES (?,?,?,?,?,?,?,?)";
+                + User.COLUMN_USERNUMBER +", "
+                + User.COLUMN_SECRETQUESTION +", "
+                + User.COLUMN_SECRETANSWER +") "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?)";
 
          //   String url = "jdbc:mysql://localhost:3306/userID";
 
@@ -40,6 +42,8 @@ public class UserService {
                 pstmt.setString(6, u.getLastName());
                 pstmt.setString(7, u.getUserType());
                 pstmt.setString(8, u.getUserNumber());
+                pstmt.setString(9, u.getSecretQuestion());
+                pstmt.setString(10, u.getSecretAnswer());
                 
                 pstmt.executeUpdate();
                 out=true;

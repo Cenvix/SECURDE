@@ -23,11 +23,18 @@
 			$fName = $("#fName").val();
 			$mName = $("#mName").val();
 			$lName = $("#lName").val();
+			
 			$idNumber = $("#idNumber").val();
 			$email = $("#email").val();
+			
 			$pass = $("#password").val();
 			$passCon = $("#confirmPassword").val();
+			
 			$type = $("#userType").val();
+			
+			$sQuestion = $("#sQuestion").val();
+			$sAnswer = $("#sAnswer").val();
+			$sCAnswer = $("#sCAnswer").val();
 			
 			if($fName==""||$mName==""||$lName==""){
 				alert("Input Name Input!");
@@ -41,6 +48,14 @@
 				alert("Input Password with 8 or more characters!");
 			}else if($pass != $passCon){
 				alert("Confirm Password does not match!");
+			}else if($sQuestion==""){ //REGEX FOR 8 Char min
+				alert("Input Secret Question");
+			}else if(!/.{8,}$/.test($pass)){ //REGEX FOR 8 Char min
+				alert("Input Password with 8 or more characters!");
+			}else if($sAnswer==""){
+				alert("No answer to Secret Question!");
+			}else if($sAnswer != $sCAnswer){
+				alert("Confirm Answer does not match!");
 			}else{
 				
 				alert("Creating account!");
@@ -55,6 +70,8 @@
 		                email:$email,
 		                password:$pass,
 		                type:$type,
+		                sQuestion:$sQuestion,
+		                sAnswer:$sAnswer
 		            },
 		            type: 'POST',
 					success:function(jsonobject){
@@ -124,6 +141,12 @@
 					<input class="form-control" type="password" id="password" placeholder="Password" value=""><br>
 					Confirm Password:<br>
 					<input class="form-control" type="password" id="confirmPassword" placeholder="Confirm Password" value=""><br>
+					Secret Question:<br>
+					<input class="form-control" type="text" id="sQuestion" placeholder="E.g. What is the name of my 1st Pet?" value=""><br>
+					Answer:<br>
+					<input class="form-control" type="password" id="sAnswer" placeholder="Answer" value=""><br>
+					Confirm Answer:<br>
+					<input class="form-control" type="password" id="sCAnswer" placeholder="Confirm Answer" value=""><br>
 					Type:<br>
 					<div class="form-group">
 						<select class="form-control" id="userType">
