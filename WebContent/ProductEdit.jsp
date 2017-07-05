@@ -22,15 +22,6 @@
 			console.log(bookID);
 			
 		});
-<<<<<<< HEAD
-		
-			function initBook(){
-				
-			}
-		
-			function editbook(){
-				$bookdewey = $("#productID").val();
-=======
 			function removebook(){
 				$bookID = $("#productID").val();
 				if($bookid==""){
@@ -58,7 +49,6 @@
 			function editbook(){
 				$bookid = $("#productID").val();
 				$bookdds = $("#productdds").val();
->>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 				$bookname = $("#productTitle").val();
 				$bookauthor = $("#productAuthor").val();
 				$bookpublisher = $("#productPublisher").val();
@@ -73,12 +63,8 @@
 					$.ajax({
 			            url: 'EditBook',
 			            data: {
-<<<<<<< HEAD
-			              bookdewey:$bookdewey,
-=======
 			              bookid:$bookid,
 			              bookdds:$bookdds,
->>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 			              bookname:$bookname,
 			              bookauthor:$bookauthor,
 			              bookpublisher:$bookpublisher,
@@ -125,8 +111,8 @@
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="Home.jsp">Home</a></li>
-						<li><a href="LibraryPage.jsp">Search Library</a></li>
-						<li><a href="RoomReservations.jsp">Room Reservation</a></li>
+						<li><a href="LibraryInit">Search Library</a></li>
+						<li><a href="BookingsInit">Room Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>
@@ -145,17 +131,10 @@
 		<div class="container">
 			<div class="row well">
 				<div class="col-sm-4">
-<<<<<<< HEAD
-					Dewey Decimal ID:<br>
-					<input class="form-control" type="text" id="productID" placeholder="DDC"><br>
-=======
 					Book ID:<br>
 					<input class="form-control" type="text" id="productID" placeholder="Book ID" value="123413241234"><br>
-					
 					Dewey Decimal Number:<br>
 					<input class="form-control" type="text" id="productdds" placeholder="DDC" value="343/.52"><br>
-					
->>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 					Title:<br>
 					<input class="form-control" type="text" id="productTitle" placeholder="Title"><br>
 					Author:<br>
