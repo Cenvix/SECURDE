@@ -64,21 +64,33 @@
 									
 				console.log(books[i].status);
 				if(books[i].status == "reserved") {
-					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' disabled='true'>RESERVED</button>" +
-									"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
-								"</div>" + 
-							"</div>";
+					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' disabled='true'>RESERVED</button>";
+									
 				}
 				else {
-					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' onclick='reserveBook("+books[i].id+")'>Reserve</button>" +
-									"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
-								"</div>" + 
-							"</div>";
+					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' onclick='reserveBook("+books[i].id+")'>Reserve</button>";	
 				}
+				results +="<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
+				"</div>" + 
+			"</div>";
 			}
 			
 			document.getElementById('resultsContainer').innerHTML = results;
 		}
+		
+		function editBook(id){
+			$.ajax({
+                url: 'EditProduct',
+                data: {
+                    bookID: id
+                },
+                type: 'POST',
+				success:function(jsonobject){
+						window.location = "ProductEdit.jsp";
+					}
+            });
+		}
+		
 		
 		function reserveBook(id) {
 			$.ajax({

@@ -79,7 +79,7 @@
 							
 								if(jsonobject=="true"){
 									alert("Employee Added");
-									window.location = "AdminPage.jsp";
+									window.location = "AdminInit";
 								} else{
 									alert("Employee Add FAILED");
 							   	

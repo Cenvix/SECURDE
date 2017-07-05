@@ -17,7 +17,20 @@
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
+			var bookID = '<%= session.getAttribute("productID")%>';
+			
+			console.log(bookID);
+			
 		});
+<<<<<<< HEAD
+		
+			function initBook(){
+				
+			}
+		
+			function editbook(){
+				$bookdewey = $("#productID").val();
+=======
 			function removebook(){
 				$bookID = $("#productID").val();
 				if($bookid==""){
@@ -45,6 +58,7 @@
 			function editbook(){
 				$bookid = $("#productID").val();
 				$bookdds = $("#productdds").val();
+>>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 				$bookname = $("#productTitle").val();
 				$bookauthor = $("#productAuthor").val();
 				$bookpublisher = $("#productPublisher").val();
@@ -59,8 +73,12 @@
 					$.ajax({
 			            url: 'EditBook',
 			            data: {
+<<<<<<< HEAD
+			              bookdewey:$bookdewey,
+=======
 			              bookid:$bookid,
 			              bookdds:$bookdds,
+>>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 			              bookname:$bookname,
 			              bookauthor:$bookauthor,
 			              bookpublisher:$bookpublisher,
@@ -127,22 +145,27 @@
 		<div class="container">
 			<div class="row well">
 				<div class="col-sm-4">
+<<<<<<< HEAD
+					Dewey Decimal ID:<br>
+					<input class="form-control" type="text" id="productID" placeholder="DDC"><br>
+=======
 					Book ID:<br>
 					<input class="form-control" type="text" id="productID" placeholder="Book ID" value="123413241234"><br>
 					
 					Dewey Decimal Number:<br>
 					<input class="form-control" type="text" id="productdds" placeholder="DDC" value="343/.52"><br>
 					
+>>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 					Title:<br>
-					<input class="form-control" type="text" id="productTitle" placeholder="Title" value="BOOK TITLE"><br>
+					<input class="form-control" type="text" id="productTitle" placeholder="Title"><br>
 					Author:<br>
-					<input class="form-control" type="text" id="productAuthor" placeholder="Author" value="Some guy"><br>
+					<input class="form-control" type="text" id="productAuthor" placeholder="Author"><br>
 					Published by:<br>
-					<input class="form-control" type="text" id="productPublisher" placeholder="Publisher" value="Some people"><br>
+					<input class="form-control" type="text" id="productPublisher" placeholder="Publisher"><br>
 					Year:<br>
-					<input class="form-control" type="text" id="productYear" placeholder="Year" value="2017"><br>
+					<input class="form-control" type="text" id="productYear" placeholder="Year"><br>
 					Status:<br>
-					<input class="form-control" type="text" id="productStatus" placeholder="Status" value="Available"><br>
+					<input class="form-control" type="text" id="productStatus" placeholder="Status"><br>
 					
 					Type:<br>
 					<div class="form-group">

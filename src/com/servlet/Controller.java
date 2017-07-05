@@ -25,9 +25,6 @@ import com.services.UserService;
  * Servlet implementation class Controller
  */
 
-<<<<<<< HEAD
-@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee","/EditBook", "/LibraryInit", "/ReserveBook", "/BookingsInit", "/ReserveRoom", "/SearchBooks"})
-=======
 @WebServlet(urlPatterns = {	"/Controller",
 							"/Login",
 							"/Logout",
@@ -41,8 +38,8 @@ import com.services.UserService;
 							"/BookingsInit",
 							"/AdminInit",
 							"/ReserveRoom"
+							,"/EditProduct"
 							})
->>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 
 public class Controller extends HttpServlet {
 	
@@ -92,11 +89,9 @@ public class Controller extends HttpServlet {
 		case "/ReserveBook": reserveBook(request,response); break;
 		case "/BookingsInit": bookingsInit(request, response); break;
 		case "/ReserveRoom": reserveRoom(request, response); break;
-<<<<<<< HEAD
 		case "/SearchBooks": searchBooks(request, response); break;
-=======
+		case "/EditProduct": editProduct(request, response); break;
 		case "/DeleteBook": deleteBook(request,response); break;
->>>>>>> 566290030950ab74579fe2871b79ca8d1cbf0dee
 		default: home(request,response); break;
 		}
 	}
@@ -291,6 +286,7 @@ public class Controller extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 		pw.write(status+"");
 	}
+
 	public void deleteBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("DeleteBook");
 		
@@ -312,6 +308,12 @@ public class Controller extends HttpServlet {
 
 	
 	
+	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("EditProduct");
 
+		request.getSession().setAttribute("productID", request.getParameter("bookID"));
+
+	
+	}
 
 }
