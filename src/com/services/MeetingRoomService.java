@@ -20,7 +20,7 @@ public class MeetingRoomService {
              + MeetingRoomBooking.COLUMN_TIMEEND + "," 
              + MeetingRoomBooking.COLUMN_IDMEETINGROOM + ", " 
              + MeetingRoomBooking.COLUMN_DATE + ") "
-             + "VALUES (?,?,?,?)";
+             + "VALUES (?,?,?,?,?,?)";
 
       //   String url = "jdbc:mysql://localhost:3306/userID";
 
@@ -30,7 +30,6 @@ public class MeetingRoomService {
 
          try {
              pstmt = connection.prepareStatement(sql);
-             
              
              pstmt.setInt(1, mrb.getId());
              pstmt.setInt(2, mrb.getIduser());
