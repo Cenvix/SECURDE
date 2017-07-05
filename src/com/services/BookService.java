@@ -308,4 +308,60 @@ public class BookService {
         
         return result;
 	}
+	
+	public static ArrayList<Book> searchBooks(String query, boolean filterMagazine, boolean filterThesis, boolean filterBook) {
+		ArrayList<Book> allBooks = BookService.getAllBooks();
+		ArrayList<Book> validResults = new ArrayList<Book>();
+		String[] queryTags = query.split(" ");
+		
+		for(int i = 0; i < allBooks.size(); i++) {
+			int matchVal = 0;
+			boolean validType = false;
+			String[] titleTags = allBooks.get(i).getName().split(" ");
+			String[] authorTags = allBooks.get(i).getAuthor().split(" ");
+			String[] publishTags = allBooks.get(i).getPublisher().split(" ");
+			
+			if(allBooks.get(i).getType().equals("magazine") && filterMagazine == true) {
+				validType = true;
+			}
+			if(allBooks.get(i).getType().equals("thesis") && filterThesis == true) {
+				validType = true;
+			}
+			if(allBooks.get(i).getType().equals("book") && filterBook == true) {
+				validType = true;
+			}
+			
+			if(validType) {
+				for(int j = 0; j < queryTags.length; j++) {
+					for(int k = 0; k < titleTags.length; k++) {
+						if(queryTags[j].toLowerCase().equals(titleTags[k].toLowerCase())) {
+							matchVal++;
+						}
+					}
+					
+					for(int k = 0; k < authorTags.length; k++) {
+						if(queryTags[j].toLowerCase().equals(authorTags[k].toLowerCase())) {
+							matchVal++;
+						}
+					}
+					
+					for(int k = 0; k < publishTags.length; k++) {
+						if(queryTags[j].toLowerCase().equals(publishTags[k].toLowerCase())) {
+							matchVal++;
+						}
+					}
+				}
+			}
+			
+			//System.out.println("MATCHVAL " + allBooks.get(i).getName() + ": " + matchVal);
+			matchVal = matchVal / queryTags.length*100;
+			//System.out.println("MATCHVAL " + allBooks.get(i).getName() + ": " + matchVal);
+			
+			if(matchVal > 50) {
+				validResults.add(allBooks.get(i));
+			}
+		}
+		
+		return validResults;
+	}
 }

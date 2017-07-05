@@ -39,7 +39,8 @@ import com.services.UserService;
 							"/AdminInit",
 							"/ReserveRoom",
 							"/EditProduct",
-							"/GetBook"
+							"/GetBook",
+							"/SearchBooks"
 							})
 
 public class Controller extends HttpServlet {
@@ -90,6 +91,7 @@ public class Controller extends HttpServlet {
 		case "/ReserveBook": reserveBook(request,response); break;
 		case "/BookingsInit": bookingsInit(request, response); break;
 		case "/ReserveRoom": reserveRoom(request, response); break;
+		case "/SearchBooks": searchBooks(request, response); break;
 		case "/EditProduct": editProduct(request, response); break;
 		case "/DeleteBook": deleteBook(request,response); break;
 		case "/GetBook": getBook(request,response); break;
@@ -97,6 +99,24 @@ public class Controller extends HttpServlet {
 		}
 	}
 	
+	private void searchBooks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//System.out.println("SEARCH BOOKS");
+		String query = request.getParameter("query");
+		boolean filterMagazine = request.getParameter("filterMagazine")!=null;
+		boolean filterThesis = request.getParameter("filterThesis")!=null;
+		boolean filterBook = request.getParameter("filterBook")!=null;
+		
+		ArrayList<Book> books = BookService.searchBooks(query, filterMagazine, filterThesis, filterBook);
+		request.setAttribute("books", books);
+		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
+		
+		//System.out.println(books.size());
+		
+		PrintWriter pw = response.getWriter();
+		pw.write("true");
+	}
+
 	private void reserveRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		MeetingRoomBooking mrb = new MeetingRoomBooking();
 		mrb.setTimeStart(Integer.parseInt(request.getParameter("timeStart")));
