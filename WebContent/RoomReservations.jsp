@@ -37,13 +37,13 @@
 			console.log("Initializing books");
 			<c:forEach items="${bookings}" var="b">
 			console.log("----------");
-			console.log("${b.timeStart}");
+			console.log("${b}");
 			console.log("----------");
         	addBooking("${b.timeStart}", "${b.idUser}", "${b.idMeetingRoom}");
         	</c:forEach>
 		}
 		
-		function addBooking() {
+		function addBooking(timeStart, id, room) {
 			var booking = new Booking(timeStart, id, room);
 			bookings.push(booking);
 		}
@@ -105,14 +105,31 @@
 			"</table>";
 			*/
 			
-			console.log(bookings[i].timeStart);
-			
 			for(var i = 0; i < bookings.length; i++) {
+				console.log(bookings[i].timeStart);
 				document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).innerHTML = "RESERVED";
 				document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).disabled = true;
 			}
-			
-			
+		}
+		
+		function createReservation(room, timeStart) {
+			$.ajax({
+                url: 'ReserveRoom',
+                data: {
+                    room: room,
+                    timeStart: timeStart
+                },
+                type: 'POST',
+				success:function(jsonobject){
+					
+							if(jsonobject=="true"){
+	   		            	 	document.getElementById("room"+room+"_"+timeStart).innerHTML="RESERVED";
+	   		               		document.getElementById("room"+room+"_"+timeStart).disabled=true;
+							} else
+								alert("Reservation Failed");
+						   	
+						}
+            });
 		}
 		</script>
 	</head>
@@ -170,36 +187,36 @@
 				<tbody>
 					<tr>
 						<td>Room 1</td>
-						<td><button type="button" class="btn btn-primary" id="room1_0900">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room1_1000">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room1_1100">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room1_1200">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room1_1300">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room1_1400">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room1_1500">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room1_1600">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room1_0900" onclick="createReservation(1, 0900)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room1_1000" onclick="createReservation(1, 1000)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room1_1100" onclick="createReservation(1, 1100)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room1_1200" onclick="createReservation(1, 1200)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room1_1300" onclick="createReservation(1, 1300)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room1_1400" onclick="createReservation(1, 1400)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room1_1500" onclick="createReservation(1, 1500)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room1_1600" onclick="createReservation(1, 1600)">Reserve</button></td>
 					</tr>
 					<tr>
 						<td>Room 2</td>
-						<td><button type="button" class="btn btn-primary" id="room2_0900">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room2_1000">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room2_1100">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room2_1200">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room2_1300">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room2_1400">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room2_1500">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room2_1600">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room2_0900" onclick="createReservation(2, 0900)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room2_1000" onclick="createReservation(2, 1000)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room2_1100" onclick="createReservation(2, 1100)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room2_1200" onclick="createReservation(2, 1200)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room2_1300" onclick="createReservation(2, 1300)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room2_1400" onclick="createReservation(2, 1400)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room2_1500" onclick="createReservation(2, 1500)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room2_1600" onclick="createReservation(2, 1600)">Reserve</button></td>
 					</tr>
 					<tr>
 						<td>Room 3</td>
-						<td><button type="button" class="btn btn-primary" id="room3_0900">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room3_1000">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room3_1100">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room3_1200">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room3_1300">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room3_1400">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room3_1500">Reserve</button></td>
-						<td><button type="button" class="btn btn-primary" id="room3_1600">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room3_0900" onclick="createReservation(3, 0900)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room3_1000" onclick="createReservation(3, 1000)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room3_1100" onclick="createReservation(3, 1100)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room3_1200" onclick="createReservation(3, 1200)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room3_1300" onclick="createReservation(3, 1300)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room3_1400" onclick="createReservation(3, 1400)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room3_1500" onclick="createReservation(3, 1500)">Reserve</button></td>
+						<td><button type="button" class="btn btn-primary" id="room3_1600" onclick="createReservation(3, 1600)">Reserve</button></td>
 					</tr>
 				</tbody>
 			</table>
