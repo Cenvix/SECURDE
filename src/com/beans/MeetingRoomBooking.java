@@ -14,19 +14,22 @@ public class MeetingRoomBooking implements Serializable {
     public final static String COLUMN_IDMEETINGROOM = "idmeetingroom";
     public final static String COLUMN_TIMESTART = "timestart";
     public final static String COLUMN_TIMEEND = "timeend";
+    public final static String COLUMN_DATE = "date";
     
     private int id;
     private int idUser;
     private int idMeetingRoom;
-    private Date timeStart;
-    private Date timeEnd;
+    private int timeStart;
+    private int timeEnd;
+    private Date date;
     
-    public MeetingRoomBooking(int id, int idUser, int idMeetingRoom, Date timeStart, Date timeEnd) {
+    public MeetingRoomBooking(int id, int idUser, int idMeetingRoom, int timeStart, int timeEnd, Date date) {
     	this.id = id;
         this.idUser = idUser;
         this.idMeetingRoom = idMeetingRoom;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
+        this.date = date;
     }
 
 	public MeetingRoomBooking() {
@@ -49,19 +52,19 @@ public class MeetingRoomBooking implements Serializable {
 		this.idUser = iduser;
 	}
 
-	public Date getTimeStart() {
+	public int getTimeStart() {
 		return timeStart;
 	}
 
-	public void setTimeStart(Date timeStart) {
+	public void setTimeStart(int timeStart) {
 		this.timeStart = timeStart;
 	}
 
-	public Date getTimeEnd() {
+	public int getTimeEnd() {
 		return timeEnd;
 	}
 
-	public void setTimeEnd(Date timeEnd) {
+	public void setTimeEnd(int timeEnd) {
 		this.timeEnd = timeEnd;
 	}
 
@@ -80,5 +83,14 @@ public class MeetingRoomBooking implements Serializable {
 	public void setIdMeetingRoom(int idMeetingRoom) {
 		this.idMeetingRoom = idMeetingRoom;
 	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
     //Pls just generate all the other stuff :c//
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +35,8 @@ import com.services.UserService;
 							"/LibraryInit",
 							"/ReserveBook",
 							"/BookingsInit",
-							"/AdminInit"
+							"/AdminInit",
+							"/ReserveRoom"
 							})
 
 public class Controller extends HttpServlet {
@@ -84,19 +86,33 @@ public class Controller extends HttpServlet {
 		case "/AdminInit": adminInit(request, response); break;
 		case "/ReserveBook": reserveBook(request,response); break;
 		case "/BookingsInit": bookingsInit(request, response); break;
+		case "/ReserveRoom": reserveRoom(request, response); break;
 		default: home(request,response); break;
 		}
 	}
 	
+	private void reserveRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		MeetingRoomBooking mrb = new MeetingRoomBooking();
+		mrb.setTimeStart(Integer.parseInt(request.getParameter("timeStart")));
+		mrb.setTimeEnd(Integer.parseInt(request.getParameter("timeStart"))+100);
+		mrb.setIdMeetingRoom(Integer.parseInt(request.getParameter("room")));
+		mrb.setDate(new Date(Calendar.getInstance().getTime().getTime()));
+		mrb.setIduser(1234); //TODO Change this to proper user id
+		mrb.setId((int)(Math.random()*100));
+		
+		boolean out = MeetingRoomService.addMeetingRoomBooking(mrb);
+		
+		PrintWriter pw = response.getWriter();
+		pw.write(out+"");
+	}
+
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookings();
 		request.setAttribute("bookings", bookings);
 		request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
 	}
 
 	private void reserveBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// TODO Auto-generated method stub
 		boolean out = BookService.reserveBook(request.getParameter("idbook"));
 		
 		PrintWriter pw = response.getWriter();
@@ -104,7 +120,6 @@ public class Controller extends HttpServlet {
 	}
 
 	private void libraryInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		ArrayList<Book> books = BookService.getAllBooks();
 		request.setAttribute("books", books);
 		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
