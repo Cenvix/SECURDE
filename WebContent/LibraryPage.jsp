@@ -24,23 +24,24 @@
 		});
 		
 		class Book {
-			constructor(name, publisher, author, id) {
+			constructor(name, publisher, author, id, status) {
 				this.name = name;
 				this.publisher = publisher;
 				this.author = author;
 				this.id = id;
+				this.status = status;
 			};
 		}
 		
-		function addBook(name, publisher, author, id) {
-			var book = new Book(name, publisher, author, id);
+		function addBook(name, publisher, author, id, status) {
+			var book = new Book(name, publisher, author, id, status);
 			books.push(book);
 		}
 		
 		function initBooks(){
 			console.log("Initializing books");
 			<c:forEach items="${books}" var="b">
-        	addBook("${b.name}", "${b.publisher}", "${b.author}", "${b.id}");
+        	addBook("${b.name}", "${b.publisher}", "${b.author}", "${b.id}", "${b.status}");
         	</c:forEach>
         	
         }
@@ -50,7 +51,6 @@
 			var results = "";
 			
 			for(var i = 0; i < books.length; i++) {
-				console.log(results);
 				results += "<div class='row'>" +
 								"<div class='col-sm-10'>" +
 									"<div class='well'>" +
@@ -59,14 +59,43 @@
 										"<label>Publisher: </label><span id='productPublisher_" + books[i].id + "'>" + books[i].publisher + "</span>" +
 									"</div>" +
 								"</div>" +
-								"<div class='col-sm-2 well'>" +
-									"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "'>Reserve</button>" +
-									"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "'>Edit</button>" +
+								"<div class='col-sm-2 well'>";
+									
+				console.log(books[i].status);
+				if(books[i].status == "reserved") {
+					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' disabled='true'>RESERVED</button>" +
+									"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
 								"</div>" + 
 							"</div>";
+				}
+				else {
+					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' onclick='reserveBook("+books[i].id+")'>Reserve</button>" +
+									"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
+								"</div>" + 
+							"</div>";
+				}
 			}
 			
 			document.getElementById('resultsContainer').innerHTML = results;
+		}
+		
+		function reserveBook(id) {
+			$.ajax({
+                url: 'ReserveBook',
+                data: {
+                    idbook: id
+                },
+                type: 'POST',
+				success:function(jsonobject){
+					
+							if(jsonobject=="true"){
+	   		            	 	document.getElementById("reserve_"+id).innerHTML="RESERVED";
+	   		               		document.getElementById("reserve_"+id).disabled=true;
+							} else
+								alert("Reservation Failed");
+						   	
+						}
+            });
 		}
 		</script>
 	</head>
@@ -129,60 +158,8 @@
 			
 			<!--TODO when we compile everything: Automate generation of search results-->
 			<!--TODO when we compile everything: Make edit button dependent on user authorization-->
-			<div class="col-sm-9" id="resultsContainer">
-				<div class="row">
-					<div class="col-sm-10">
-						<div class="well">
-							<a href="ProductPage.jsp"><h3 id="productTitle1">Book Something Something 1</h3></a>
-							<label>Author: </label> <span id="productAuthor2"> Some Guy 2</span><br>
-							<label>Publisher: </label><span id="productPublisher1"> Some People 1</span>
-						</div>
-					</div>
-					<div class="col-sm-2 well">
-						<button type="button" class="btn btn-primary libraryButtons" style="width:100%" id="reserve1">Reserve</button>
-						<button type="button" class="btn btn-info libraryButtons" style="width:100%" id="edit1">Edit</button>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-10">
-						<div class="well">
-							<a href="ProductPage.jsp"><h3 id="productTitle2">Book Something Something 2</h3></a>
-							<label>Author: </label> <span id="productAuthor2"> Some Guy 2</span><br>
-							<label>Publisher: </label><span id="productPublisher1"> Some People 1</span>
-						</div>
-					</div>
-					<div class="col-sm-2 well">
-						<button type="button" class="btn btn-primary libraryButtons" id="reserve2">Reserve</button>
-						<button type="button" class="btn btn-info libraryButtons" id="edit2">Edit</button>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-10">
-						<div class="well">
-							<a href="ProductPage.jsp"><h3 id="productTitle3">Book Something Something 3</h3></a>
-							<label>Author: </label> <span id="productAuthor2"> Some Guy 2</span><br>
-							<label>Publisher: </label><span id="productPublisher1"> Some People 1</span>
-						</div>
-					</div>
-					<div class="col-sm-2 well">
-						<button type="button" class="btn btn-primary libraryButtons" id="reserve3">Reserve</button>
-						<button type="button" class="btn btn-info libraryButtons" id="edit3">Edit</button>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-10">
-						<div class="well">
-							<a href="ProductPage.jsp"><h3 id="productTitle4">Book Something Something 4</h3></a>
-							<label>Author: </label> <span id="productAuthor2"> Some Guy 2</span><br>
-							<label>Publisher: </label><span id="productPublisher1"> Some People 1</span>
-						</div>
-					</div>
-					<div class="col-sm-2 well">
-						<button type="button" class="btn btn-primary libraryButtons" id="reserve4">Reserve</button>
-						<button type="button" class="btn btn-info libraryButtons" id="edit4">Edit</button>
-					</div>
-				</div>     
-			</div>
+			<div class="col-sm-9" id="resultsContainer"></div>
+			
 		  </div>
 		</div>
 	  
