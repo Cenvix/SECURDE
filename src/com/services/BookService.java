@@ -228,4 +228,33 @@ public class BookService {
         
         return result;
 	}
+	
+	public static ArrayList<Book> searchBooks(String query, boolean filterMagazine, boolean filterThesis, boolean filterBook) {
+		ArrayList<Book> allBooks = BookService.getAllBooks();
+		ArrayList<Book> validResults = new ArrayList<Book>();
+		String[] queryTags = query.split(" ");
+		
+		for(int i = 0; i < allBooks.size(); i++) {
+			int matchVal = 0;
+			String[] bookTags = allBooks.get(i).getName().split(" ");
+			
+			for(int j = 0; j < queryTags.length; j++) {
+				for(int k = 0; k < bookTags.length; k++) {
+					if(queryTags[j].toLowerCase().equals(bookTags[k].toLowerCase())) {
+						matchVal++;
+					}
+				}
+			}
+			
+			//System.out.println("MATCHVAL " + allBooks.get(i).getName() + ": " + matchVal);
+			matchVal = matchVal / queryTags.length*100;
+			//System.out.println("MATCHVAL " + allBooks.get(i).getName() + ": " + matchVal);
+			
+			if(matchVal > 50) {
+				validResults.add(allBooks.get(i));
+			}
+		}
+		
+		return validResults;
+	}
 }

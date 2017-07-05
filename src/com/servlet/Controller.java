@@ -24,7 +24,7 @@ import com.services.UserService;
  * Servlet implementation class Controller
  */
 
-@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee","/EditBook", "/LibraryInit", "/ReserveBook", "/BookingsInit", "/ReserveRoom"})
+@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee","/EditBook", "/LibraryInit", "/ReserveBook", "/BookingsInit", "/ReserveRoom", "/SearchBooks"})
 
 public class Controller extends HttpServlet {
 	
@@ -73,10 +73,29 @@ public class Controller extends HttpServlet {
 		case "/ReserveBook": reserveBook(request,response); break;
 		case "/BookingsInit": bookingsInit(request, response); break;
 		case "/ReserveRoom": reserveRoom(request, response); break;
+		case "/SearchBooks": searchBooks(request, response); break;
 		default: home(request,response); break;
 		}
 	}
 	
+	private void searchBooks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("SEARCH BOOKS");
+		String query = request.getParameter("query");
+		boolean filterMagazine = Boolean.parseBoolean(request.getParameter("filterMagazine"));
+		boolean filterThesis = Boolean.parseBoolean(request.getParameter("filterThesis"));
+		boolean filterBook = Boolean.parseBoolean(request.getParameter("filterBook"));
+		
+		ArrayList<Book> books = BookService.searchBooks(query, filterMagazine, filterThesis, filterBook);
+		request.setAttribute("books", books);
+		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
+		
+		System.out.println(books.size());
+		
+		PrintWriter pw = response.getWriter();
+		pw.write("true");
+	}
+
 	private void reserveRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		MeetingRoomBooking mrb = new MeetingRoomBooking();
 		mrb.setTimeStart(Integer.parseInt(request.getParameter("timeStart")));

@@ -39,6 +39,7 @@
 		}
 		
 		function initBooks(){
+			books = [];
 			console.log("Initializing books");
 			<c:forEach items="${books}" var="b">
         	addBook("${b.name}", "${b.publisher}", "${b.author}", "${b.id}", "${b.status}");
@@ -97,6 +98,32 @@
 						}
             });
 		}
+		
+		function searchBooks() {
+			$.ajax({
+                url: 'SearchBooks',
+                data: {
+                	query: document.getElementById("searchQuery").value,
+                    filterMagazine: $('filterMagazine').is(':checked'),
+					filterThesis: $('filterThesis').is(':checked'),
+					filterBook: $('filterBook').is(':checked')
+                },
+                type: 'POST',
+                success:function(jsonobject){
+					
+					if(jsonobject=="true"){
+						initBooks();
+		            	loadBooks();
+					} else {
+						alert("Search Failed");
+					initBooks();
+					loadBooks();
+					}
+				   	
+				}
+            });
+			
+		}
 		</script>
 	</head>
 	
@@ -134,26 +161,28 @@
 		<div class="container">    
 		  <div class="row">
 			<div class="col-sm-3 well">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Search" id="searchQuery">
-					<div class="input-group-btn">
-						<button class="btn btn-default" type="submit" id="searchSubmit">
-							<i class="glyphicon glyphicon-search"></i>
-						</button>
+				<form action="SearchBooks" method="post">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search" id="searchQuery" name="query">
+						<div class="input-group-btn">
+							<button class="btn btn-default" type="submit" id="searchSubmit">
+								<i class="glyphicon glyphicon-search"></i>
+							</button>
+						</div>
 					</div>
-				</div>
-				
-				<div style="margin-left:50px">
-					<div class="checkbox">
-						<label><input type="checkbox" value="" id="filterBook">Book</label>
+					
+					<div style="margin-left:50px">
+						<div class="checkbox">
+							<label><input type="checkbox" value="" id="filterBook" name="filterBook">Book</label>
+						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" value="" id="filterMagazine" name="filterMagazine">Magazine</label>
+						</div>
+						<div class="checkbox disabled">
+							<label><input type="checkbox" value="" id="filterThesis" name="filterThesis">Thesis</label>
+						</div>
 					</div>
-					<div class="checkbox">
-						<label><input type="checkbox" value="" id="filterMagazine">Magazine</label>
-					</div>
-					<div class="checkbox disabled">
-						<label><input type="checkbox" value="" id="filterThesis">Thesis</label>
-					</div>
-				</div>
+				</form>
 			</div>
 			
 			<!--TODO when we compile everything: Automate generation of search results-->
