@@ -17,7 +17,10 @@ public class Book implements Serializable {
     public final static String COLUMN_STATUS = "status";
     public final static String COLUMN_DESCRIPTION = "description";
     public final static String COLUMN_TYPE = "type";
-    private String id;
+    public final static String COLUMN_DEWEY = "deweydecimal";
+    
+    private int id;
+    private String dds;
     private String name;
     private String author;
     private String publisher;
@@ -26,10 +29,11 @@ public class Book implements Serializable {
     private String status;
     private String type; 
     
-    public Book(String id, String name, String author, String publisher, String year, String description, String status,
+    public Book(int id, String dds, String name, String author, String publisher, String year, String description, String status,
 			String type) {
 	
 		this.id = id;
+		this.dds = dds;
 		this.name = name;
 		this.author = author;
 		this.publisher = publisher;
@@ -43,6 +47,14 @@ public class Book implements Serializable {
     	
     }
     
+	public String getDds() {
+		return dds;
+	}
+
+	public void setDds(String dds) {
+		this.dds = dds;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -57,11 +69,11 @@ public class Book implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

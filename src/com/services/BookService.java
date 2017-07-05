@@ -14,14 +14,15 @@ public class BookService {
 	public static boolean addBook(Book b) {
         String sql = "INSERT INTO " + Book.TABLE_NAME + " ( "
             + Book.COLUMN_ID + ", "
+            + Book.COLUMN_DEWEY + ", "
             + Book.COLUMN_BOOKNAME +", "
             + Book.COLUMN_AUTHOR +", "
             + Book.COLUMN_PUBLISHER +", "
             + Book.COLUMN_YEAR +", "
             + Book.COLUMN_STATUS +", "
-             + Book.COLUMN_STATUS +", "
+             + Book.COLUMN_TYPE +", "
             + Book.COLUMN_DESCRIPTION + ") "
-            + "VALUES (?,?,?,?,?,?,?)";
+            + "VALUES (?,?,?,?,?,?,?,?,?)";
 
      //   String url = "jdbc:mysql://localhost:3306/userID";
 
@@ -33,14 +34,15 @@ public class BookService {
         
         try {
             pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, b.getId());
-            pstmt.setString(2, b.getName());
-            pstmt.setString(3, b.getAuthor());
-            pstmt.setString(4, b.getPublisher());
-            pstmt.setString(5, b.getYear());
-            pstmt.setString(6, b.getStatus());
-            pstmt.setString(7,  b.getType());
-            pstmt.setString(8, b.getDescription());
+            pstmt.setInt(1, b.getId());
+            pstmt.setString(2, b.getDds());
+            pstmt.setString(3, b.getName());
+            pstmt.setString(4, b.getAuthor());
+            pstmt.setString(5, b.getPublisher());
+            pstmt.setString(6, b.getYear());
+            pstmt.setString(7, b.getStatus());
+            pstmt.setString(8,  b.getType());
+            pstmt.setString(9, b.getDescription());
             pstmt.executeUpdate();
             out=true;
         } catch (SQLException e) {
@@ -85,7 +87,34 @@ public class BookService {
 		
 		return out;
 	}
-	public static boolean checkBook(String bookId){
+	public static boolean deleteBook(int bookId){
+		String sql = "DELETE FROM "+Book.TABLE_NAME +
+				" WHERE "+ Book.COLUMN_ID +"=?;";
+		boolean out = false;
+		Connection connection = DBPool.getInstance().getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement(sql);
+       
+            pstmt.setInt(1, bookId);
+
+            pstmt.executeUpdate();
+            out=true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                pstmt.close();
+                connection.close();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+		
+		return out;
+	}
+	public static boolean checkBook(int bookId){
 		String sql = "select * from "+Book.TABLE_NAME+" where "+Book.COLUMN_ID+"=?;";
 		boolean exists = false;
 		
@@ -95,7 +124,7 @@ public class BookService {
 		
 		try {
 			pstmt = connection.prepareStatement(sql);
-			pstmt.setString(1, bookId);
+			pstmt.setInt(1, bookId);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()){
@@ -126,8 +155,9 @@ public class BookService {
 						Book.COLUMN_PUBLISHER+ "=?,"+
 						Book.COLUMN_STATUS+ "=?,"+
 						Book.COLUMN_DESCRIPTION+ "=?,"+
-						Book.COLUMN_TYPE+ "=?,"+
-						Book.COLUMN_YEAR+ "=?" +
+						Book.COLUMN_TYPE+ "=?, "+
+						Book.COLUMN_YEAR+ "=?, " +
+						Book.COLUMN_DEWEY+ "=? " +
 				" where " + Book.COLUMN_ID +"=?;";
 		
 			Boolean out=false;
@@ -146,7 +176,8 @@ public class BookService {
 	            pstmt.setString(5, b.getDescription());
 	            pstmt.setString(6, b.getType());
 	            pstmt.setString(7, b.getYear());
-	            pstmt.setString(8, b.getId());
+	            pstmt.setString(8, b.getDds());
+	            pstmt.setInt(9, b.getId());
 
 	            pstmt.executeUpdate();
 	            out=true;
@@ -177,7 +208,8 @@ public class BookService {
 			while(rs.next()){
 				Book b = new Book();
 				b.setAuthor(rs.getString(Book.COLUMN_AUTHOR));
-				b.setId(rs.getString(Book.COLUMN_ID));
+				b.setId(rs.getInt(Book.COLUMN_ID));
+				b.setDds(rs.getString(Book.COLUMN_DEWEY));
 				b.setName(rs.getString(Book.COLUMN_BOOKNAME));
 				b.setPublisher(rs.getString(Book.COLUMN_PUBLISHER));
 				b.setStatus(rs.getString(Book.COLUMN_STATUS));
