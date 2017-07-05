@@ -18,6 +18,53 @@
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
 		});
+		
+			function editbook(){
+				$bookid = $("#productID").val();
+				$bookname = $("#productTitle").val();
+				$bookauthor = $("#productAuthor").val();
+				$bookpublisher = $("#productPublisher").val();
+				$booktype = $("#productType").val();
+				$bookyear = $("#productYear").val();
+				$bookstatus = $("#productStatus").val();
+				$bookdescription = $("#productDescription").val();
+				console.log($bookid);
+				if($bookid == "" || $bookname=="" ||$bookauthor==""||$bookpublisher == "" ||$booktype==""||$bookyear==""||$bookstatus==""||$bookdescription=="")					
+					setLogMessage("One or more fields are left blank.");
+				else{
+					$.ajax({
+			            url: 'EditBook',
+			            data: {
+			              bookid:$bookid,
+			              bookname:$bookname,
+			              bookauthor:$bookauthor,
+			              bookpublisher:$bookpublisher,
+			              booktype:$booktype,
+			              bookyear:$bookyear,
+			              bookstatus:$bookstatus,
+			              bookdescription:$bookdescription
+			          		
+			            },
+			            type: 'POST',
+						success:function(jsonobject){
+									if(jsonobject=="true"){
+										window.location = "Home";
+									} else{
+									setLogMessage("Book Cannot be Found");
+								   	
+								}
+						}
+			        });
+					
+					
+				}
+			}
+			
+			
+			function setLogMessage(mes){
+				$("#logMessage").show();
+				$("#logMessage").html(mes);
+			}
 		</script>
 	</head>
 
@@ -63,6 +110,11 @@
 					<input class="form-control" type="text" id="productAuthor" placeholder="Author" value="Some guy"><br>
 					Published by:<br>
 					<input class="form-control" type="text" id="productPublisher" placeholder="Publisher" value="Some people"><br>
+					Year:<br>
+					<input class="form-control" type="text" id="productYear" placeholder="Year" value="2017"><br>
+					Status:<br>
+					<input class="form-control" type="text" id="productStatus" placeholder="Status" value="Available"><br>
+					
 					Type:<br>
 					<div class="form-group">
 						<select class="form-control" id="productType">
@@ -76,7 +128,7 @@
 				<div class="col-sm-8">
 					Description:<br>
 					<textarea class="form-control" rows="16" id="productDescription">Some sort of description here about the product. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
-					<button type="button" class="btn btn-primary" style="width:100%;margin-top:10px" id="save">Save Changes</button>
+					<button type="button" class="btn btn-primary" style="width:100%;margin-top:10px" id="save" onClick="editbook()">Save Changes</button>
 					<button type="button" class="btn btn-danger" style="width:100%;margin-top:10px" id="delete">Delete</button>
 				</div>
 			</div>

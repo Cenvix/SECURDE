@@ -12,13 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.beans.Book;
 import com.beans.User;
+import com.services.BookService;
 import com.services.UserService;
 
 /**
  * Servlet implementation class Controller
  */
-@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee"})
+@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee","/EditBook"})
 public class Controller extends HttpServlet {
 	
 	
@@ -61,6 +63,7 @@ public class Controller extends HttpServlet {
 		case "/Logout": logout(request,response); break;
 		case "/Register": register(request,response); break;
 		case "/AddEmployee": addEmployee(request,response); break;
+		case "/EditBook": editBook(request,response);break;
 		default: home(request,response); break;
 		}
 	}
@@ -69,6 +72,7 @@ public class Controller extends HttpServlet {
 		System.out.println("Home");
 		response.sendRedirect("Home.jsp");
 	}
+	
 	public void login(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Login");
 
@@ -157,6 +161,33 @@ public class Controller extends HttpServlet {
 			if(UserService.addUser(newUser)){
 				status = true;
 				System.out.println("Added");
+			}
+		}
+		
+		//setUserSessions(request, response, newUser);
+
+		PrintWriter pw = response.getWriter();
+		pw.write(status+"");
+	}
+	
+	public void editBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("EditBook");
+		
+		
+		Book editedBook = new Book();
+		editedBook.setId(request.getParameter("bookid"));
+		editedBook.setAuthor(request.getParameter("bookauthor"));
+		editedBook.setDescription(request.getParameter("bookdescription"));
+		editedBook.setName(request.getParameter("bookname"));
+		editedBook.setPublisher(request.getParameter("bookpublisher"));
+		editedBook.setStatus(request.getParameter("bookstatus"));
+		editedBook.setYear(request.getParameter("bookyear"));
+		boolean status=false;
+
+		if(BookService.checkBook(editedBook.getId())){
+			if(BookService.editBook(editedBook)){
+				status = true;
+				System.out.println("Edited");
 			}
 		}
 		

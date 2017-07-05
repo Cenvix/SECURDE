@@ -2,7 +2,7 @@ package com.DB;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
+import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 
 public class DBPool {
 	public final static String url = "jdbc:mysql://localhost:3306/securde";

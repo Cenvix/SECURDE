@@ -18,8 +18,9 @@ public class BookService {
             + Book.COLUMN_AUTHOR +", "
             + Book.COLUMN_PUBLISHER +", "
             + Book.COLUMN_YEAR +", "
-            + Book.COLUMN_STATUS + ") "
-            + "VALUES (?,?,?,?,?,?)";
+            + Book.COLUMN_STATUS +", "
+            + Book.COLUMN_DESCRIPTION + ") "
+            + "VALUES (?,?,?,?,?,?,?)";
 
      //   String url = "jdbc:mysql://localhost:3306/userID";
 
@@ -31,13 +32,13 @@ public class BookService {
         
         try {
             pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(1, b.getId());
+            pstmt.setString(1, b.getId());
             pstmt.setString(2, b.getName());
             pstmt.setString(3, b.getAuthor());
             pstmt.setString(4, b.getPublisher());
             pstmt.setString(5, b.getYear());
             pstmt.setString(6, b.getStatus());
-
+            pstmt.setString(7, b.getDescription());
             pstmt.executeUpdate();
             out=true;
         } catch (SQLException e) {
@@ -82,6 +83,39 @@ public class BookService {
 		
 		return out;
 	}
+	public static boolean checkBook(String bookId){
+		String sql = "select * from"+Book.TABLE_NAME+"where"+Book.COLUMN_ID+"=?;";
+		boolean exists = false;
+		
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, bookId);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()){
+				exists = true;
+			}else exists = false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				rs.close();
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return exists;
+	}
 	public static boolean editBook(Book b){
 		
 		String sql = "update "+Book.TABLE_NAME + 
@@ -89,6 +123,7 @@ public class BookService {
 						Book.COLUMN_BOOKNAME+ "=?,"+
 						Book.COLUMN_PUBLISHER+ "=?,"+
 						Book.COLUMN_STATUS+ "=?,"+
+						Book.COLUMN_DESCRIPTION+ "=?,"+
 						Book.COLUMN_YEAR+ "=?" +
 				" where " + Book.COLUMN_ID +"=?;";
 		
@@ -100,13 +135,14 @@ public class BookService {
 	        
 	        try {
 	            pstmt = connection.prepareStatement(sql);
-   
+	            System.out.println(b.getName());
 	            pstmt.setString(1, b.getAuthor());
 	            pstmt.setString(2, b.getName());
 	            pstmt.setString(3, b.getPublisher());
 	            pstmt.setString(4, b.getStatus());
-	            pstmt.setString(5, b.getYear());
-	            pstmt.setInt(6, b.getId());
+	            pstmt.setString(5, b.getDescription());
+	            pstmt.setString(6, b.getYear());
+	            pstmt.setString(7, b.getId());
 
 	            pstmt.executeUpdate();
 	            out=true;
@@ -137,12 +173,12 @@ public class BookService {
 			while(rs.next()){
 				Book b = new Book();
 				b.setAuthor(rs.getString(Book.COLUMN_AUTHOR));
-				b.setId(rs.getInt(Book.COLUMN_ID));
+				b.setId(rs.getString(Book.COLUMN_ID));
 				b.setName(rs.getString(Book.COLUMN_BOOKNAME));
 				b.setPublisher(rs.getString(Book.COLUMN_PUBLISHER));
 				b.setStatus(rs.getString(Book.COLUMN_PUBLISHER));
 				b.setYear(rs.getString(Book.COLUMN_YEAR));
-				
+				b.setDescription(rs.getString(Book.COLUMN_DESCRIPTION));
 				books.add(b);
 			}
 		} catch (SQLException e) {
