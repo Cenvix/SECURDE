@@ -37,6 +37,7 @@ import com.services.UserService;
 							"/BookingsInit",
 							"/AdminInit",
 							"/ReserveRoom"
+							,"/EditProduct"
 							})
 
 public class Controller extends HttpServlet {
@@ -87,6 +88,7 @@ public class Controller extends HttpServlet {
 		case "/ReserveBook": reserveBook(request,response); break;
 		case "/BookingsInit": bookingsInit(request, response); break;
 		case "/ReserveRoom": reserveRoom(request, response); break;
+		case "/EditProduct": editProduct(request, response); break;
 		default: home(request,response); break;
 		}
 	}
@@ -262,9 +264,13 @@ public class Controller extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 		pw.write(status+"");
 	}
+	
+	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("EditProduct");
+
+		request.getSession().setAttribute("productID", request.getParameter("bookID"));
 
 	
-	
-
+	}
 
 }

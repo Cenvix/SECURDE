@@ -17,10 +17,18 @@
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
+			var bookID = '<%= session.getAttribute("productID")%>';
+			
+			console.log(bookID);
+			
 		});
 		
+			function initBook(){
+				
+			}
+		
 			function editbook(){
-				$bookid = $("#productID").val();
+				$bookdewey = $("#productID").val();
 				$bookname = $("#productTitle").val();
 				$bookauthor = $("#productAuthor").val();
 				$bookpublisher = $("#productPublisher").val();
@@ -35,7 +43,7 @@
 					$.ajax({
 			            url: 'EditBook',
 			            data: {
-			              bookid:$bookid,
+			              bookdewey:$bookdewey,
 			              bookname:$bookname,
 			              bookauthor:$bookauthor,
 			              bookpublisher:$bookpublisher,
@@ -103,17 +111,17 @@
 			<div class="row well">
 				<div class="col-sm-4">
 					Dewey Decimal ID:<br>
-					<input class="form-control" type="text" id="productID" placeholder="DDC" value="123413241234"><br>
+					<input class="form-control" type="text" id="productID" placeholder="DDC"><br>
 					Title:<br>
-					<input class="form-control" type="text" id="productTitle" placeholder="Title" value="BOOK TITLE"><br>
+					<input class="form-control" type="text" id="productTitle" placeholder="Title"><br>
 					Author:<br>
-					<input class="form-control" type="text" id="productAuthor" placeholder="Author" value="Some guy"><br>
+					<input class="form-control" type="text" id="productAuthor" placeholder="Author"><br>
 					Published by:<br>
-					<input class="form-control" type="text" id="productPublisher" placeholder="Publisher" value="Some people"><br>
+					<input class="form-control" type="text" id="productPublisher" placeholder="Publisher"><br>
 					Year:<br>
-					<input class="form-control" type="text" id="productYear" placeholder="Year" value="2017"><br>
+					<input class="form-control" type="text" id="productYear" placeholder="Year"><br>
 					Status:<br>
-					<input class="form-control" type="text" id="productStatus" placeholder="Status" value="Available"><br>
+					<input class="form-control" type="text" id="productStatus" placeholder="Status"><br>
 					
 					Type:<br>
 					<div class="form-group">
