@@ -84,7 +84,7 @@ public class BookService {
 		return out;
 	}
 	public static boolean checkBook(String bookId){
-		String sql = "select * from"+Book.TABLE_NAME+"where"+Book.COLUMN_ID+"=?;";
+		String sql = "select * from "+Book.TABLE_NAME+" where "+Book.COLUMN_ID+"=?;";
 		boolean exists = false;
 		
 		Connection connection = DBPool.getInstance().getConnection();
