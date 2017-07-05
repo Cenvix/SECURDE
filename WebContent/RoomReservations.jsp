@@ -36,6 +36,9 @@
 		function initBookings() {
 			console.log("Initializing books");
 			<c:forEach items="${bookings}" var="b">
+			console.log("----------");
+			console.log("${b.timeStart}");
+			console.log("----------");
         	addBooking("${b.timeStart}", "${b.idUser}", "${b.idMeetingRoom}");
         	</c:forEach>
 		}
@@ -101,6 +104,9 @@
 			"</tbody>" +
 			"</table>";
 			*/
+			
+			console.log(bookings[i].timeStart);
+			
 			for(var i = 0; i < bookings.length; i++) {
 				document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).innerHTML = "RESERVED";
 				document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).disabled = true;
