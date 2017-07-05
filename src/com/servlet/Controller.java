@@ -32,6 +32,7 @@ import com.services.UserService;
 							"/Home",
 							"/AddEmployee",
 							"/EditBook",
+							"/DeleteBook",
 							"/LibraryInit",
 							"/ReserveBook",
 							"/BookingsInit",
@@ -89,6 +90,7 @@ public class Controller extends HttpServlet {
 		case "/BookingsInit": bookingsInit(request, response); break;
 		case "/ReserveRoom": reserveRoom(request, response); break;
 		case "/EditProduct": editProduct(request, response); break;
+		case "/DeleteBook": deleteBook(request,response); break;
 		default: home(request,response); break;
 		}
 	}
@@ -242,7 +244,8 @@ public class Controller extends HttpServlet {
 		
 		
 		Book editedBook = new Book();
-		editedBook.setId(request.getParameter("bookid"));
+		editedBook.setId(Integer.parseInt(request.getParameter("bookid")));
+		editedBook.setDds(request.getParameter("bookdds"));
 		editedBook.setAuthor(request.getParameter("bookauthor"));
 		editedBook.setDescription(request.getParameter("bookdescription"));
 		editedBook.setName(request.getParameter("bookname"));
@@ -264,6 +267,27 @@ public class Controller extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 		pw.write(status+"");
 	}
+
+	public void deleteBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+		System.out.println("DeleteBook");
+		
+		int bookid = Integer.parseInt(request.getParameter("bookid"));
+		boolean status=false;
+
+		if(BookService.checkBook(bookid)){
+			if(BookService.deleteBook(bookid)){
+				status = true;
+				System.out.println("deleted");
+			}
+		}
+		
+		//setUserSessions(request, response, newUser);
+
+		PrintWriter pw = response.getWriter();
+		pw.write(status+"");
+	}
+
+	
 	
 	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("EditProduct");
