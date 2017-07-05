@@ -185,13 +185,13 @@
 					
 					<div style="margin-left:50px">
 						<div class="checkbox">
-							<label><input type="checkbox" value="" id="filterBook" name="filterBook">Book</label>
+							<label><input type="checkbox" value="filterBook" id="filterBook" name="filterBook">Book</label>
 						</div>
 						<div class="checkbox">
-							<label><input type="checkbox" value="" id="filterMagazine" name="filterMagazine">Magazine</label>
+							<label><input type="checkbox" value="filterMagazine" id="filterMagazine" name="filterMagazine">Magazine</label>
 						</div>
 						<div class="checkbox disabled">
-							<label><input type="checkbox" value="" id="filterThesis" name="filterThesis">Thesis</label>
+							<label><input type="checkbox" value="filterThesis" id="filterThesis" name="filterThesis">Thesis</label>
 						</div>
 					</div>
 				</form>

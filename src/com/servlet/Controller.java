@@ -37,8 +37,9 @@ import com.services.UserService;
 							"/ReserveBook",
 							"/BookingsInit",
 							"/AdminInit",
-							"/ReserveRoom"
-							,"/EditProduct"
+							"/ReserveRoom",
+							"/EditProduct",
+							"/SearchBooks"
 							})
 
 public class Controller extends HttpServlet {
@@ -98,17 +99,17 @@ public class Controller extends HttpServlet {
 	
 	private void searchBooks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("SEARCH BOOKS");
+		//System.out.println("SEARCH BOOKS");
 		String query = request.getParameter("query");
-		boolean filterMagazine = Boolean.parseBoolean(request.getParameter("filterMagazine"));
-		boolean filterThesis = Boolean.parseBoolean(request.getParameter("filterThesis"));
-		boolean filterBook = Boolean.parseBoolean(request.getParameter("filterBook"));
+		boolean filterMagazine = request.getParameter("filterMagazine")!=null;
+		boolean filterThesis = request.getParameter("filterThesis")!=null;
+		boolean filterBook = request.getParameter("filterBook")!=null;
 		
 		ArrayList<Book> books = BookService.searchBooks(query, filterMagazine, filterThesis, filterBook);
 		request.setAttribute("books", books);
 		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
 		
-		System.out.println(books.size());
+		//System.out.println(books.size());
 		
 		PrintWriter pw = response.getWriter();
 		pw.write("true");
