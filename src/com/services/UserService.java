@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.beans.Book;
 import com.beans.User;
 import com.DB.DBPool;
 
@@ -130,5 +131,49 @@ public class UserService {
         }
         
         return returnVal;
+    }
+    
+    public static ArrayList<User> getAllAdmins(){
+    	
+    	ArrayList<User> admins = new ArrayList();
+		String sql = "SELECT * FROM "+ User.TABLE_NAME+" where "+ User.COLUMN_USERTYPE +" <>'student' ;";
+		
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = connection.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				User admin = new User();
+				
+				admin.setId(rs.getInt(User.COLUMN_ID));
+				admin.setEmail(rs.getString(User.COLUMN_EMAIL));
+				admin.setFirstName(rs.getString(User.COLUMN_FIRSTNAME));
+				admin.setMiddleName(rs.getString(User.COLUMN_MIDDLENAME));
+				admin.setLastName(rs.getString(User.COLUMN_LASTNAME));
+				admin.setUserNumber(rs.getString(User.COLUMN_USERNUMBER));
+				admin.setUserType(rs.getString(User.COLUMN_USERTYPE));
+				admins.add(admin);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				rs.close();
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return admins;
+    	
+    
     }
 }

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import com.beans.Book;
 import com.beans.MeetingRoomBooking;
 import com.beans.User;
+import com.google.gson.Gson;
 import com.services.BookService;
 import com.services.MeetingRoomService;
 import com.services.UserService;
@@ -23,7 +24,18 @@ import com.services.UserService;
  * Servlet implementation class Controller
  */
 
-@WebServlet(urlPatterns = {"/Controller","/Login","/Logout","/Register","/Home","/AddEmployee","/EditBook", "/LibraryInit", "/ReserveBook", "/BookingsInit"})
+@WebServlet(urlPatterns = {	"/Controller",
+							"/Login",
+							"/Logout",
+							"/Register",
+							"/Home",
+							"/AddEmployee",
+							"/EditBook",
+							"/LibraryInit",
+							"/ReserveBook",
+							"/BookingsInit",
+							"/AdminInit"
+							})
 
 public class Controller extends HttpServlet {
 	
@@ -69,6 +81,7 @@ public class Controller extends HttpServlet {
 		case "/AddEmployee": addEmployee(request,response); break;
 		case "/EditBook": editBook(request,response);break;
 		case "/LibraryInit": libraryInit(request, response); break;
+		case "/AdminInit": adminInit(request, response); break;
 		case "/ReserveBook": reserveBook(request,response); break;
 		case "/BookingsInit": bookingsInit(request, response); break;
 		default: home(request,response); break;
@@ -97,6 +110,15 @@ public class Controller extends HttpServlet {
 		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
 	}
 
+	private void adminInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		ArrayList<User> admins = UserService.getAllAdmins();
+		String json = new Gson().toJson(admins);
+		request.setAttribute("admins", json);
+		request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+	}
+	
 	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Home");
 		response.sendRedirect("Home.jsp");
