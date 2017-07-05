@@ -136,7 +136,7 @@
 					Email:<br>
 					<input class="form-control" type="text" id="email" placeholder="Email" value=""><br>
 					ID Number:<br>
-					<input class="form-control" type="text" id="idNumber" placeholder="Email" value=""><br>
+					<input class="form-control" type="text" id="idNumber" placeholder="ID Number" value=""><br>
 					Password:<br>
 					<input class="form-control" type="password" id="password" placeholder="Password" value=""><br>
 					Confirm Password:<br>

@@ -61,6 +61,10 @@
 				$pass = $("#registerPassword").val();
 				$passCon = $("#registerConfirmPassword").val();
 				
+				$sQuestion = $("#sQuestion").val();
+				$sAnswer = $("#sAnswer").val();
+				$sCAnswer = $("#sCAnswer").val();
+				
 				if($fName==""||$mName==""||$lName==""){
 					alert("Input Name Input!");
 				}else if($idNumber==""){
@@ -73,6 +77,14 @@
 					setRegMessage("Input Password with 8 or more characters!");
 				}else if($pass != $passCon){
 					setRegMessage("Confirm Password does not match!");
+				}else if($sQuestion==""){ //REGEX FOR 8 Char min
+					alert("Input Secret Question");
+				}else if(!/.{8,}$/.test($pass)){ //REGEX FOR 8 Char min
+					alert("Input Password with 8 or more characters!");
+				}else if($sAnswer==""){
+					alert("No answer to Secret Question!");
+				}else if($sAnswer != $sCAnswer){
+					alert("Confirm Answer does not match!");
 				}else{
 					
 					setRegMessage("Creating account!");
@@ -85,7 +97,9 @@
 			            	lName:$lName,
 			            	idNumber:$idNumber,
 			                email:$email,
-			                password:$pass
+			                password:$pass,
+			                sQuestion:$sQuestion,
+			                sAnswer:$sAnswer
 			            },
 			            type: 'POST',
 						success:function(jsonobject){
@@ -173,20 +187,25 @@
 				<form id="register">
 					<div class="col-sm-12" style="margin-bottom:30px"><h1>Register</h1></div>
 					<div class="col-sm-12" style="margin-bottom:20px" id="registerMessage"></div>
-					First Name:<br>
-					<input class="form-control" type="text" id="registerFName" placeholder="Name" value=""><br>
-					Middle Name:<br>
-					<input class="form-control" type="text" id="registerMName" placeholder="Name" value=""><br>
-					Last Name:<br>
-					<input class="form-control" type="text" id="registerLName" placeholder="Name" value=""><br>
-					Email:<br>
+					<input class="form-control" type="text" id="registerFName" placeholder="First Name" value=""><br>
+					
+					<input class="form-control" type="text" id="registerMName" placeholder="Middle Name" value=""><br>
+					
+					<input class="form-control" type="text" id="registerLName" placeholder="Last Name" value=""><br>
+					
 					<input class="form-control" type="text" id="registerEmail" placeholder="Email" value=""><br>
-					ID Number:<br>
-					<input class="form-control" type="text" id="registerIDNumber" placeholder="Email" value=""><br>
-					Password:<br>
+					
+					<input class="form-control" type="text" id="registerIDNumber" placeholder="ID Number" value=""><br>
+					
 					<input class="form-control" type="password" id="registerPassword" placeholder="Password" value=""><br>
-					Confirm Password:<br>
+					
 					<input class="form-control" type="password" id="registerConfirmPassword" placeholder="Confirm Password" value=""><br>
+					
+					<input class="form-control" type="text" id="sQuestion" placeholder="E.g. What is the name of my 1st Pet?" value=""><br>
+					
+					<input class="form-control" type="password" id="sAnswer" placeholder="Answer" value=""><br>
+					
+					<input class="form-control" type="password" id="sCAnswer" placeholder="Confirm Answer" value=""><br>
 					<div class="col-sm-12" style="margin-bottom:20px"><button type="button" class="btn btn-primary" id="registerButton" onClick="register()">Register</button></div>
 				</form>
 			</div>
