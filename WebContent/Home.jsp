@@ -38,7 +38,7 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="Home.jsp">Home</a></li>
 						<li><a href="LibraryInit">Search Library</a></li>
-						<li><a href="RoomReservations.jsp">Room Reservation</a></li>
+						<li><a href="BookingsInit">Room Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>

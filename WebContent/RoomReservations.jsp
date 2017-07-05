@@ -15,10 +15,99 @@
 		
 		<script type="text/javascript">
 
+		var bookings = [];
+		
+		class Booking {
+			constructor(timeStart, id, room) {
+				this.timeStart = timeStart;
+				this.id = id;
+				this.room = room;
+			}
+		}
+		
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
+			
+			initBookings();
+			loadBookings();
 		});
+		
+		function initBookings() {
+			console.log("Initializing books");
+			<c:forEach items="${bookings}" var="b">
+        	addBooking("${b.timeStart}", "${b.idUser}", "${b.idMeetingRoom}");
+        	</c:forEach>
+		}
+		
+		function addBooking() {
+			var booking = new Booking(timeStart, id, room);
+			bookings.push(booking);
+		}
+		
+		function loadBookings() {
+			/*
+			document.getElementById('tableContainer').innerHTML = "";
+			
+			var result = "<h1> Meeting Rooms </h1>" +
+			"<table class='table table-bordered table-condensed'>" +
+			"<thead>" +
+				"<tr>" +
+					"<th>Room</th>" +
+					"<th>9AM-10AM</th>" +
+					"<th>10AM-11AM</th>" +
+					"<th>11AM-12AM</th>" +
+					"<th>12AM-1PM</th>" +
+					"<th>1PM-2PM</th>" +
+					"<th>2PM-3PM</th>" +
+					"<th>3PM-4PM</th>" +
+					"<th>4PM-5PM</th>" +
+				"</tr>" +
+			"</thead>" +
+			"<tbody>" +
+				"<tr>" +
+					"<td>Room 1</td>" +
+					"<td><button type='button' class='btn btn-primary' id='room1_0900'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room1_1000'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room1_1100'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room1_1200'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room1_1300'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room1_1400'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room1_1500'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room1_1600'>Reserve</button></td>" +
+				"</tr>" +
+				"<tr>" +
+					"<td>Room 2</td>" +
+					"<td><button type='button' class='btn btn-primary' id='room2_0900'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room2_1000'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room2_1100'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room2_1200'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room2_1300'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room2_1400'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room2_1500'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room2_1600'>Reserve</button></td>" +
+				"</tr>" +
+				"<tr>" +
+					"<td>Room 3</td>" +
+					"<td><button type='button' class='btn btn-primary' id='room3_0900'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room3_1000'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room3_1100'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room3_1200'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room3_1300'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room3_1400'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room3_1500'>Reserve</button></td>" +
+					"<td><button type='button' class='btn btn-primary' id='room3_1600'>Reserve</button></td>" +
+				"</tr>" +
+			"</tbody>" +
+			"</table>";
+			*/
+			for(var i = 0; i < bookings.length; i++) {
+				document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).innerHTML = "RESERVED";
+				document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).disabled = true;
+			}
+			
+			
+		}
 		</script>
 	</head>
 
@@ -56,7 +145,7 @@
 		<!--TODO when compiling: Autogenerate Table-->
 		<!--TODO when compiling: Swap reserve button for override button when library manager mode-->
 		<!--TODO when compiling: Swap button out for glyphicon when library staff mode-->	
-		<div class="container well">
+		<div class="container well" id="tableContainer">
 			<h1> Meeting Rooms </h1>
 			<table class="table table-bordered table-condensed">
 				<thead>

@@ -8,20 +8,23 @@ import java.util.ArrayList;
 
 public class MeetingRoomBooking implements Serializable {
     
-    public final static String TABLE_NAME = " meetingroombooking ";
-    public final static String COLUMN_ID = " idmeetingroombooking ";
-    public final static String COLUMN_IDUSER = " iduser ";
-    public final static String COLUMN_TIMESTART = " timestart ";
-    public final static String COLUMN_TIMEEND = " timeend ";
+    public final static String TABLE_NAME = "meetingroombooking";
+    public final static String COLUMN_ID = "idmeetingroombooking";
+    public final static String COLUMN_IDUSER = "iduser";
+    public final static String COLUMN_IDMEETINGROOM = "idmeetingroom";
+    public final static String COLUMN_TIMESTART = "timestart";
+    public final static String COLUMN_TIMEEND = "timeend";
     
     private int id;
     private int idUser;
+    private int idMeetingRoom;
     private Date timeStart;
     private Date timeEnd;
     
-    public MeetingRoomBooking(int id, int idUser, Date timeStart, Date timeEnd) {
+    public MeetingRoomBooking(int id, int idUser, int idMeetingRoom, Date timeStart, Date timeEnd) {
     	this.id = id;
         this.idUser = idUser;
+        this.idMeetingRoom = idMeetingRoom;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
     }
@@ -62,8 +65,20 @@ public class MeetingRoomBooking implements Serializable {
 		this.timeEnd = timeEnd;
 	}
 
-	
+	public int getIdUser() {
+		return idUser;
+	}
 
-	
+	public void setIdUser(int idUser) {
+		this.idUser = idUser;
+	}
+
+	public int getIdMeetingRoom() {
+		return idMeetingRoom;
+	}
+
+	public void setIdMeetingRoom(int idMeetingRoom) {
+		this.idMeetingRoom = idMeetingRoom;
+	}
     //Pls just generate all the other stuff :c//
 }

@@ -17,7 +17,8 @@ public class MeetingRoomService {
              + MeetingRoomBooking.COLUMN_ID + ", "
              + MeetingRoomBooking.COLUMN_IDUSER +", "
              + MeetingRoomBooking.COLUMN_TIMESTART + ", "
-             + MeetingRoomBooking.COLUMN_TIMEEND +") "
+             + MeetingRoomBooking.COLUMN_TIMEEND + "," 
+             + MeetingRoomBooking.COLUMN_IDMEETINGROOM + ") "
              + "VALUES (?,?,?,?)";
 
       //   String url = "jdbc:mysql://localhost:3306/userID";
@@ -31,9 +32,10 @@ public class MeetingRoomService {
              
              
              pstmt.setInt(1, mrb.getId());
-             pstmt.setInt(2,mrb.getIduser());
+             pstmt.setInt(2, mrb.getIduser());
              pstmt.setDate(3, mrb.getTimeStart());
              pstmt.setDate(4, mrb.getTimeEnd());
+             pstmt.setInt(5, mrb.getIdMeetingRoom());
              
              pstmt.executeUpdate();
              out=true;
@@ -67,9 +69,10 @@ public class MeetingRoomService {
 						
 					mrb.setId(rs.getInt(MeetingRoomBooking.COLUMN_ID));
 					mrb.setIduser(rs.getInt(MeetingRoomBooking.COLUMN_IDUSER));
+					mrb.setIdMeetingRoom(rs.getInt(MeetingRoomBooking.COLUMN_IDMEETINGROOM));
 					mrb.setTimeEnd(rs.getDate(MeetingRoomBooking.COLUMN_TIMEEND));
-
 					mrb.setTimeStart(rs.getDate(MeetingRoomBooking.COLUMN_TIMESTART));
+					
 					meetingroombookings.add(mrb);
 				}
 			} catch (SQLException e) {
