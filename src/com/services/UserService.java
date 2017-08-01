@@ -63,6 +63,7 @@ public class UserService {
     }
     
     public static ArrayList<String> loginUser(User u) {
+    	System.out.println("Login daw eh");
     	String sql = "SELECT "+User.COLUMN_ID+" , "+ User.COLUMN_USERTYPE+" FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ? AND " + User.COLUMN_PASSWORD + "= ?";
     	
     	Connection conn = DBPool.getInstance().getConnection();
