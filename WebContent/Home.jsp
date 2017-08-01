@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
 		<title>SECURDE Library</title>
-
+		
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="stylesheet.css" rel="stylesheet">
 		
@@ -16,13 +16,13 @@
 
 	<body>
 
-	<script type="text/javascript">
-
-		$(document).ready(function(){
-			var userID ='<%= session.getAttribute("userID")%>';
-			console.log(userID);
-		});
-	</script>
+		<script type="text/javascript">
+	
+			$(document).ready(function(){
+				var userID ='<%= session.getAttribute("userID")%>';
+				console.log(userID);
+			});
+		</script>
 
 		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
