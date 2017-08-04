@@ -15,11 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -38,7 +41,8 @@ import com.sun.media.jfxmedia.logging.Logger;
 
 
 
-@Controller
+@RestController
+@Scope("session")
 public class MainController{
 	
 	
@@ -148,7 +152,8 @@ public class MainController{
 	
 	
 	@RequestMapping(value="/Login", method = RequestMethod.POST)
-	public void login(HttpServletRequest request,@RequestParam("email") String email,@RequestParam("password") String password){
+	@ResponseBody
+	public String login(HttpServletRequest request,@RequestParam("email") String email,@RequestParam("password") String password){
 		System.out.println("Login");
 
 		User user = new User(email,password);
@@ -160,18 +165,16 @@ public class MainController{
 			user.setId(Integer.parseInt(out.get(0)));
 			user.setUserType(out.get(1));
 			
-			//setUserSessions(request, response, user);
+			setUserSessions(request, user);
 			status = true;
 		}
-		//PrintWriter pw = response.getWriter();
-		//pw.write(status+"");
+		return ""+status;
 		
-		System.out.println(request.getAttribute("email"));
-		System.out.println(status);
+		
 	}
 	
 	
-	@RequestMapping(value="/Logout", method = RequestMethod.POST)
+	@RequestMapping(value="/Logout", method = RequestMethod.GET)
 	public void logout(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		HttpSession session = request.getSession();
 		System.out.println("Sign Out: "+session.getAttribute(sessionUserID));
@@ -181,17 +184,25 @@ public class MainController{
 	
 	
 	@RequestMapping(value="/Register", method = RequestMethod.POST)
-	public void register(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	@ResponseBody
+	public String register(HttpServletRequest request,@RequestParam("email") String email,     
+												  	@RequestParam("password")String password,
+												  	@RequestParam("fName")String fName,    
+												  	@RequestParam("mName")String mName,    
+												  	@RequestParam("lName")String lName,    
+												  	@RequestParam("idNumber")String idNumber, 
+												  	@RequestParam("sQuestion")String sQuestion,
+												  	@RequestParam("sAnswer")String sAnswer)throws ServletException, IOException{
 		System.out.println("Register");
 		
 		
-		User newUser = new User(request.getParameter("email"),request.getParameter("password"));
-		newUser.setFirstName(request.getParameter("fName"));
-		newUser.setMiddleName(request.getParameter("mName"));
-		newUser.setLastName(request.getParameter("lName"));
-		newUser.setUserNumber(request.getParameter("idNumber"));
-		newUser.setSecretQuestion(request.getParameter("sQuestion"));
-		newUser.setSecretAnswer(request.getParameter("sAnswer"));
+		User newUser = new User((email),(password));
+		newUser.setFirstName(fName);
+		newUser.setMiddleName(mName);
+		newUser.setLastName(lName);
+		newUser.setUserNumber(idNumber);
+		newUser.setSecretQuestion(sQuestion);
+		newUser.setSecretAnswer(sAnswer);
 		
 		
 		boolean status=false;
@@ -202,13 +213,12 @@ public class MainController{
 		}
 		
 		
-		setUserSessions(request, response, newUser);
+		setUserSessions(request, newUser);
 
-		PrintWriter pw = response.getWriter();
-		pw.write(status+"");
+		return ""+true;
 	}
 	
-	public void setUserSessions(HttpServletRequest request, HttpServletResponse response, User user)throws ServletException, IOException{
+	public void setUserSessions(HttpServletRequest request, User user){
 		
 		HttpSession session;
 		session = request.getSession(true);

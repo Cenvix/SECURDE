@@ -37,6 +37,7 @@
 			            },
 			            type: 'POST',
 						success:function(jsonobject){
+								console.log(jsonobject);
 									if(jsonobject=="true"){
 										window.location = "Home";
 									} else{
