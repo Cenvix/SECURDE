@@ -139,7 +139,7 @@ public class MainController{
 		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
 	}
 
-	@RequestMapping(value="/AdminInit", method = RequestMethod.POST)
+	@RequestMapping(value="/AdminInit", method = RequestMethod.GET)
 	private void adminInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
@@ -349,12 +349,12 @@ public class MainController{
 	}
 
 	
-	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
-	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
-		System.out.println("EditProduct");
-
-		request.getSession().setAttribute("productID", request.getParameter("bookID"));
-
-	
-	}
+//	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
+//	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+//		System.out.println("EditProduct");
+//
+//		request.getSession().setAttribute("productID", request.getParameter("bookID"));
+//
+//	
+//	}
 }
