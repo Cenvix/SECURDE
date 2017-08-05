@@ -16,12 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -112,7 +114,7 @@ public class MainController{
 		pw.write(out+"");
 	}
 
-	@RequestMapping(value="/BookingsInit", method = RequestMethod.POST)
+	@RequestMapping(value="/BookingsInit", method = RequestMethod.GET)
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookings();
 		request.setAttribute("bookings", bookings);
@@ -127,7 +129,7 @@ public class MainController{
 		pw.write(out+"");
 	}
 
-	@RequestMapping(value="/LibraryInit", method = RequestMethod.POST)
+	@RequestMapping(value="/LibraryInit", method = RequestMethod.GET)
 	private void libraryInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<Book> books = BookService.getAllBooks();
 		request.setAttribute("books", books);
@@ -360,11 +362,4 @@ public class MainController{
 
 	
 	}
-
-
-
-
-
-
-
 }
