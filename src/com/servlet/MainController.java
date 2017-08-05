@@ -100,11 +100,11 @@ public class MainController{
 
 	@RequestMapping(value="/ReserverRoom", method = RequestMethod.POST)
 	@ResponseBody
-	private String reserveRoom(HttpServletRequest request,@ReqestParam("timeStart") String timeStart, @ReqestParam("room") String room) throws IOException {
+	private String reserveRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
 		MeetingRoomBooking mrb = new MeetingRoomBooking();
-		mrb.setTimeStart(Integer.parseInt(request.getParameter("timeStart")));
-		mrb.setTimeEnd(Integer.parseInt(request.getParameter("timeStart"))+100);
-		mrb.setIdMeetingRoom(Integer.parseInt(request.getParameter("room")));
+		mrb.setTimeStart(Integer.parseInt(timeStart));
+		mrb.setTimeEnd(Integer.parseInt(timeStart)+100);
+		mrb.setIdMeetingRoom(Integer.parseInt(room));
 		mrb.setDate(new Date(Calendar.getInstance().getTime().getTime()));
 		mrb.setIduser(1234); //TODO Change this to proper user id
 		mrb.setId((int)(Math.random()*100));
