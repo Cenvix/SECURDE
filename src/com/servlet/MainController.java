@@ -258,7 +258,9 @@ public class MainController{
 		pw.write(status+"");
 	}
 	
+	//DONE
 	@RequestMapping(value="/AddBook", method = RequestMethod.POST)
+	@ResponseBody
 	public String addBook(@ModelAttribute("Book") Book book)throws ServletException, IOException{
 		System.out.println("AddBook");
 		
@@ -274,10 +276,9 @@ public class MainController{
 		boolean status=false;
 		
 		if(!BookService.checkBook(book.getId())){
-			System.out.println("Yes");
+			
 			if(BookService.addBook(book)){
 				status = true;
-				System.out.println("Added");
 			}
 		}
 		
@@ -287,21 +288,13 @@ public class MainController{
 		return status+"";
 	}
 	
+	
+	//DONE
 	@RequestMapping(value="/EditBook", method = RequestMethod.POST)
-	public void editBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	@ResponseBody
+	public String editBook(@ModelAttribute("Book") Book editedBook)throws ServletException, IOException{
 		System.out.println("EditBook");
 		
-		
-		Book editedBook = new Book();
-		editedBook.setId(Integer.parseInt(request.getParameter("bookid")));
-		editedBook.setDds(request.getParameter("bookdds"));
-		editedBook.setAuthor(request.getParameter("bookauthor"));
-		editedBook.setDescription(request.getParameter("bookdescription"));
-		editedBook.setName(request.getParameter("bookname"));
-		editedBook.setPublisher(request.getParameter("bookpublisher"));
-		editedBook.setStatus(request.getParameter("bookstatus"));
-		editedBook.setYear(request.getParameter("bookyear"));
-		editedBook.setType(request.getParameter("booktype"));
 		boolean status=false;
 
 		if(BookService.checkBook(editedBook.getId())){
@@ -313,8 +306,7 @@ public class MainController{
 		
 		//setUserSessions(request, response, newUser);
 
-		PrintWriter pw = response.getWriter();
-		pw.write(status+"");
+		return status +"";
 	}
 
 	@RequestMapping(value="/GetBook", method = RequestMethod.POST)
