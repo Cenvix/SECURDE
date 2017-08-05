@@ -98,7 +98,8 @@ public class MainController{
 		pw.write("true");
 	}
 
-	@RequestMapping(value="/ReserverRoom", method = RequestMethod.POST)
+	//DONE
+	@RequestMapping(value="/ReserveRoom", method = RequestMethod.POST)
 	@ResponseBody
 	private String reserveRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
 		MeetingRoomBooking mrb = new MeetingRoomBooking();
@@ -121,6 +122,7 @@ public class MainController{
 		request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
 	}
 
+	
 	@RequestMapping(value="/ReserveBook", method = RequestMethod.POST)
 	private void reserveBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		boolean out = BookService.reserveBook(request.getParameter("idbook"));
@@ -152,7 +154,7 @@ public class MainController{
 		response.sendRedirect("Home.jsp");
 	}
 	
-	
+	//DONE
 	@RequestMapping(value="/Login", method = RequestMethod.POST)
 	@ResponseBody
 	public String login(HttpServletRequest request,	@RequestParam("email") String email,
@@ -178,7 +180,7 @@ public class MainController{
 		
 	}
 	
-	
+	//DONE
 	@RequestMapping(value="/Logout", method = RequestMethod.GET)
 	public void logout(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		HttpSession session = request.getSession();
@@ -188,6 +190,7 @@ public class MainController{
 	}
 	
 	
+	//DONE
 	@RequestMapping(value="/Register", method = RequestMethod.POST)
 	@ResponseBody
 	public String register(HttpServletRequest request,@ModelAttribute("User") User newUser)throws ServletException, IOException{
