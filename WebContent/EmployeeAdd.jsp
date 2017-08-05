@@ -63,15 +63,15 @@
 				$.ajax({
 		            url: 'AddEmployee',
 		            data: {
-		            	fName:$fName,
-		            	mName:$mName,
-		            	lName:$lName,
-		            	idNumber:$idNumber,
+		            	firstName:$fName,
+		            	middleName:$mName,
+		            	lastName:$lName,
+		            	userNumber:$idNumber,
 		                email:$email,
 		                password:$pass,
-		                type:$type,
-		                sQuestion:$sQuestion,
-		                sAnswer:$sAnswer
+		                userType:$type,
+		                secretQuestion:$sQuestion,
+		                secretAnswer:$sAnswer
 		            },
 		            type: 'POST',
 					success:function(jsonobject){

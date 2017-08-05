@@ -233,17 +233,11 @@ public class MainController{
 	
 	
 	@RequestMapping(value="/AddEmployee", method = RequestMethod.POST)
-	public void addEmployee(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	@ResponseBody
+	public String addEmployee(@ModelAttribute("User") User newUser)throws ServletException, IOException{
 		System.out.println("AddEmployee");
 		
-		User newUser = new User();//request.getParameter("email"),request.getParameter("password"));
-		newUser.setFirstName(request.getParameter("fName"));
-		newUser.setMiddleName(request.getParameter("mName"));
-		newUser.setLastName(request.getParameter("lName"));
-		newUser.setUserType(request.getParameter("type"));
-		newUser.setUserNumber(request.getParameter("idNumber"));
-		newUser.setSecretQuestion(request.getParameter("sQuestion"));
-		newUser.setSecretAnswer(request.getParameter("sAnswer"));
+		
 		
 		boolean status=false;
 		
@@ -256,8 +250,7 @@ public class MainController{
 		
 		//setUserSessions(request, response, newUser);
 
-		PrintWriter pw = response.getWriter();
-		pw.write(status+"");
+		return(status+"");
 	}
 	
 	//DONE
