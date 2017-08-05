@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 //import com.mysql.fabric.xmlrpc.base.Array;
 
+
 public class Book implements Serializable {
     
 
@@ -18,6 +19,7 @@ public class Book implements Serializable {
     public final static String COLUMN_DESCRIPTION = "description";
     public final static String COLUMN_TYPE = "type";
     public final static String COLUMN_DEWEY = "deweydecimal";
+    
     
     private int id;
     private String dds;

@@ -93,14 +93,14 @@
 					$.ajax({
 			            url: 'Register',
 			            data: {
-			            	fName:$fName,
-			            	mName:$mName,
-			            	lName:$lName,
-			            	idNumber:$idNumber,
+			            	firstName:$fName,
+			            	middleName:$mName,
+			            	lastName:$lName,
+			            	userNumber:$idNumber,
 			                email:$email,
 			                password:$pass,
-			                sQuestion:$sQuestion,
-			                sAnswer:$sAnswer
+			                secretQuestion:$sQuestion,
+			                secretAnswer:$sAnswer
 			            },
 			            type: 'POST',
 						success:function(jsonobject){

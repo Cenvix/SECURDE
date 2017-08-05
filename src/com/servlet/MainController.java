@@ -153,10 +153,13 @@ public class MainController{
 	
 	@RequestMapping(value="/Login", method = RequestMethod.POST)
 	@ResponseBody
-	public String login(HttpServletRequest request,@RequestParam("email") String email,@RequestParam("password") String password){
+	public String login(HttpServletRequest request,	@RequestParam("email") String email,
+													@RequestParam("password") String password){
 		System.out.println("Login");
 
-		User user = new User(email,password);
+		User user = new User();
+		user.setEmail(email);
+		user.setPassword(password);
 		ArrayList<String> out = UserService.loginUser(user);
 		
 		boolean status = false;
@@ -185,25 +188,11 @@ public class MainController{
 	
 	@RequestMapping(value="/Register", method = RequestMethod.POST)
 	@ResponseBody
-	public String register(HttpServletRequest request,@RequestParam("email") String email,     
-												  	@RequestParam("password")String password,
-												  	@RequestParam("fName")String fName,    
-												  	@RequestParam("mName")String mName,    
-												  	@RequestParam("lName")String lName,    
-												  	@RequestParam("idNumber")String idNumber, 
-												  	@RequestParam("sQuestion")String sQuestion,
-												  	@RequestParam("sAnswer")String sAnswer)throws ServletException, IOException{
+	public String register(HttpServletRequest request,@ModelAttribute("User") User newUser)throws ServletException, IOException{
 		System.out.println("Register");
 		
-		
-		User newUser = new User((email),(password));
-		newUser.setFirstName(fName);
-		newUser.setMiddleName(mName);
-		newUser.setLastName(lName);
-		newUser.setUserNumber(idNumber);
-		newUser.setSecretQuestion(sQuestion);
-		newUser.setSecretAnswer(sAnswer);
-		
+		newUser.setNewId();
+		newUser.setUserType("0");
 		
 		boolean status=false;
 		
@@ -212,11 +201,13 @@ public class MainController{
 				status = true;
 		}
 		
-		
+
+		if(status)
 		setUserSessions(request, newUser);
 
-		return ""+true;
+		return ""+status;
 	}
+	
 	
 	public void setUserSessions(HttpServletRequest request, User user){
 		
@@ -238,7 +229,7 @@ public class MainController{
 	public void addEmployee(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("AddEmployee");
 		
-		User newUser = new User(request.getParameter("email"),request.getParameter("password"));
+		User newUser = new User();//request.getParameter("email"),request.getParameter("password"));
 		newUser.setFirstName(request.getParameter("fName"));
 		newUser.setMiddleName(request.getParameter("mName"));
 		newUser.setLastName(request.getParameter("lName"));
@@ -263,20 +254,17 @@ public class MainController{
 	}
 	
 	@RequestMapping(value="/AddBook", method = RequestMethod.POST)
-	public void addBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	public String addBook(@ModelAttribute("Book") Book book)throws ServletException, IOException{
 		System.out.println("AddBook");
 		
-		Book book=  new Book();
+
+		System.out.println(book.getId());
+
 		Random r =new Random();
 		book.setId(r.nextInt(9999));
-		book.setDds(request.getParameter("bookdds"));
-		book.setAuthor(request.getParameter("bookauthor"));
-		book.setDescription(request.getParameter("bookdescription"));
-		book.setName(request.getParameter("bookname"));
-		book.setPublisher(request.getParameter("bookpublisher"));
-		book.setStatus(request.getParameter("bookstatus"));
-		book.setYear(request.getParameter("bookyear"));
-		book.setType(request.getParameter("booktype"));
+		
+		System.out.println(book.getId());
+
 		
 		boolean status=false;
 		
@@ -290,8 +278,8 @@ public class MainController{
 		
 		//setUserSessions(request, response, newUser);
 
-		PrintWriter pw = response.getWriter();
-		pw.write(status+"");
+		//PrintWriter pw = response.getWriter();
+		return status+"";
 	}
 	
 	@RequestMapping(value="/EditBook", method = RequestMethod.POST)

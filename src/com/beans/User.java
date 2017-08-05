@@ -37,8 +37,17 @@ public class User implements Serializable {
     public User(){
     }
     
-    public User(String email, String password){
-    	Random r = new Random();
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public void setNewId(){
+		Random r = new Random();
     	int first = r.nextInt(899999)+100000;
     	int last = 0;
     	
@@ -53,18 +62,6 @@ public class User implements Serializable {
     	id+=last;
     	
     	this.id = Integer.parseInt(id); 
-    	this.email = email;
-    	this.password = password;
-    	this.userType = "0";
-    }
-    
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 
