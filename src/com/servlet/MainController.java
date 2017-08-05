@@ -125,11 +125,12 @@ public class MainController{
 
 	
 	@RequestMapping(value="/ReserveBook", method = RequestMethod.POST)
-	private void reserveBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		boolean out = BookService.reserveBook(request.getParameter("idbook"));
+	@ResponseBody
+	private String reserveBook(@RequestParam("idbook")String idbook) throws IOException {
+		System.out.println("ReserveBook");
+		boolean out = BookService.reserveBook(idbook);
 		
-		PrintWriter pw = response.getWriter();
-		pw.write(out+"");
+		return out+"";
 	}
 
 	@RequestMapping(value="/LibraryInit", method = RequestMethod.GET)
@@ -139,7 +140,7 @@ public class MainController{
 		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
 	}
 
-	@RequestMapping(value="/AdminInit", method = RequestMethod.POST)
+	@RequestMapping(value="/AdminInit", method = RequestMethod.GET)
 	private void adminInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
@@ -152,7 +153,7 @@ public class MainController{
 	@RequestMapping(value="/Home")
 	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Home");
-		response.sendRedirect("Home.jsp");
+		request.getRequestDispatcher("Home.jsp").forward(request, response);
 	}
 	
 	//DONE
@@ -259,7 +260,9 @@ public class MainController{
 		pw.write(status+"");
 	}
 	
+	//DONE
 	@RequestMapping(value="/AddBook", method = RequestMethod.POST)
+	@ResponseBody
 	public String addBook(@ModelAttribute("Book") Book book)throws ServletException, IOException{
 		System.out.println("AddBook");
 		
@@ -275,10 +278,9 @@ public class MainController{
 		boolean status=false;
 		
 		if(!BookService.checkBook(book.getId())){
-			System.out.println("Yes");
+			
 			if(BookService.addBook(book)){
 				status = true;
-				System.out.println("Added");
 			}
 		}
 		
@@ -288,21 +290,13 @@ public class MainController{
 		return status+"";
 	}
 	
+	
+	//DONE
 	@RequestMapping(value="/EditBook", method = RequestMethod.POST)
-	public void editBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	@ResponseBody
+	public String editBook(@ModelAttribute("Book") Book editedBook)throws ServletException, IOException{
 		System.out.println("EditBook");
 		
-		
-		Book editedBook = new Book();
-		editedBook.setId(Integer.parseInt(request.getParameter("bookid")));
-		editedBook.setDds(request.getParameter("bookdds"));
-		editedBook.setAuthor(request.getParameter("bookauthor"));
-		editedBook.setDescription(request.getParameter("bookdescription"));
-		editedBook.setName(request.getParameter("bookname"));
-		editedBook.setPublisher(request.getParameter("bookpublisher"));
-		editedBook.setStatus(request.getParameter("bookstatus"));
-		editedBook.setYear(request.getParameter("bookyear"));
-		editedBook.setType(request.getParameter("booktype"));
 		boolean status=false;
 
 		if(BookService.checkBook(editedBook.getId())){
@@ -314,8 +308,7 @@ public class MainController{
 		
 		//setUserSessions(request, response, newUser);
 
-		PrintWriter pw = response.getWriter();
-		pw.write(status+"");
+		return status +"";
 	}
 
 	@RequestMapping(value="/GetBook", method = RequestMethod.POST)
@@ -338,10 +331,10 @@ public class MainController{
 	}
 		
 	@RequestMapping(value="/DeleteBook", method = RequestMethod.POST)
-	public void deleteBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	@ResponseBody
+	public String deleteBook(@RequestParam("bookid") int bookid)throws ServletException, IOException{
 		System.out.println("DeleteBook");
 		
-		int bookid = Integer.parseInt(request.getParameter("bookid"));
 		boolean status=false;
 
 		if(BookService.checkBook(bookid)){
@@ -353,17 +346,16 @@ public class MainController{
 		
 		//setUserSessions(request, response, newUser);
 
-		PrintWriter pw = response.getWriter();
-		pw.write(status+"");
+		return(status+"");
 	}
 
 	
-	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
-	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
-		System.out.println("EditProduct");
-
-		request.getSession().setAttribute("productID", request.getParameter("bookID"));
-
-	
-	}
+//	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
+//	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+//		System.out.println("EditProduct");
+//
+//		request.getSession().setAttribute("productID", request.getParameter("bookID"));
+//
+//	
+//	}
 }

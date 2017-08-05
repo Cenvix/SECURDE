@@ -104,15 +104,15 @@
 			            url: 'EditBook',
 			            data: {
 
-				          bookid:$bookid,
-			              bookdds:$bookdds,
-			              bookname:$bookname,
-			              bookauthor:$bookauthor,
-			              bookpublisher:$bookpublisher,
-			              booktype:$booktype,
-			              bookyear:$bookyear,
-			              bookstatus:$bookstatus,
-			              bookdescription:$bookdescription
+				          id:$bookid,
+			              dds:$bookdds,
+			              name:$bookname,
+			              author:$bookauthor,
+			              publisher:$bookpublisher,
+			              type:$booktype,
+			              year:$bookyear,
+			              status:$bookstatus,
+			              description:$bookdescription
 			          		
 			            },
 			            type: 'POST',
