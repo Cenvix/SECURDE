@@ -78,21 +78,22 @@ public class MainController{
 	}
 */
 	
-	@RequestMapping(value="/SearchBooks", method = RequestMethod.GET)
-	private void searchBooks(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
-		// TODO Auto-generated method stub
-		//System.out.println("SEARCH BOOKS");
+	//DONE - Review if time later
+	@RequestMapping(value="/SearchBooks", method = RequestMethod.POST)
+	@ResponseBody
+	private void searchBooks(HttpServletRequest request, HttpServletResponse response,
+								@RequestParam("query") String query, @RequestParam("filterMagazine") String magazineFilter, 
+								@RequestParam("filterThesis") String thesisFilter, @RequestParam("filterBook") String bookFilter)throws ServletException, IOException{
 		System.out.println("SEARCH BOOKS");
-		String query = request.getParameter("query");
-		boolean filterMagazine = request.getParameter("filterMagazine")!=null;
-		boolean filterThesis = request.getParameter("filterThesis")!=null;
-		boolean filterBook = request.getParameter("filterBook")!=null;
 		
+		boolean filterMagazine = thesisFilter != null;
+		boolean filterThesis = magazineFilter != null;
+		boolean filterBook = bookFilter != null;
+
 		ArrayList<Book> books = BookService.searchBooks(query, filterMagazine, filterThesis, filterBook);
+		
 		request.setAttribute("books", books);
 		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
-		
-		//System.out.println(books.size());
 		
 		PrintWriter pw = response.getWriter();
 		pw.write("true");
