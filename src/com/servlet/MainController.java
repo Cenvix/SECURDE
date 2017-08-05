@@ -99,7 +99,8 @@ public class MainController{
 	}
 
 	@RequestMapping(value="/ReserverRoom", method = RequestMethod.POST)
-	private void reserveRoom(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@ResponseBody
+	private String reserveRoom(HttpServletRequest request,@ReqestParam("timeStart") String timeStart, @ReqestParam("room") String room) throws IOException {
 		MeetingRoomBooking mrb = new MeetingRoomBooking();
 		mrb.setTimeStart(Integer.parseInt(request.getParameter("timeStart")));
 		mrb.setTimeEnd(Integer.parseInt(request.getParameter("timeStart"))+100);
@@ -110,8 +111,7 @@ public class MainController{
 		
 		boolean out = MeetingRoomService.addMeetingRoomBooking(mrb);
 		
-		PrintWriter pw = response.getWriter();
-		pw.write(out+"");
+		return out+"";
 	}
 
 	@RequestMapping(value="/BookingsInit", method = RequestMethod.GET)
