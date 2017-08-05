@@ -152,7 +152,7 @@ public class MainController{
 	@RequestMapping(value="/Home")
 	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Home");
-		response.sendRedirect("Home.jsp");
+		request.getRequestDispatcher("Home.jsp").forward(request, response);
 	}
 	
 	//DONE
