@@ -124,11 +124,12 @@ public class MainController{
 
 	
 	@RequestMapping(value="/ReserveBook", method = RequestMethod.POST)
-	private void reserveBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		boolean out = BookService.reserveBook(request.getParameter("idbook"));
+	@ResponseBody
+	private String reserveBook(@RequestParam("idbook")String idbook) throws IOException {
+		System.out.println("ReserveBook");
+		boolean out = BookService.reserveBook(idbook);
 		
-		PrintWriter pw = response.getWriter();
-		pw.write(out+"");
+		return out+"";
 	}
 
 	@RequestMapping(value="/LibraryInit", method = RequestMethod.GET)
@@ -329,10 +330,10 @@ public class MainController{
 	}
 		
 	@RequestMapping(value="/DeleteBook", method = RequestMethod.POST)
-	public void deleteBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	@ResponseBody
+	public String deleteBook(@RequestParam("bookid") int bookid)throws ServletException, IOException{
 		System.out.println("DeleteBook");
 		
-		int bookid = Integer.parseInt(request.getParameter("bookid"));
 		boolean status=false;
 
 		if(BookService.checkBook(bookid)){
@@ -344,8 +345,7 @@ public class MainController{
 		
 		//setUserSessions(request, response, newUser);
 
-		PrintWriter pw = response.getWriter();
-		pw.write(status+"");
+		return(status+"");
 	}
 
 	
