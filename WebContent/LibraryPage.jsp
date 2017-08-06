@@ -87,7 +87,7 @@
 				}
 				
 				if(canUserModify()) {
-					results +="<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>";
+					results +=		"<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>";
 				}
 				
 				results += "</div> </div>";

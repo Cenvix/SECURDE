@@ -117,6 +117,7 @@ public class MainController{
 		return out+"";
 	}
 	
+	//DONE - Might be less secure than I like
 	@RequestMapping(value="/ProductAddInit", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getAttribute("userType")!=null) {
@@ -172,7 +173,19 @@ public class MainController{
 	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Home");
 		
-		request.getRequestDispatcher("Home.jsp").forward(request, response);
+		if(request.getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getAttribute("userType").toString());
+			
+			if(AuthorityCheckerService.isAdmin(type)) {
+				request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+			}
+			else {
+				request.getRequestDispatcher("Home.jsp").forward(request, response);
+			}
+		}
+		else {
+			request.getRequestDispatcher("Home.jsp").forward(request, response);
+		}
 	}
 	
 	//DONE
