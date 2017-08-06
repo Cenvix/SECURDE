@@ -19,8 +19,8 @@
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
 			
-			if(canUserModify) {
-				document.getElementById('addBookContainer').innerHTML = "<div class='well'><button type='button' class='btn btn-primary' style='width:100%;' id='save'  onclick='addProduct()'>Add a Book!</button></div>";
+			if(canUserModify()) {
+				document.getElementById('addBookContainer').innerHTML = "<div class='well'><button type='button' class='btn btn-primary' style='width:100%;' id='save' onclick='addProduct()'>Add a Book!</button></div>";
 			}
 			
 			initBooks();
