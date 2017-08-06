@@ -34,6 +34,7 @@ import com.beans.User;
 import com.google.gson.Gson;
 import com.services.AuthorityCheckerService;
 import com.services.BookService;
+import com.services.EncryptionService;
 import com.services.MeetingRoomService;
 import com.services.UserService;
 import com.sun.media.jfxmedia.logging.Logger;
@@ -233,6 +234,10 @@ public class MainController{
 		newUser.setNewId();
 		newUser.setUserType("0");
 		
+		EncryptionService encode = new EncryptionService();
+		newUser.setPassword(encode.encryptPass(newUser.getPassword()));
+		newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
+		
 		boolean status=false;
 		
 		if(UserService.checkUser(newUser)){
@@ -272,6 +277,11 @@ public class MainController{
 	public String addEmployee(@ModelAttribute("User") User newUser)throws ServletException, IOException{
 		System.out.println("AddEmployee");
 		
+		
+
+		EncryptionService encode = new EncryptionService();
+		newUser.setPassword(encode.encryptPass(newUser.getPassword()));
+		newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
 		
 		
 		boolean status=false;
