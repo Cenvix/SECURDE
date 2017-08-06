@@ -86,7 +86,7 @@
 					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' onclick='reserveBook("+books[i].id+")'>Reserve</button>";	
 				}
 				
-				if(canUserModify) {
+				if(canUserModify()) {
 					results +="<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>";
 				}
 				
