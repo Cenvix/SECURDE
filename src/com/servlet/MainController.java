@@ -120,15 +120,17 @@ public class MainController{
 	
 	@RequestMapping(value="/ProductAddInit", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("GO TO PRODUCT ADD");
-		int type = Integer.parseInt(request.getAttribute("userType").toString());
-		
-		if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
-			System.out.println("ALLOWED");
-			response.sendRedirect("ProductAdd.jsp");
+		if(request.getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getAttribute("userType").toString());
+			
+			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
+				response.sendRedirect("ProductAdd.jsp");
+			}
+			else {
+				response.sendRedirect("AccessDenied.jsp");
+			}
 		}
 		else {
-			System.out.println("DENIED");
 			response.sendRedirect("AccessDenied.jsp");
 		}
 	}
