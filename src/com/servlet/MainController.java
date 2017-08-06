@@ -228,6 +228,9 @@ public class MainController{
 	    Date lastAccessTime = new Date(session.getLastAccessedTime());
 	
         session.setAttribute("userID", user.getId());
+        session.setAttribute("userType", user.getUserType());
+        session.setAttribute("userFirstName", user.getFirstName());
+        session.setAttribute("userLastName", user.getLastName());
 	}
 	
 	
