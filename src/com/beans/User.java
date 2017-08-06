@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.springframework.security.crypto.encrypt.Encryptors;
+
 //import com.mysql.fabric.xmlrpc.base.Array;
 
 public class User implements Serializable {
@@ -113,7 +115,6 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 
 	public String getUserNumber() {
 		return userNumber;
