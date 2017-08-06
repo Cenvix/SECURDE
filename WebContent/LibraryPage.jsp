@@ -20,7 +20,7 @@
 			console.log(userID);
 			
 			if(canUserModify) {
-				document.getElementById('addBookContainer').innerHTML = "<div class='well'><button type='button' class='btn btn-primary' style='width:100%;' id='save' href='ProductAdd.jsp'>Add a Book!</button></div>";
+				document.getElementById('addBookContainer').innerHTML = "<div class='well'><button type='button' class='btn btn-primary' style='width:100%;' id='save' href='ProductAddInit'>Add a Book!</button></div>";
 			}
 			
 			initBooks();
@@ -74,7 +74,6 @@
 								"</div>" +
 								"<div class='col-sm-3 well'>";
 									
-				console.log(books[i].status);
 				if(books[i].status == "Reserved") {
 					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' disabled='true'>RESERVED</button>";
 									
@@ -83,7 +82,6 @@
 					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' onclick='reserveBook("+books[i].id+")'>Reserve</button>";	
 				}
 				
-				console.log("${userType}");
 				if(canUserModify) {
 					results +="<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>";
 				}

@@ -32,6 +32,7 @@ import com.beans.Book;
 import com.beans.MeetingRoomBooking;
 import com.beans.User;
 import com.google.gson.Gson;
+import com.services.AuthorityCheckerService;
 import com.services.BookService;
 import com.services.MeetingRoomService;
 import com.services.UserService;
@@ -115,6 +116,21 @@ public class MainController{
 		
 		return out+"";
 	}
+	
+	@RequestMapping(value="/ProductAddInit", method = RequestMethod.POST)
+	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("GO TO PRODUCT ADD");
+		int type = Integer.parseInt(request.getAttribute("userType").toString());
+		
+		if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
+			System.out.println("ALLOWED");
+			response.sendRedirect("ProductAdd.jsp");
+		}
+		else {
+			System.out.println("DENIED");
+			response.sendRedirect("AccessDenied.jsp");
+		}
+	}
 
 	@RequestMapping(value="/BookingsInit", method = RequestMethod.GET)
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -153,6 +169,7 @@ public class MainController{
 	@RequestMapping(value="/Home")
 	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Home");
+		
 		request.getRequestDispatcher("Home.jsp").forward(request, response);
 	}
 	
