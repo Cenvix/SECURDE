@@ -63,8 +63,7 @@ public class UserService {
     }
     
     public static ArrayList<String> loginUser(User u) {
-    	System.out.println("Login daw eh");
-    	String sql = "SELECT "+User.COLUMN_ID+" , "+ User.COLUMN_USERTYPE+" FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ? AND " + User.COLUMN_PASSWORD + "= ?";
+    	String sql = "SELECT "+User.COLUMN_ID+" , "+ User.COLUMN_USERTYPE+", "+User.COLUMN_PASSWORD+" FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ?";
     	
     	Connection conn = DBPool.getInstance().getConnection();
         PreparedStatement pstmt = null;
@@ -74,13 +73,15 @@ public class UserService {
         try {
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, u.getEmail());
-            pstmt.setString(2, u.getPassword());
             
             rs = pstmt.executeQuery();
             
             if(rs.next()) {
-                returnVal.add(rs.getString(1));
-                returnVal.add(rs.getString(2));
+            	EncryptionService encoder = new EncryptionService();
+            	if(encoder.matchPass(u.getPassword(), rs.getString(3))){
+	                returnVal.add(rs.getString(1));
+	                returnVal.add(rs.getString(2));
+            	}
             }
             
         } catch (SQLException e) {
