@@ -180,6 +180,9 @@ public class MainController{
 			if(AuthorityCheckerService.isAdmin(type)) {
 				request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
 			}
+			else if(AuthorityCheckerService.isManager(type)) {
+				request.getRequestDispatcher("ManagementPage.jsp").forward(request, response);
+			}
 			else {
 				request.getRequestDispatcher("Home.jsp").forward(request, response);
 			}
