@@ -265,6 +265,11 @@ public class MainController{
 		System.out.println("AddEmployee");
 		
 		
+
+		EncryptionService encode = new EncryptionService();
+		newUser.setPassword(encode.encryptPass(newUser.getPassword()));
+		newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
+		
 		
 		boolean status=false;
 		
