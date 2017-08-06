@@ -19,6 +19,10 @@
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
 			
+			if(canUserModify) {
+				document.getElementById('addBookContainer').innerHTML = "<div class='well'><button type='button' class='btn btn-primary' style='width:100%;' id='save' href='ProductAdd.jsp'>Add a Book!</button></div>";
+			}
+			
 			initBooks();
 			loadBooks();
 		});
@@ -38,6 +42,14 @@
 			books.push(book);
 		}
 		
+		function canUserModify(){
+			if("${userType}" == "1" || "${userType}" == "2") {
+				return true;
+			}
+			
+			return false;
+		}
+		
 		function initBooks(){
 			books = [];
 			console.log("Initializing books");
@@ -53,14 +65,14 @@
 			
 			for(var i = 0; i < books.length; i++) {
 				results += "<div class='row'>" +
-								"<div class='col-sm-10'>" +
+								"<div class='col-sm-9'>" +
 									"<div class='well'>" +
 										"<a href='ProductPage.jsp'><h3 id='productTitle_" + books[i].id + "'>" + books[i].name + "</h3></a>" +
 										"<label>Author: </label> <span id='productAuthor_" + books[i].id + "'>" + books[i].author + "</span><br>" +
 										"<label>Publisher: </label><span id='productPublisher_" + books[i].id + "'>" + books[i].publisher + "</span>" +
 									"</div>" +
 								"</div>" +
-								"<div class='col-sm-2 well'>";
+								"<div class='col-sm-3 well'>";
 									
 				console.log(books[i].status);
 				if(books[i].status == "Reserved") {
@@ -70,9 +82,13 @@
 				else {
 					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' onclick='reserveBook("+books[i].id+")'>Reserve</button>";	
 				}
-				results +="<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>" +
-				"</div>" + 
-			"</div>";
+				
+				console.log("${userType}");
+				if(canUserModify) {
+					results +="<button type='button' class='btn btn-info libraryButtons' style='width:100%' id='edit_" + books[i].id + "' onclick='editBook("+books[i].id+")'>Edit</button>";
+				}
+				
+				results += "</div> </div>";
 			}
 			
 			document.getElementById('resultsContainer').innerHTML = results;
@@ -172,8 +188,8 @@
 		  
 		<div class="container">    
 		  <div class="row">
-			<div class="col-sm-3 well">
-				<form action="SearchBooks" method="post">
+			<div class="col-sm-3">
+				<form action="SearchBooks" method="post" class="well">
 					<div class="input-group">
 						<input type="text" class="form-control" placeholder="Search" id="searchQuery" name="query">
 						<div class="input-group-btn">
@@ -195,13 +211,13 @@
 						</div>
 					</div>
 				</form>
+				
+				<div id="addBookContainer"></div>
 			</div>
 			
 			<!--TODO when we compile everything: Automate generation of search results-->
 			<!--TODO when we compile everything: Make edit button dependent on user authorization-->
 			<div class="col-sm-9" id="resultsContainer"></div>
-			
-			<button type="button" class="btn btn-primary" style="width:100%;margin-top:10px" id="save" href="ProductAdd.jsp">Add a Book!</button>
 					
 		  </div>
 		</div>
