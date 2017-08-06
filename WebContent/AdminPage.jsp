@@ -33,8 +33,10 @@
 							
 					if($admins[i].userType==1)
 						out+= "<br>" + "\(Library Staff\)";
-					else
+					else if($admins[i].userType==2)
 						out+= "<br>" + "\(Library Manager\)";
+					else
+						out+= "<br>" + "\(Admin\)";
 					out+="<br><br><br><\div>";
 					
 					finalOut+=out;

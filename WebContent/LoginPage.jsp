@@ -142,11 +142,11 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>                        
 					</button>
-					<a class="navbar-brand" href="Home.jsp">SECURDE Library</a>
+					<a class="navbar-brand" href="Home">SECURDE Library</a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="Home.jsp">Home</a></li>
+						<li class="active"><a href="Home">Home</a></li>
 						<li><a href="LibraryInit">Search Library</a></li>
 						<li><a href="BookingsInit">Room Reservation</a></li>
 					</ul>

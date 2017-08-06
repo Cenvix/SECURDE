@@ -121,8 +121,8 @@ public class MainController{
 	//DONE - Might be less secure than I like
 	@RequestMapping(value="/ProductAddInit", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getAttribute("userType")!=null) {
-			int type = Integer.parseInt(request.getAttribute("userType").toString());
+		if(request.getSession().getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
 			
 			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
 				response.sendRedirect("ProductAdd.jsp");
@@ -173,9 +173,9 @@ public class MainController{
 	@RequestMapping(value="/Home")
 	public void home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("Home");
-		
-		if(request.getAttribute("userType")!=null) {
-			int type = Integer.parseInt(request.getAttribute("userType").toString());
+		if(request.getSession().getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			System.out.println("USER TYPE: " + type);
 			
 			if(AuthorityCheckerService.isAdmin(type)) {
 				request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
