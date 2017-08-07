@@ -40,8 +40,8 @@
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="Home">Home</a></li>
-						<li><a href="LibraryInit">Search Library</a></li>
-						<li><a href="BookingsInit">Room Reservation</a></li>
+						<li><a href="Library">Search Library</a></li>
+						<li><a href="Bookings">Room Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>
@@ -63,9 +63,9 @@
 		</div>
 		
 		<div class="text-center">
-			<p><a role="button" class="btn btn-primary" type="button" href="AddProductInit">Add New Book</a></p>
-			<p><a role="button" class="btn btn-primary" type="button" href="LibraryInit">Edit / Delete Existing Book</a></p>
-			<p><a role="button" class="btn btn-primary" type="button" href="BookingsInit">Check Meeting Rooms</a></p>
+			<p><a role="button" class="btn btn-primary" type="button" href="AddProduct">Add New Book</a></p>
+			<p><a role="button" class="btn btn-primary" type="button" href="Library">Edit / Delete Existing Book</a></p>
+			<p><a role="button" class="btn btn-primary" type="button" href="Bookings">Check Meeting Rooms</a></p>
 		</div>
 	</body>
 </html>

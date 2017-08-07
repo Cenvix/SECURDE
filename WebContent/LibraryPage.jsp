@@ -38,7 +38,7 @@
 		}
 		
 		function addProduct(){
-			window.location = "ProductAddInit";
+			window.location = "AddProduct";
 		}
 		
 		function addBook(name, publisher, author, id, status) {
@@ -171,8 +171,8 @@
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="Home">Home</a></li>
-						<li><a href="LibraryInit">Search Library</a></li>
-						<li><a href="BookingsInit">Room Reservation</a></li>
+						<li><a href="Library">Search Library</a></li>
+						<li><a href="Bookings">Room Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>
