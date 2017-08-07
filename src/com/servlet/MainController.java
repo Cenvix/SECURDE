@@ -194,7 +194,7 @@ public class MainController{
 			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
 			
 			if(AuthorityCheckerService.isAdmin(type)) {
-				request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+				request.getRequestDispatcher("AdminInit").forward(request, response);
 			}
 			else if(AuthorityCheckerService.isManager(type)) {
 				request.getRequestDispatcher("ManagementPage.jsp").forward(request, response);

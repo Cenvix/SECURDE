@@ -6,6 +6,8 @@
 		<%@  taglib  prefix="c"   uri="http://java.sun.com/jsp/jstl/core"  %>
 		
 
+
+						
 <nav class="navbar navbar-inverse">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -14,13 +16,18 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>                        
 					</button>
-					<a class="navbar-brand" href="Home.jsp">SECURDE Library</a>
+					<a class="navbar-brand" href="Home">SECURDE Library</a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="Home.jsp">Home</a></li>
-						<li><a href="LibraryInit">Search Library</a></li>
-						<li><a href="BookingsInit">Room Reservation</a></li>
+						<c:if test = "${sessionScope.userType!=3}">
+						<li><a href="Home">Home</a></li>
+						</c:if>
+						<c:if test = "${sessionScope.userType==3}">
+						<li><a href="AdminInit">Admins</a></li>
+						</c:if>
+						<li><a href="Library">Search Library</a></li>
+						<li><a href="Bookings">Room Reservation</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>

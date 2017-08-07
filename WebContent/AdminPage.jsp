@@ -14,6 +14,13 @@
 			console.log(userID);
 			$admins = (JSON.parse('${admins}'));
 			console.log($admins);
+			
+			var userType = '<%= session.getAttribute("userType")%>';
+			console.log(userType);
+			if(userType!=3){
+				window.location="AccessDenied.jsp";
+			}
+			
 			initAdmins();
 		});
 		
@@ -45,6 +52,8 @@
 	</head>
 
 	<body>
+	
+	<c:if test = "${sessionScope.userType==3}">
 		<div class="jumbotron text-center">
 			<h1>Welcome</h1>
 			<h3 style="margin-bottom:20px"> Admin <span id="name">Namehere</span></h3>
@@ -53,5 +62,6 @@
 			
 		</div>
 		<div class="jumbotron text-center" id="adminTable"></div>
+	</c:if>
 	</body>
 </html>
