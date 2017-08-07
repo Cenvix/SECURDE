@@ -175,7 +175,6 @@ public class MainController{
 		System.out.println("Home");
 		if(request.getSession().getAttribute("userType")!=null) {
 			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
-			System.out.println("USER TYPE: " + type);
 			
 			if(AuthorityCheckerService.isAdmin(type)) {
 				request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
@@ -355,8 +354,6 @@ public class MainController{
 	@RequestMapping(value="/GetBook", method = RequestMethod.POST)
 	public void getBook(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("GetBook");
-		
-		
 		int bookid = Integer.parseInt(request.getParameter("bookID"));
 		
 		Book book = null;
