@@ -70,9 +70,7 @@
 		</script>
 	</head>
 
-	<body>
-		
-		
+	<body>		
 		<div class="container">
 			<div class="row well">
 				<div class="col-sm-4">

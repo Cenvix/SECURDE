@@ -45,12 +45,10 @@
 	</head>
 
 	<body>
-		
-		
 		<div class="jumbotron text-center">
 			<h1>Welcome</h1>
 			<h3 style="margin-bottom:20px"> Admin <span id="name">Namehere</span></h3>
-			<p><a role="button" class="btn btn-primary" type="button" href="EmployeeAdd.jsp">Add New Staff</a></p>
+			<p><a role="button" class="btn btn-primary" type="button" href="AddEmployees">Add New Staff</a></p>
 			<!-- <p><a role="button" class="btn btn-primary" type="button" href="EmployeeEdit.jsp">Edit / Delete Existing Staff</a></p>-->
 			
 		</div>

@@ -19,8 +19,7 @@
 				console.log(userID);
 			});
 		</script>
-
-		<div class="jumbotron">
+	<div class="jumbotron">
 			<div class="container text-center">
 				<h1>ACCESS DENIED</h1>      
 				<p>You do not have authority to enter this page</p>

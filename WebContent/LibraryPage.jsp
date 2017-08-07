@@ -34,7 +34,7 @@
 		}
 		
 		function addProduct(){
-			window.location = "ProductAddInit";
+			window.location = "AddProduct";
 		}
 		
 		function addBook(name, publisher, author, id, status) {
@@ -154,8 +154,6 @@
 	</head>
 	
 	<body>
-		
-		  
 		<div class="container">    
 		  <div class="row">
 			<div class="col-sm-3">

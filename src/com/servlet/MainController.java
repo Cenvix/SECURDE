@@ -118,8 +118,8 @@ public class MainController{
 		return out+"";
 	}
 	
-	//DONE - Might be less secure than I like
-	@RequestMapping(value="/ProductAddInit", method = RequestMethod.GET)
+	//DONE
+	@RequestMapping(value="/AddProduct", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getSession().getAttribute("userType")!=null) {
 			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
@@ -136,7 +136,7 @@ public class MainController{
 		}
 	}
 
-	@RequestMapping(value="/BookingsInit", method = RequestMethod.GET)
+	@RequestMapping(value="/Bookings", method = RequestMethod.GET)
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookings();
 		request.setAttribute("bookings", bookings);
@@ -153,7 +153,7 @@ public class MainController{
 		return out+"";
 	}
 
-	@RequestMapping(value="/LibraryInit", method = RequestMethod.GET)
+	@RequestMapping(value="/Library", method = RequestMethod.GET)
 	private void libraryInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<Book> books = BookService.getAllBooks();
 		request.setAttribute("books", books);
@@ -168,6 +168,23 @@ public class MainController{
 		String json = new Gson().toJson(admins);
 		request.setAttribute("admins", json);
 		request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+	}
+	
+	@RequestMapping(value="/AddEmployees", method = RequestMethod.GET)
+	private void employeeAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getSession().getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			
+			if(AuthorityCheckerService.isAdmin(type)) {
+				request.getRequestDispatcher("EmployeeAdd.jsp").forward(request, response);
+			}
+			else {
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			}
+		}
+		else {
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		}
 	}
 	
 	@RequestMapping(value="/Home")

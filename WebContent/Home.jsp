@@ -19,8 +19,6 @@
 			});
 		</script>
 
-		
-
 		<div class="jumbotron">
 			<div class="container text-center">
 				<h1>Welcome to SECURDE Library</h1>      

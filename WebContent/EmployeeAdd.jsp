@@ -90,8 +90,6 @@
 	</head>
 
 	<body>
-		
-		
 		<div class="container" style="max-width:600px">
 			<div class="row well">
 				<div class="col-sm-12">
