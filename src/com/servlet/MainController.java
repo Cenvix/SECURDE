@@ -163,9 +163,16 @@ public class MainController{
 	
 	@RequestMapping(value="/ReserveBook", method = RequestMethod.POST)
 	@ResponseBody
-	private String reserveBook(@RequestParam("idbook")String idbook) throws IOException {
-		System.out.println("ReserveBook");
-		boolean out = BookService.reserveBook(idbook);
+	private String reserveBook(@RequestParam("idbook")String idbook, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		
+		boolean out = false;
+		
+		if(request.getSession().getAttribute("userID") != null) {
+			System.out.println("ReserveBook");
+			out = BookService.reserveBook(idbook);
+		}
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 		
 		return out+"";
 	}
@@ -205,10 +212,18 @@ public class MainController{
 	private void adminInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		ArrayList<User> admins = UserService.getAllAdmins();
-		String json = new Gson().toJson(admins);
-		request.setAttribute("admins", json);
-		request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+		if(request.getSession().getAttribute("userID") != null) {
+			if(AuthorityCheckerService.isAdmin(Integer.parseInt(request.getSession().getAttribute("userType").toString()))) {
+				ArrayList<User> admins = UserService.getAllAdmins();
+				String json = new Gson().toJson(admins);
+				request.setAttribute("admins", json);
+				request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+			}
+			else
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		}
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 	}
 	
 	@RequestMapping(value="/AddEmployees", method = RequestMethod.GET)
@@ -270,8 +285,6 @@ public class MainController{
 			status = true;
 		}
 		return ""+status;
-		
-		
 	}
 	
 	//DONE
@@ -293,8 +306,6 @@ public class MainController{
 		newUser.setNewId();
 		newUser.setUserType("0");
 		
-		
-		
 		EncryptionService encode = new EncryptionService();
 		newUser.setPassword(encode.encryptPass(newUser.getPassword()));
 		newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
@@ -311,8 +322,6 @@ public class MainController{
 			//new Gson().toJson(book)
 		}else
 			out.setMessage("Please Verify your Humanity");
-	
-		
 
 		if(out.isSucess())
 		setUserSessions(request, newUser);
@@ -357,26 +366,28 @@ public class MainController{
 	
 	@RequestMapping(value="/AddEmployee", method = RequestMethod.POST)
 	@ResponseBody
-	public String addEmployee(@ModelAttribute("User") User newUser)throws ServletException, IOException{
+	public String addEmployee(@ModelAttribute("User") User newUser, HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("AddEmployee");
-		
-		
-
-		EncryptionService encode = new EncryptionService();
-		newUser.setPassword(encode.encryptPass(newUser.getPassword()));
-		newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
-		
-		
 		boolean status=false;
 		
-		if(UserService.checkUser(newUser)){
-			if(UserService.addUser(newUser)){
-				status = true;
-				System.out.println("Added");
+		if(request.getSession().getAttribute("userID") != null) {
+			if(AuthorityCheckerService.isAdmin(Integer.parseInt(request.getSession().getAttribute("userType").toString()))) {
+				EncryptionService encode = new EncryptionService();
+				newUser.setPassword(encode.encryptPass(newUser.getPassword()));
+				newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
+				
+				if(UserService.checkUser(newUser)){
+					if(UserService.addUser(newUser)){
+						status = true;
+						System.out.println("Added");
+					}
+				}
 			}
+			else
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 		}
-		
-		//setUserSessions(request, response, newUser);
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 
 		return(status+"");
 	}
@@ -384,30 +395,28 @@ public class MainController{
 	//DONE
 	@RequestMapping(value="/AddBook", method = RequestMethod.POST)
 	@ResponseBody
-	public String addBook(@ModelAttribute("Book") Book book)throws ServletException, IOException{
+	public String addBook(@ModelAttribute("Book") Book book, HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("AddBook");
-		
-
-		System.out.println(book.getId());
-
-		Random r =new Random();
-		book.setId(r.nextInt(9999));
-		
-		System.out.println(book.getId());
-
-		
 		boolean status=false;
-		
-		if(!BookService.checkBook(book.getId())){
-			
-			if(BookService.addBook(book)){
-				status = true;
-			}
-		}
-		
-		//setUserSessions(request, response, newUser);
 
-		//PrintWriter pw = response.getWriter();
+		if(request.getSession().getAttribute("userID") != null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
+				Random r =new Random();
+				book.setId(r.nextInt(9999));
+				
+				if(!BookService.checkBook(book.getId())){
+					if(BookService.addBook(book)){
+						status = true;
+					}
+				}
+			}
+			else
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		}
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		
 		return status+"";
 	}
 	
@@ -415,17 +424,28 @@ public class MainController{
 	//DONE
 	@RequestMapping(value="/EditBook", method = RequestMethod.POST)
 	@ResponseBody
-	public String editBook(@ModelAttribute("Book") Book editedBook)throws ServletException, IOException{
+	public String editBook(@ModelAttribute("Book") Book editedBook, HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("EditBook");
 		
 		boolean status=false;
 
-		if(BookService.checkBook(editedBook.getId())){
-			if(BookService.editBook(editedBook)){
-				status = true;
-				System.out.println("Edited");
+		if(request.getSession().getAttribute("userID") != null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
+				if(BookService.checkBook(editedBook.getId())){
+					if(BookService.editBook(editedBook)){
+						status = true;
+						System.out.println("Edited");
+					}
+				}
 			}
+			else
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 		}
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		
+		
 		
 		//setUserSessions(request, response, newUser);
 
@@ -451,17 +471,26 @@ public class MainController{
 		
 	@RequestMapping(value="/DeleteBook", method = RequestMethod.POST)
 	@ResponseBody
-	public String deleteBook(@RequestParam("bookid") int bookid)throws ServletException, IOException{
+	public String deleteBook(@RequestParam("bookid") int bookid, HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("DeleteBook");
 		
 		boolean status=false;
-
-		if(BookService.checkBook(bookid)){
-			if(BookService.deleteBook(bookid)){
-				status = true;
-				System.out.println("deleted");
+		
+		if(request.getSession().getAttribute("userID") != null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
+				if(BookService.checkBook(bookid)){
+					if(BookService.deleteBook(bookid)){
+						status = true;
+						System.out.println("deleted");
+					}
+				}
 			}
+			else
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 		}
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 		
 		//setUserSessions(request, response, newUser);
 
