@@ -53,6 +53,39 @@ public class MeetingRoomService {
 
          return out;
 	 }
+	 public static boolean removeMeetingRoomBooking(int timeStart, int roomId) {
+         String sql = "DELETE FROM " + MeetingRoomBooking.TABLE_NAME + " WHERE "
+             + MeetingRoomBooking.COLUMN_TIMESTART + "= ? AND "
+             + MeetingRoomBooking.COLUMN_IDMEETINGROOM + " = ? AND " 
+             + MeetingRoomBooking.COLUMN_DATE + " = CURDATE();";
+         
+      //   String url = "jdbc:mysql://localhost:3306/userID";
+
+         Connection connection = DBPool.getInstance().getConnection();
+         PreparedStatement pstmt = null;
+         Boolean out=false;
+
+         try {
+             pstmt = connection.prepareStatement(sql);
+             
+             pstmt.setInt(1, timeStart);
+             pstmt.setInt(2, roomId);
+            
+             pstmt.executeUpdate();
+             out=true;
+         } catch (SQLException e) {
+             e.printStackTrace();
+         } finally {
+             try {
+                 pstmt.close();
+                 connection.close();
+             } catch(SQLException e) {
+                 e.printStackTrace();
+             }
+         }
+
+         return out;
+	 }
 	 public static boolean checkDoubleBook(String userID){
 		 ArrayList<MeetingRoomBooking> mrbToday= new ArrayList();
 		 mrbToday = getMeetingRoomBookingsToday();
