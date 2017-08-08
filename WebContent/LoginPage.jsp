@@ -8,7 +8,8 @@
 		
 		<%@ include file="header.jsp" %>
 	
-	
+	<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+		
 		
 		<script type="text/javascript">
 		
@@ -19,16 +20,30 @@
 			$("#logMessage").hide();
 			$("#registerMessage").hide();
 			var userID ='<%= session.getAttribute("userID")%>';
-			console.log(userID);
+			if(parseInt('<%= session.getAttribute("attemps")%>')>=3){
+				
+				setLogMessage("Wrong Username OR Password");
+			}
+			
 			
 		});
-		var regCap;
+		
+		var regCap,logCap,attemps;
 		var onloadCallback = function() {
-
+			
+			
 			regCap = grecaptcha.render(document.getElementById('regCap'), {'sitekey' : '6LeDJywUAAAAADtpcpPKf3jRUv9lNi4dgHo9S86A'});
+			if(parseInt('<%= session.getAttribute("attemps")%>')>=3){
+				logCap = grecaptcha.render(document.getElementById('logCap'), {'sitekey' : '6LeDJywUAAAAADtpcpPKf3jRUv9lNi4dgHo9S86A'});
+				
+			}
 	      };
+	      
+	      
 		
 			function login(){
+				
+				
 				$email = $("#loginEmail").val();
 				$pass = $("#loginPassword").val();
 				
@@ -39,22 +54,30 @@
 			            url: 'Login',
 			            data: {
 			                email:$email,
-			                password:$pass
+			                password:$pass,
+			                grecaptcharesponse:grecaptcha.getResponse(logCap)
 			            },
 			            type: 'POST',
 						success:function(jsonobject){
-								console.log(jsonobject);
-									if(jsonobject=="true"){
+								jsonobject = JSON.parse(jsonobject);
+									if(jsonobject.sucess){
 										window.location = "Home";
 									} else{
-									setLogMessage("Wrong Username OR Password");
-								   	
+										alert(jsonobject.message);
+										window.location = "LoginPage.jsp";
 								}
+						
+						},
+			            error: function(){
+						    alert('Something went wrong! Please try again');
 						}
+			            
 			        });
 					
 					
 				}
+
+				
 			}
 			
 			function register(){
@@ -73,9 +96,6 @@
 				$sQuestion = $("#sQuestion").val();
 				$sAnswer = $("#sAnswer").val();
 				$sCAnswer = $("#sCAnswer").val();
-				
-				
-				console.log(grecaptcha.getResponse(regCap));
 				
 				if($fName==""||$mName==""||$lName==""){
 					alert("Input Name Input!");
@@ -125,6 +145,9 @@
 									alert(jsonobject.message);
 								   	
 								}
+						},
+			            error: function(){
+						    alert('Something went wrong! Please try again');
 						}
 			        });
 					
@@ -132,7 +155,7 @@
 				}
 				grecaptcha.reset(regCap);
 
-				console.log(grecaptcha.getResponse(regCap));
+				//console.log(grecaptcha.getResponse(regCap));
 			}
 			
 			function setRegMessage(mes){
@@ -165,6 +188,7 @@
 					<div class="col-sm-12" style="margin-bottom:20px"><input class="form-control" type="text" id="loginEmail" placeholder="Email"></input></div>
 					<div class="col-sm-12" style="margin-bottom:10px"><input class="form-control" type="password" id="loginPassword" placeholder="Password"></input></div>
 					<div class="col-sm-12" style="margin-bottom:20px"><a href="#">Forgot your password?</a></div>
+					<div class="col-sm-12" id="logCap"></div><br>
 					<div class="col-sm-12" style="margin-bottom:20px"><button type="button" class="btn btn-primary" id="loginButton" onClick="login()">Login</button></div>
 				</form>
 			</div>
@@ -173,24 +197,35 @@
 				<form id="register">
 					<div class="col-sm-12" style="margin-bottom:30px"><h1>Register</h1></div>
 					<div class="col-sm-12" style="margin-bottom:20px" id="registerMessage"></div>
+					
+					First Name
 					<input class="form-control" type="text" id="registerFName" placeholder="First Name" value=""><br>
 					
+					Middle Name
 					<input class="form-control" type="text" id="registerMName" placeholder="Middle Name" value=""><br>
 					
+					Last Name
 					<input class="form-control" type="text" id="registerLName" placeholder="Last Name" value=""><br>
 					
+					Email
 					<input class="form-control" type="text" id="registerEmail" placeholder="Email" value=""><br>
 					
+					ID Number
 					<input class="form-control" type="text" id="registerIDNumber" placeholder="ID Number" value=""><br>
 					
+					Password
 					<input class="form-control" type="password" id="registerPassword" placeholder="Password" value=""><br>
 					
+					Confirm Password
 					<input class="form-control" type="password" id="registerConfirmPassword" placeholder="Confirm Password" value=""><br>
 					
+					Secret Question
 					<input class="form-control" type="text" id="sQuestion" placeholder="E.g. What is the name of my 1st Pet?" value=""><br>
 					
+					Answer
 					<input class="form-control" type="password" id="sAnswer" placeholder="Answer" value=""><br>
 					
+					Confirm Answer
 					<input class="form-control" type="password" id="sCAnswer" placeholder="Confirm Answer" value=""><br>
 					
 					<div id="regCap"></div>

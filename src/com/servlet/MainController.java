@@ -250,23 +250,48 @@ public class MainController{
 	@RequestMapping(value="/Login", method = RequestMethod.POST)
 	@ResponseBody
 	public String login(HttpServletRequest request,	@RequestParam("email") String email,
-													@RequestParam("password") String password){
+													@RequestParam("password") String password,
+													@RequestParam("grecaptcharesponse") String cap ){
 		System.out.println("Login");
 
 		User user = new User();
 		user.setEmail(email);
 		user.setPassword(password);
+		
+		
+		if((Integer)request.getSession().getAttribute("attemps")==null)
+		setAttempsSessions(request,1);
+		else
+			setAttempsSessions(request, (Integer)request.getSession().getAttribute("attemps")+1);
+		
 		ArrayList<String> out = UserService.loginUser(user);
 		
-		boolean status = false;
 		
-		if(out.size()>0){
-			user.setId(Integer.parseInt(out.get(0)));
-			
-			setUserSessions(request, user);
-			status = true;
+		ResponseOut resp = new ResponseOut();
+		
+		if((Integer)request.getSession().getAttribute("attemps")>3){
+			if(this.processCaptcha(request, cap)){
+				if(out.size()>0){
+					user.setId(Integer.parseInt(out.get(0)));
+					
+					setUserSessions(request, user);
+					resp.setSucess(true);
+				}else{
+					resp.setMessage("Wrong Username or Password");
+				}
+			}else
+				resp.setMessage("Please verify your humanity");
+		}else{
+			if(out.size()>0){
+				user.setId(Integer.parseInt(out.get(0)));
+				
+				setUserSessions(request, user);
+				resp.setSucess(true);
+			}else{
+				resp.setMessage("Wrong Username or Password");
+			}
 		}
-		return ""+status;
+		return new Gson().toJson(resp);
 		
 		
 	}
@@ -286,7 +311,7 @@ public class MainController{
 	@ResponseBody
 	public String register(HttpServletRequest request,@ModelAttribute("User") User newUser,@RequestParam("grecaptcharesponse") String cap )throws ServletException, IOException{
 		System.out.println("Register");
-		System.out.println(cap);
+		//System.out.println(cap);
 		newUser.setNewId();
 		newUser.setUserType("0");
 		
@@ -330,6 +355,8 @@ public class MainController{
 	    Date lastAccessTime = new Date(session.getLastAccessedTime());
 	    User sessionUser = UserService.getUser(user.getId());
 	    
+
+		session.setAttribute("attemps", 0);
         session.setAttribute("userID", sessionUser.getId());
         session.setAttribute("userType", sessionUser.getUserType());
         session.setAttribute("userNumber", sessionUser.getUserNumber());
@@ -337,6 +364,21 @@ public class MainController{
         session.setAttribute("userLastName", sessionUser.getLastName());
         
 	}
+	
+	public void setAttempsSessions(HttpServletRequest request, int a){
+		
+		HttpSession session;
+		session = request.getSession(true);
+		
+		// Get session creation time.
+	    Date createTime = new Date(session.getCreationTime());
+	         
+	    // Get last access time of this web page.
+	    Date lastAccessTime = new Date(session.getLastAccessedTime());
+	   session.setAttribute("attemps", a);
+        
+	}
+	
 	
 	public boolean processCaptcha(HttpServletRequest request,String cap){
 		CaptchaSettings captchaSettings = new CaptchaSettings();
