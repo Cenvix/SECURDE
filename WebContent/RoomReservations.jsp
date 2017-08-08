@@ -24,6 +24,9 @@
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
+			if(userID == "null"){
+				window.location =  "AccessDenied.jsp";
+			}
 			
 			initBookings();
 			loadBookings();
@@ -109,11 +112,13 @@
 		}
 		
 		function createReservation(room, timeStart) {
+			var userID ='<%= session.getAttribute("userID")%>';
 			$.ajax({
                 url: 'ReserveRoom',
                 data: {
                     room: room,
-                    timeStart: timeStart
+                    timeStart: timeStart,
+                    userID: userID
                 },
                 type: 'POST',
 				success:function(jsonobject){
