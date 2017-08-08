@@ -30,12 +30,14 @@ import org.springframework.web.servlet.mvc.AbstractController;
 
 import com.beans.Book;
 import com.beans.MeetingRoomBooking;
+import com.beans.Review;
 import com.beans.User;
 import com.google.gson.Gson;
 import com.services.AuthorityCheckerService;
 import com.services.BookService;
 import com.services.EncryptionService;
 import com.services.MeetingRoomService;
+import com.services.ReviewService;
 import com.services.UserService;
 import com.sun.media.jfxmedia.logging.Logger;
 
@@ -168,7 +170,19 @@ public class MainController{
 		Book product = BookService.getBook(id);
 		String productJSON = new Gson().toJson(product);
 		
+		ArrayList<Review> reviews = ReviewService.getBookReviews(id);
+		String reviewsJSON = new Gson().toJson(reviews);
+		
+		ArrayList<String> names = new ArrayList();
+		for(int i = 0; i < reviews.size(); i++) {
+			User user = UserService.getUser(reviews.get(i).getUserID());
+			names.add(user.getFirstName() + " " + user.getLastName());
+		}
+		String namesJSON = new Gson().toJson(names);
+		
 		request.setAttribute("bookJSON", productJSON);
+		request.setAttribute("reviewsJSON", reviewsJSON);
+		request.setAttribute("namesJSON", namesJSON);
 		request.getRequestDispatcher("ProductPage.jsp").forward(request, response);
 	}
 

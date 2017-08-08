@@ -4,7 +4,6 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-	
 		
 		<%@ include file="header.jsp" %>
 		
@@ -15,8 +14,13 @@
 			console.log(userID);
 			
 			console.log("PRODUCT PAGE");
-			initBook();
+			init();
 		});
+		
+		function init() {
+			initBook();
+			initReviews();
+		}
 		
 		function initBook() {
 			var book = (JSON.parse('${bookJSON}'));
@@ -28,6 +32,26 @@
 			document.getElementById("productID").innerHTML = book.id;
 			document.getElementById("productDesc").innerHTML = book.description;
 			
+		}
+		
+		function initReviews() {
+			var reviews = (JSON.parse('${reviewsJSON}'));
+			var names = (JSON.parse('${namesJSON}'));
+			
+			console.log(reviews);
+			console.log(names);
+			var results = "";
+			
+			for(var i = 0; i < reviews.length; i++) {
+				results += "<div class='row'>" +
+								"<div class='well'>" +
+									"<h3>" + reviews[i].rating + "/10    by <span id='reviewerName"+i+"'>"+ names[i] +"</span></h3>" +
+										"<p id='review"+i+"'>" + reviews[i].review + "</p>" +
+								"</div>" + 
+							"</div>"
+			}
+			
+			document.getElementById("reviewContainer").innerHTML = results;
 		}
 		</script>
 	</head>
@@ -77,30 +101,7 @@
 			</div>
 			
 			<!--TODO when we compile everything: automate reviews-->
-			<div class="row">
-				<div class="well">
-					<p>Review Title     by <span id="reviewerName1">that guy</span></p>
-					<p id="review1">Review Content Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="well">
-					<p>Review Title     by <span id="reviewerName2">that guy</span></p>
-					<p id="review2">Review Content Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="well">
-					<p>Review Title     by <span id="reviewerName3">that guy</span></p>
-					<p id="review3">Review Content Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="well">
-					<p>Review Title     by <span id="reviewerName4">that guy</span></p>
-					<p id="review4">Review Content Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				</div>
-			</div>
+			<div id = reviewContainer></div>
 		</div>
 	
 	
