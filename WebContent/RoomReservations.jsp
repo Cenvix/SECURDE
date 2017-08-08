@@ -24,12 +24,14 @@
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
-			if(userID == "null"){
-				window.location =  "AccessDenied.jsp";
-			}
 			
 			initBookings();
 			loadBookings();
+			if(userType != "0"){
+				for(var i = 0; i < bookings.length; i++) {
+					document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).disabled = false;
+				}
+			}
 		});
 		
 		function initBookings() {
@@ -113,24 +115,47 @@
 		
 		function createReservation(room, timeStart) {
 			var userID ='<%= session.getAttribute("userID")%>';
-			$.ajax({
-                url: 'ReserveRoom',
-                data: {
-                    room: room,
-                    timeStart: timeStart,
-                    userID: userID
-                },
-                type: 'POST',
-				success:function(jsonobject){
-					
-							if(jsonobject=="true"){
-	   		            	 	document.getElementById("room"+room+"_"+timeStart).innerHTML="RESERVED";
-	   		               		document.getElementById("room"+room+"_"+timeStart).disabled=true;
-							} else
-								alert("Reservation Failed");
-						   	
-						}
-            });
+
+			var userType ='<%= session.getAttribute("userType")%>';
+			
+			if(userType == "0"){			
+				$.ajax({
+	                url: 'ReserveRoom',
+	                data: {
+	                    room: room,
+	                    timeStart: timeStart,
+	                    userID: userID
+	                },
+	                type: 'POST',
+					success:function(jsonobject){
+						
+								if(jsonobject=="true"){
+		   		            	 	document.getElementById("room"+room+"_"+timeStart).innerHTML="RESERVED";
+		   		               		document.getElementById("room"+room+"_"+timeStart).disabled=true;
+								} else
+									alert("Reservation Failed");
+							   	
+							}
+	            });
+			}else{
+				$.ajax({
+	                url: 'RemoveRoom',
+	                data: {
+	                    room: room,
+	                    timeStart: timeStart
+	                },
+	                type: 'POST',
+					success:function(jsonobject){
+						
+								if(jsonobject=="true"){
+		   		            	 	document.getElementById("room"+room+"_"+timeStart).innerHTML="Reserve";
+								} else
+									alert("Reservation Wot");
+							   	
+							}
+	            });
+			}
+		
 		}
 		</script>
 	</head>

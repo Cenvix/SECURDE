@@ -186,7 +186,7 @@
 					<div class="col-sm-12" style="margin-bottom:20px" id="logMessage"></div>
 					<div class="col-sm-12" style="margin-bottom:20px"><input class="form-control" type="text" id="loginEmail" placeholder="Email"></input></div>
 					<div class="col-sm-12" style="margin-bottom:10px"><input class="form-control" type="password" id="loginPassword" placeholder="Password"></input></div>
-					<div class="col-sm-12" style="margin-bottom:20px"><a href="#">Forgot your password?</a></div>
+					<div class="col-sm-12" style="margin-bottom:20px"><a href="ForgotPassword">Forgot your password?</a></div>
 					<div class="col-sm-12" id="logCap"></div><br>
 					<div class="col-sm-12" style="margin-bottom:20px"><button type="button" class="btn btn-primary" id="loginButton" onClick="login()">Login</button></div>
 				</form>

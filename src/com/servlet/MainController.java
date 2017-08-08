@@ -135,6 +135,16 @@ public class MainController{
 			return out+"";
 		}
 		
+		//DONE
+				@RequestMapping(value="/RemoveRoom", method = RequestMethod.POST)
+				@ResponseBody
+				private String removeRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
+				
+					boolean out = false;
+					out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
+					
+					return out+"";
+				}
 	//DONE
 	@RequestMapping(value="/AddProduct", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -157,7 +167,12 @@ public class MainController{
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookings();
 		request.setAttribute("bookings", bookings);
-		request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
+		if(request.getAttribute("userType")!=null){
+			request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
+		}else{
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		}
+
 	}
 
 	
@@ -567,8 +582,35 @@ public class MainController{
 		
 		return ""+isSuccess;
 	}
-
 	
+	@RequestMapping(value="/ForgotPassword", method=RequestMethod.GET)
+	public void forgotPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("ForgotPassword.jsp").forward(request, response);
+	}
+
+	@RequestMapping(value="/ForgotPasswordEmail", method=RequestMethod.POST)
+	@ResponseBody
+	public String forgotPasswordEmail(@RequestParam("email") String email, HttpServletRequest request, HttpServletResponse response) {
+		boolean isSuccess = false;
+		
+		User user = UserService.whoseEmail(email);
+		request.setAttribute("userQuestion", user.getSecretQuestion());
+		isSuccess = true;
+		
+		return ""+user.getSecretQuestion();
+	}
+	
+	@RequestMapping(value="/ForgotPasswordAnswer", method=RequestMethod.POST)
+	@ResponseBody
+	public String forgotPasswordAnswer(@RequestParam("email") String email, @RequestParam("answer") String answer, HttpServletRequest request, HttpServletResponse response) {
+		boolean isSuccess = false;
+		
+		User user = UserService.whoseEmail(email);
+		
+		//Insert verification and login here
+		
+		return ""+isSuccess;
+	}
 //	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
 //	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 //		System.out.println("EditProduct");
