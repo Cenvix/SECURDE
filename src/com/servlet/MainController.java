@@ -343,8 +343,9 @@ public class MainController{
 				if(UserService.addUser(newUser)){
 					out.setSucess(true);
 				}else
-					out.setMessage("ID Number or Email is already Taken");
-			}
+					out.setMessage("Check the ID Number or Email, Account might exist already");
+			}else
+				out.setMessage("Check the ID Number or Email, Account might exist already");
 			//new Gson().toJson(book)
 		}else
 			out.setMessage("Please Verify your Humanity");
@@ -409,9 +410,10 @@ public class MainController{
 	
 	@RequestMapping(value="/AddEmployee", method = RequestMethod.POST)
 	@ResponseBody
-	public String addEmployee(@ModelAttribute("User") User newUser, HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	public String addEmployee(@ModelAttribute("User") User newUser, HttpServletRequest request, HttpServletResponse response,@RequestParam("grecaptcharesponse") String cap )throws ServletException, IOException{
 		System.out.println("AddEmployee");
-		boolean status=false;
+		ResponseOut status = new ResponseOut();
+		
 		
 		if(request.getSession().getAttribute("userID") != null) {
 			if(AuthorityCheckerService.isAdmin(Integer.parseInt(request.getSession().getAttribute("userType").toString()))) {
@@ -419,11 +421,17 @@ public class MainController{
 				newUser.setPassword(encode.encryptPass(newUser.getPassword()));
 				newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
 				
-				if(UserService.checkUser(newUser)){
-					if(UserService.addUser(newUser)){
-						status = true;
-						System.out.println("Added");
-					}
+				if(processCaptcha(request, cap)){
+					if(UserService.checkUser(newUser)){
+						if(UserService.addUser(newUser)){
+							status.setSucess(true);
+							System.out.println("Added");
+						}else
+							status.setMessage("Check the ID Number or Email, Account might exist already");
+					}else
+						status.setMessage("Check the ID Number or Email, Account might exist already");
+				}else{
+					status.setMessage("Verify your Humanity");
 				}
 			}
 			else
@@ -432,7 +440,7 @@ public class MainController{
 		else
 			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 
-		return(status+"");
+		return new Gson().toJson(status);
 	}
 	
 	//DONE

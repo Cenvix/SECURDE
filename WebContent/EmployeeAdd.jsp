@@ -7,13 +7,22 @@
 	
 		
 		<%@ include file="header.jsp" %>
-		
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+	
 		<script type="text/javascript">
 
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
 		});
+		
+		var captcha
+		var onloadCallback = function() {
+			
+			
+			captcha = grecaptcha.render(document.getElementById('captcha'), {'sitekey' : '6LeDJywUAAAAADtpcpPKf3jRUv9lNi4dgHo9S86A'});
+			
+	      };
 		
 		function addEmployee(){
 			$fName = $("#fName").val();
@@ -67,17 +76,19 @@
 		                password:$pass,
 		                userType:$type,
 		                secretQuestion:$sQuestion,
-		                secretAnswer:$sAnswer
+		                secretAnswer:$sAnswer,
+			            grecaptcharesponse:grecaptcha.getResponse(captcha),
 		            },
 		            type: 'POST',
 					success:function(jsonobject){
 						
-							
-								if(jsonobject=="true"){
-									alert("Employee Added");
-									window.location = "AdminInit";
-								} else{
-									alert("Employee Add FAILED");
+
+						jsonobject = JSON.parse(jsonobject);
+							if(jsonobject.sucess){
+								alert("Add Sucess!");
+								window.location = "AdminInit";
+							} else{
+								alert(jsonobject.message);
 							   	
 							}
 					}
@@ -85,6 +96,7 @@
 				
 				
 			}
+			grecaptcha.reset(captcha);
 		}
 		</script>
 	</head>
@@ -121,6 +133,8 @@
 						</select>
 					</div>
 					
+					<div id="captcha"></div>
+					
 					<button class="btn btn-primary" id="submitEmployee" onclick="addEmployee()">Save</button>
 				</div>
 			</div>
@@ -130,5 +144,8 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
+		
+		
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
 	</body>
 </html>

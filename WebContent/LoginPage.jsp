@@ -137,11 +137,10 @@
 			            type: 'POST',
 						success:function(jsonobject){
 							jsonobject = JSON.parse(jsonobject);
-								console.log(jsonobject);
+								//console.log(jsonobject);
 									if(jsonobject.sucess){
 										window.location = "Home";
 									} else{
-										alert("Register FAILED");
 									alert(jsonobject.message);
 								   	
 								}
