@@ -5,6 +5,8 @@
 		<script type="text/javascript" src="js/jquery-3.0.0.min.js" ></script>
 		<%@  taglib  prefix="c"   uri="http://java.sun.com/jsp/jstl/core"  %>
 		
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+		
 
 
 						

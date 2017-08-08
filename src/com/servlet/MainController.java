@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,14 +30,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
+import com.Captcha.CaptchaSettings;
 import com.beans.Book;
+import com.beans.GoogleResponse;
 import com.beans.MeetingRoomBooking;
+import com.beans.ResponseOut;
 import com.beans.Review;
 import com.beans.User;
 import com.google.gson.Gson;
+import com.octo.captcha.Captcha;
 import com.octo.captcha.service.CaptchaServiceException;
 import com.services.AuthorityCheckerService;
 import com.services.BookService;
@@ -278,28 +285,37 @@ public class MainController{
 	//DONE
 	@RequestMapping(value="/Register", method = RequestMethod.POST)
 	@ResponseBody
-	public String register(HttpServletRequest request,@ModelAttribute("User") User newUser)throws ServletException, IOException{
+	public String register(HttpServletRequest request,@ModelAttribute("User") User newUser,@RequestParam("grecaptcharesponse") String cap )throws ServletException, IOException{
 		System.out.println("Register");
-		
+		System.out.println(cap);
 		newUser.setNewId();
 		newUser.setUserType("0");
+		
+		
 		
 		EncryptionService encode = new EncryptionService();
 		newUser.setPassword(encode.encryptPass(newUser.getPassword()));
 		newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
 		
-		boolean status=false;
+		ResponseOut out = new ResponseOut();
 		
-		if(UserService.checkUser(newUser)){
-			if(UserService.addUser(newUser))
-				status = true;
-		}
+		if(this.processCaptcha(request, cap)){
+			if(UserService.checkUser(newUser)){
+				if(UserService.addUser(newUser)){
+					out.setSucess(true);
+				}else
+					out.setMessage("ID Number or Email is already Taken");
+			}
+			//new Gson().toJson(book)
+		}else
+			out.setMessage("Please Verify your Humanity");
+	
 		
 
-		if(status)
+		if(out.isSucess())
 		setUserSessions(request, newUser);
 
-		return ""+status;
+		return new Gson().toJson(out);
 	}
 	
 	
@@ -321,8 +337,21 @@ public class MainController{
         session.setAttribute("userNumber", sessionUser.getUserNumber());
         session.setAttribute("userFirstName", sessionUser.getFirstName());
         session.setAttribute("userLastName", sessionUser.getLastName());
+        
 	}
 	
+	public boolean processCaptcha(HttpServletRequest request,String cap){
+		CaptchaSettings captchaSettings = new CaptchaSettings();
+		RestTemplate rest = new RestTemplate();
+		System.out.println(request.getRemoteAddr());
+        URI verifyUri = URI.create(String.format(
+                "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s&remoteip=%s",
+                captchaSettings.getSecret(), cap, request.getRemoteAddr()));
+       
+              GoogleResponse googleResponse = rest.getForObject(verifyUri, GoogleResponse.class);
+       
+              return googleResponse.isSuccess();
+	}
 	
 	
 	@RequestMapping(value="/AddEmployee", method = RequestMethod.POST)
