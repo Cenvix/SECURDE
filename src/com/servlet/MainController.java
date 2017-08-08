@@ -118,20 +118,22 @@ public class MainController{
 	//DONE
 	@RequestMapping(value="/ReserveRoom", method = RequestMethod.POST)
 	@ResponseBody
-	private String reserveRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
+	private String reserveRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room,@RequestParam("userID") String userID) throws IOException {
 		MeetingRoomBooking mrb = new MeetingRoomBooking();
 		mrb.setTimeStart(Integer.parseInt(timeStart));
 		mrb.setTimeEnd(Integer.parseInt(timeStart)+100);
 		mrb.setIdMeetingRoom(Integer.parseInt(room));
 		mrb.setDate(new Date(Calendar.getInstance().getTime().getTime()));
-		mrb.setIduser(1234); //TODO Change this to proper user id
+		mrb.setIduser(Integer.parseInt(userID)); //TODO Change this to proper user id
 		mrb.setId((int)(Math.random()*100));
 		
-		boolean out = MeetingRoomService.addMeetingRoomBooking(mrb);
 		
+		boolean out = false;
+		if(!MeetingRoomService.checkDoubleBook(userID)){
+			out = MeetingRoomService.addMeetingRoomBooking(mrb);
+		}
 		return out+"";
 	}
-	
 	//DONE
 	@RequestMapping(value="/AddProduct", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
