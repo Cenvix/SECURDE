@@ -603,13 +603,25 @@ public class MainController{
 	@RequestMapping(value="/ForgotPasswordAnswer", method=RequestMethod.POST)
 	@ResponseBody
 	public String forgotPasswordAnswer(@RequestParam("email") String email, @RequestParam("answer") String answer, HttpServletRequest request, HttpServletResponse response) {
-		boolean isSuccess = false;
+		
+		ResponseOut resp = new ResponseOut();
 		
 		User user = UserService.whoseEmail(email);
+		user.setSecretAnswer(answer);
 		
-		//Insert verification and login here
+		ArrayList<String> out = UserService.loginUserSecret(user);
 		
-		return ""+isSuccess;
+		if(out.size()>0){
+			user.setId(Integer.parseInt(out.get(0)));
+			
+			setUserSessions(request, user);
+			resp.setSucess(true);
+		}else{
+			resp.setMessage("Wrong Username or Password");
+		}
+		
+		
+		return new Gson().toJson(resp);
 	}
 //	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
 //	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{

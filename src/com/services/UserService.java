@@ -98,6 +98,42 @@ public class UserService {
         return returnVal;
     }
     
+    public static ArrayList<String> loginUserSecret(User u) {
+    	String sql = "SELECT "+User.COLUMN_ID+" , "+ User.COLUMN_USERTYPE+", "+User.COLUMN_SECRETANSWER+" FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ?";
+    	
+    	Connection conn = DBPool.getInstance().getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArrayList<String> returnVal = new ArrayList<>();
+        
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, u.getEmail());
+            
+            rs = pstmt.executeQuery();
+            
+            if(rs.next()) {
+            	EncryptionService encoder = new EncryptionService();
+            	if(encoder.matchPass(u.getSecretAnswer(), rs.getString(3))){
+	                returnVal.add(rs.getString(1));
+	                returnVal.add(rs.getString(2));
+            	}
+            }
+            
+        } catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+                rs.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+        }
+        return returnVal;
+    }
+    
     public static boolean checkUser(User u) {
         String sql = "SELECT * FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_EMAIL + "= ?"+
         				" OR " + User.COLUMN_USERNUMBER +"= ?";
