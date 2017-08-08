@@ -8,7 +8,11 @@
 		
 		<%@ include file="header.jsp" %>
 	
+	
+		
 		<script type="text/javascript">
+		
+		
 		
 		$(document).ready(function(){
 
@@ -16,7 +20,13 @@
 			$("#registerMessage").hide();
 			var userID ='<%= session.getAttribute("userID")%>';
 			console.log(userID);
+			
 		});
+		var regCap;
+		var onloadCallback = function() {
+
+			regCap = grecaptcha.render(document.getElementById('regCap'), {'sitekey' : '6LeDJywUAAAAADtpcpPKf3jRUv9lNi4dgHo9S86A'});
+	      };
 		
 			function login(){
 				$email = $("#loginEmail").val();
@@ -58,9 +68,14 @@
 				$pass = $("#registerPassword").val();
 				$passCon = $("#registerConfirmPassword").val();
 				
+
+				
 				$sQuestion = $("#sQuestion").val();
 				$sAnswer = $("#sAnswer").val();
 				$sCAnswer = $("#sCAnswer").val();
+				
+				
+				console.log(grecaptcha.getResponse(regCap));
 				
 				if($fName==""||$mName==""||$lName==""){
 					alert("Input Name Input!");
@@ -69,11 +84,11 @@
 				}
 				else if(!/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test($email))//REGEX for EMAILL
 				{
-					setRegMessage("Input Valid Email!");
+					alert("Input Valid Email!");
 				}else if(!/.{8,}$/.test($pass)){ //REGEX FOR 8 Char min
-					setRegMessage("Input Password with 8 or more characters!");
+					alert("Input Password with 8 or more characters!");
 				}else if($pass != $passCon){
-					setRegMessage("Confirm Password does not match!");
+					alert("Confirm Password does not match!");
 				}else if($sQuestion==""){ //REGEX FOR 8 Char min
 					alert("Input Secret Question");
 				}else if(!/.{8,}$/.test($pass)){ //REGEX FOR 8 Char min
@@ -96,17 +111,18 @@
 			                email:$email,
 			                password:$pass,
 			                secretQuestion:$sQuestion,
-			                secretAnswer:$sAnswer
+			                secretAnswer:$sAnswer,
+				            grecaptcharesponse:grecaptcha.getResponse(regCap),
 			            },
 			            type: 'POST',
 						success:function(jsonobject){
-							
-								
-									if(jsonobject=="true"){
+							jsonobject = JSON.parse(jsonobject);
+								console.log(jsonobject);
+									if(jsonobject.sucess){
 										window.location = "Home";
 									} else{
 										alert("Register FAILED");
-									setRegMessage("Account failed to create");
+									alert(jsonobject.message);
 								   	
 								}
 						}
@@ -114,6 +130,9 @@
 					
 					
 				}
+				grecaptcha.reset(regCap);
+
+				console.log(grecaptcha.getResponse(regCap));
 			}
 			
 			function setRegMessage(mes){
@@ -173,7 +192,13 @@
 					<input class="form-control" type="password" id="sAnswer" placeholder="Answer" value=""><br>
 					
 					<input class="form-control" type="password" id="sCAnswer" placeholder="Confirm Answer" value=""><br>
+					
+					<div id="regCap"></div>
+					
+        			<span id="captchaError" class="alert alert-danger col-sm-4" style="display:none"></span><br>
+					
 					<div class="col-sm-12" style="margin-bottom:20px"><button type="button" class="btn btn-primary" id="registerButton" onClick="register()">Register</button></div>
+					
 				</form>
 			</div>
 			<div class="col-sm-1"></div>
@@ -183,5 +208,9 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
+		
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
+	
+		
 	</body>
 </html>
