@@ -177,8 +177,8 @@ public class UserService {
 		return admins;
     }
     
-public static User getUser(int userID){
-		String sql = "SELECT * FROM "+ User.TABLE_NAME+" where "+ User.COLUMN_USERNUMBER +" = ? ;";
+    public static User getUser(int userID){
+		String sql = "SELECT * FROM "+ User.TABLE_NAME+" where "+ User.COLUMN_ID +" = ? ;";
 		
 		User user = new User();
 		Connection connection = DBPool.getInstance().getConnection();
@@ -188,6 +188,45 @@ public static User getUser(int userID){
 		try {
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setInt(1, userID);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				user.setId(rs.getInt(User.COLUMN_ID));
+				user.setEmail(rs.getString(User.COLUMN_EMAIL));
+				user.setFirstName(rs.getString(User.COLUMN_FIRSTNAME));
+				user.setMiddleName(rs.getString(User.COLUMN_MIDDLENAME));
+				user.setLastName(rs.getString(User.COLUMN_LASTNAME));
+				user.setUserNumber(rs.getString(User.COLUMN_USERNUMBER));
+				user.setUserType(rs.getString(User.COLUMN_USERTYPE));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				rs.close();
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return user;
+    }
+    
+    public static User whoseUserNumber(int userNumber){
+		String sql = "SELECT * FROM "+ User.TABLE_NAME+" where "+ User.COLUMN_USERNUMBER +" = ? ;";
+		
+		User user = new User();
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setInt(1, userNumber);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()){

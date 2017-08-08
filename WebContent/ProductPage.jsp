@@ -55,30 +55,30 @@
 			var reviewScore = document.getElementById("reviewScore").value;
 			var review = document.getElementById("review").value;
 			var bookID = document.getElementById("productID").innerHTML;
-			var userID = "${userNumber}";
+			var userNumber = ${userNumber};
 			
 			$.ajax({
 	            url: 'SubmitReview',
 	            data: {
 	                reviewScore: reviewScore,
 	                review: review,
-	                userID: userID,
+	                userNumber: userNumber,
 	                bookID: bookID
 	            },
 	            type: 'POST',
 				success:function(jsonobject){
-							if(jsonobject=="true"){
-								var newReview = "<div class='row'>" +
-													"<div class='well'>" +
-													"<h3>" + reviewScore + "/10    by <span id='reviewerNameNew'>"+ ${userFirstName} +" " + ${userLastName} + "</span></h3>" +
-														"<p id='newReview'>" + review + "</p>" +
-													"</div>" + 
-												"</div>";
-								
-								document.getElementById("reviewContainer").innerHTML = newReview + document.getElementById("reviewContainer").innerHTML;
-							} else{
-								alert("Review was not submitted, please try again");
-							}
+					if(jsonobject=="true") {
+						var newReview = "<div class='row'>" +
+											"<div class='well'>" +
+											"<h3>" + reviewScore + "/5    by <span id='reviewerNameNew'> ${userFirstName} ${userLastName}</span></h3>" +
+												"<p id='newReview'>" + review + "</p>" +
+											"</div>" + 
+										"</div>";
+						
+						document.getElementById("reviewContainer").innerHTML = newReview + document.getElementById("reviewContainer").innerHTML;
+					}
+					else
+						alert("Review was not submitted, please try again");
 				}
 	        });
 		}

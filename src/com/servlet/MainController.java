@@ -1,5 +1,7 @@
 package com.servlet;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
@@ -9,6 +11,7 @@ import java.util.Random;
 
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +36,15 @@ import com.beans.MeetingRoomBooking;
 import com.beans.Review;
 import com.beans.User;
 import com.google.gson.Gson;
+//import com.octo.captcha.service.CaptchaServiceException;
 import com.services.AuthorityCheckerService;
 import com.services.BookService;
 import com.services.EncryptionService;
 import com.services.MeetingRoomService;
 import com.services.ReviewService;
 import com.services.UserService;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.sun.media.jfxmedia.logging.Logger;
 
 /**
@@ -175,7 +181,7 @@ public class MainController{
 		
 		ArrayList<String> names = new ArrayList();
 		for(int i = 0; i < reviews.size(); i++) {
-			User user = UserService.getUser(reviews.get(i).getUserID());
+			User user = UserService.whoseUserNumber(reviews.get(i).getUserID());
 			names.add(user.getFirstName() + " " + user.getLastName());
 		}
 		String namesJSON = new Gson().toJson(names);
@@ -250,7 +256,6 @@ public class MainController{
 		
 		if(out.size()>0){
 			user.setId(Integer.parseInt(out.get(0)));
-			user.setUserType(out.get(1));
 			
 			setUserSessions(request, user);
 			status = true;
@@ -308,12 +313,13 @@ public class MainController{
 	         
 	    // Get last access time of this web page.
 	    Date lastAccessTime = new Date(session.getLastAccessedTime());
-	
-        session.setAttribute("userID", user.getId());
-        session.setAttribute("userType", user.getUserType());
-        session.setAttribute("userFirstName", user.getFirstName());
-        session.setAttribute("userLastName", user.getLastName());
-        session.setAttribute("userNumber", user.getUserNumber());
+	    User sessionUser = UserService.getUser(user.getId());
+	    
+        session.setAttribute("userID", sessionUser.getId());
+        session.setAttribute("userType", sessionUser.getUserType());
+        session.setAttribute("userNumber", sessionUser.getUserNumber());
+        session.setAttribute("userFirstName", sessionUser.getFirstName());
+        session.setAttribute("userLastName", sessionUser.getLastName());
 	}
 	
 	
@@ -432,6 +438,7 @@ public class MainController{
 	}
 	
 	@RequestMapping(value="/SubmitReview", method=RequestMethod.POST)
+	@ResponseBody
 	public String submitReview(@RequestParam("userNumber") int userNumber, @RequestParam("reviewScore") int score, 
 								@RequestParam("bookID") int bookID, @RequestParam("review") String review,
 								HttpServletRequest request, HttpServletResponse response) {
@@ -459,4 +466,5 @@ public class MainController{
 //
 //	
 //	}
+
 }
