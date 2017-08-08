@@ -53,6 +53,60 @@ public class MeetingRoomService {
 
          return out;
 	 }
+	 public static boolean checkDoubleBook(String userID){
+		 ArrayList<MeetingRoomBooking> mrbToday= new ArrayList();
+		 mrbToday = getMeetingRoomBookingsToday();
+		 
+		 for(int i = 0; i<mrbToday.size();i++){
+			 if(userID.equals(Integer.toString(mrbToday.get(i).getIdUser()))){
+				 return true;
+			 }
+		 }
+		 
+		 
+		 return false;
+	 }
+	 public static ArrayList<MeetingRoomBooking> getMeetingRoomBookingsToday(){
+		 ArrayList<MeetingRoomBooking> meetingroombookings= new ArrayList();
+			String sql = "SELECT * FROM "+ MeetingRoomBooking.TABLE_NAME+" where "+MeetingRoomBooking.COLUMN_DATE +" = CURDATE();";
+			
+			Connection connection = DBPool.getInstance().getConnection();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			
+			try {
+				pstmt = connection.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()){
+					MeetingRoomBooking mrb = new MeetingRoomBooking();
+						
+					mrb.setId(rs.getInt(MeetingRoomBooking.COLUMN_ID));
+					mrb.setIduser(rs.getInt(MeetingRoomBooking.COLUMN_IDUSER));
+					mrb.setIdMeetingRoom(rs.getInt(MeetingRoomBooking.COLUMN_IDMEETINGROOM));
+					mrb.setDate(rs.getDate(MeetingRoomBooking.COLUMN_DATE));
+					mrb.setTimeEnd(rs.getInt(MeetingRoomBooking.COLUMN_TIMEEND));
+					mrb.setTimeStart(rs.getInt(MeetingRoomBooking.COLUMN_TIMESTART));
+					
+					meetingroombookings.add(mrb);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally{
+				try {
+					rs.close();
+					pstmt.close();
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			return meetingroombookings;
+	 }
+	 
 	 public static ArrayList<MeetingRoomBooking> getMeetingRoomBookings(){
 		 ArrayList<MeetingRoomBooking> meetingroombookings= new ArrayList();
 			String sql = "SELECT * FROM "+ MeetingRoomBooking.TABLE_NAME+";";
