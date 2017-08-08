@@ -135,6 +135,16 @@ public class MainController{
 			return out+"";
 		}
 		
+		//DONE
+				@RequestMapping(value="/RemoveRoom", method = RequestMethod.POST)
+				@ResponseBody
+				private String removeRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
+				
+					boolean out = false;
+					out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
+					
+					return out+"";
+				}
 	//DONE
 	@RequestMapping(value="/AddProduct", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
