@@ -23,11 +23,7 @@
 		
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
-			var userType ='<%= session.getAttribute("userType")%>';
-			console.log(userType + "hello");
-			if(userID == "null"){
-				window.location =  "AccessDenied.jsp";
-			}
+			console.log(userID);
 			
 			initBookings();
 			loadBookings();

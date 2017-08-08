@@ -167,7 +167,12 @@ public class MainController{
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookings();
 		request.setAttribute("bookings", bookings);
-		request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
+		if(request.getAttribute("userType")!=null){
+			request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
+		}else{
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		}
+
 	}
 
 	
