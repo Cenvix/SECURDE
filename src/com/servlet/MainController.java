@@ -159,6 +159,18 @@ public class MainController{
 		request.setAttribute("books", books);
 		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
 	}
+	
+	@RequestMapping(value="/ViewProduct", method = RequestMethod.POST)
+	private void viewProduct(@RequestParam("bookID") int id, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	//private void viewProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("VIEWING PRODUCT");
+		
+		Book product = BookService.getBook(id);
+		String productJSON = new Gson().toJson(product);
+		
+		request.setAttribute("bookJSON", productJSON);
+		request.getRequestDispatcher("ProductPage.jsp").forward(request, response);
+	}
 
 	@RequestMapping(value="/AdminInit", method = RequestMethod.GET)
 	private void adminInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -194,7 +206,7 @@ public class MainController{
 			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
 			
 			if(AuthorityCheckerService.isAdmin(type)) {
-				request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+				request.getRequestDispatcher("AdminInit").forward(request, response);
 			}
 			else if(AuthorityCheckerService.isManager(type)) {
 				request.getRequestDispatcher("ManagementPage.jsp").forward(request, response);

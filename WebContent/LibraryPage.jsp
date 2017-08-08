@@ -54,6 +54,11 @@
 			return false;
 		}
 		
+		function viewProduct(id) {
+			document.getElementById("invisFormContainer").innerHTML = "<form id='invisForm' action='ViewProduct' method='post'><input type='hidden' name='bookID' value='"+id+"''></form>";
+			document.getElementById("invisForm").submit();
+		}
+		
 		function initBooks(){
 			books = [];
 			console.log("Initializing books");
@@ -71,12 +76,13 @@
 				results += "<div class='row'>" +
 								"<div class='col-sm-9'>" +
 									"<div class='well'>" +
-										"<a href='ProductPage.jsp'><h3 id='productTitle_" + books[i].id + "'>" + books[i].name + "</h3></a>" +
+										"<h3 id='productTitle_" + books[i].id + "'>" + books[i].name + "</h3>" +
 										"<label>Author: </label> <span id='productAuthor_" + books[i].id + "'>" + books[i].author + "</span><br>" +
 										"<label>Publisher: </label><span id='productPublisher_" + books[i].id + "'>" + books[i].publisher + "</span>" +
 									"</div>" +
 								"</div>" +
-								"<div class='col-sm-3 well'>";
+								"<div class='col-sm-3 well'>" +
+									"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' onclick='viewProduct("+books[i].id+")'>View</button>";
 									
 				if(books[i].status == "Reserved") {
 					results += 		"<button type='button' class='btn btn-primary libraryButtons' style='width:100%' id='reserve_" + books[i].id + "' disabled='true'>RESERVED</button>";
@@ -223,6 +229,8 @@
 					
 		  </div>
 		</div>
+		
+		<div id="invisFormContainer" style="visibiliy:false"></div>
 	  
 	  
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
