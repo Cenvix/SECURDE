@@ -56,22 +56,18 @@ public class ReviewService {
 	public static boolean addReview(Review r){
 		boolean success = false;
 		
-		String sql = "insert into "+Review.TABLE_NAME+" values(?,?,?,?,?)";
+		String sql = "INSERT INTO "+Review.TABLE_NAME+"("+Review.COLUMN_BOOKID+","+Review.COLUMN_USERID+","+Review.COLUMN_RATING+","+Review.COLUMN_REVIEW+") values(?,?,?,?)";
 
         Connection connection = DBPool.getInstance().getConnection();
         PreparedStatement pstmt = null;
-        Boolean out=false;
-
-        
         
         try {
             pstmt = connection.prepareStatement(sql);
             
-            pstmt.setInt(1, r.getReviewID());
-            pstmt.setInt(2, r.getBookID());
-            pstmt.setInt(3, r.getUserID());
-            pstmt.setInt(4, r.getRating());
-            pstmt.setString(5, r.getReview());
+            pstmt.setInt(1, r.getBookID());
+            pstmt.setInt(2, r.getUserID());
+            pstmt.setInt(3, r.getRating());
+            pstmt.setString(4, r.getReview());
             pstmt.executeUpdate();
             success=true;
         } catch (SQLException e) {
@@ -86,8 +82,5 @@ public class ReviewService {
         }
 
         return success;
-		
-	
-		
 	}
 }

@@ -313,6 +313,7 @@ public class MainController{
         session.setAttribute("userType", user.getUserType());
         session.setAttribute("userFirstName", user.getFirstName());
         session.setAttribute("userLastName", user.getLastName());
+        session.setAttribute("userNumber", user.getUserNumber());
 	}
 	
 	
@@ -428,6 +429,25 @@ public class MainController{
 		//setUserSessions(request, response, newUser);
 
 		return(status+"");
+	}
+	
+	@RequestMapping(value="/SubmitReview", method=RequestMethod.POST)
+	public String submitReview(@RequestParam("userNumber") int userNumber, @RequestParam("reviewScore") int score, 
+								@RequestParam("bookID") int bookID, @RequestParam("review") String review,
+								HttpServletRequest request, HttpServletResponse response) {
+		
+		System.out.println("SUBMITTING REVIEW");
+		
+		Review r = new Review();
+		
+		r.setBookID(bookID);
+		r.setRating(score);
+		r.setReview(review);
+		r.setUserID(userNumber);
+		
+		boolean isSuccess = ReviewService.addReview(r);
+		
+		return ""+isSuccess;
 	}
 
 	

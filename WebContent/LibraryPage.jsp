@@ -71,7 +71,7 @@
 			for(var i = 0; i < books.length; i++) {
 				results += "<div class='row'>" +
 								"<div class='col-sm-9'>" +
-									"<div class='well'>" +
+									"<div class='well' style='min-height:157px'>" +
 										"<h3 id='productTitle_" + books[i].id + "'>" + books[i].name + "</h3>" +
 										"<label>Author: </label> <span id='productAuthor_" + books[i].id + "'>" + books[i].author + "</span><br>" +
 										"<label>Publisher: </label><span id='productPublisher_" + books[i].id + "'>" + books[i].publisher + "</span>" +
