@@ -42,8 +42,7 @@ import com.beans.ResponseOut;
 import com.beans.Review;
 import com.beans.User;
 import com.google.gson.Gson;
-import com.octo.captcha.Captcha;
-import com.octo.captcha.service.CaptchaServiceException;
+
 import com.services.AuthorityCheckerService;
 import com.services.BookService;
 import com.services.EncryptionService;
@@ -188,7 +187,7 @@ public class MainController{
 		
 		ArrayList<String> names = new ArrayList();
 		for(int i = 0; i < reviews.size(); i++) {
-			User user = UserService.getUser(reviews.get(i).getUserID());
+			User user = UserService.whoseUserNumber(reviews.get(i).getUserID());
 			names.add(user.getFirstName() + " " + user.getLastName());
 		}
 		String namesJSON = new Gson().toJson(names);
@@ -329,7 +328,6 @@ public class MainController{
 	         
 	    // Get last access time of this web page.
 	    Date lastAccessTime = new Date(session.getLastAccessedTime());
-	
 	    User sessionUser = UserService.getUser(user.getId());
 	    
         session.setAttribute("userID", sessionUser.getId());
@@ -465,6 +463,26 @@ public class MainController{
 		//setUserSessions(request, response, newUser);
 
 		return(status+"");
+	}
+	
+	@RequestMapping(value="/SubmitReview", method=RequestMethod.POST)
+	@ResponseBody
+	public String submitReview(@RequestParam("userNumber") int userNumber, @RequestParam("reviewScore") int score, 
+								@RequestParam("bookID") int bookID, @RequestParam("review") String review,
+								HttpServletRequest request, HttpServletResponse response) {
+		
+		System.out.println("SUBMITTING REVIEW");
+		
+		Review r = new Review();
+		
+		r.setBookID(bookID);
+		r.setRating(score);
+		r.setReview(review);
+		r.setUserID(userNumber);
+		
+		boolean isSuccess = ReviewService.addReview(r);
+		
+		return ""+isSuccess;
 	}
 
 	

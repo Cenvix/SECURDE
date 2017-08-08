@@ -10,7 +10,7 @@
 		<script type="text/javascript">
 
 		$(document).ready(function(){
-			var userID ='<%= session.getAttribute("userID")%>';
+			var userID = '<%= session.getAttribute("userID")%>';
 			console.log(userID);
 			
 			console.log("PRODUCT PAGE");
@@ -31,27 +31,56 @@
 			document.getElementById("productPublisher").innerHTML = book.publisher;
 			document.getElementById("productID").innerHTML = book.id;
 			document.getElementById("productDesc").innerHTML = book.description;
-			
 		}
 		
 		function initReviews() {
+			console.log("INIT REVIEWS");
 			var reviews = (JSON.parse('${reviewsJSON}'));
 			var names = (JSON.parse('${namesJSON}'));
-			
-			console.log(reviews);
-			console.log(names);
 			var results = "";
 			
 			for(var i = 0; i < reviews.length; i++) {
 				results += "<div class='row'>" +
 								"<div class='well'>" +
-									"<h3>" + reviews[i].rating + "/10    by <span id='reviewerName"+i+"'>"+ names[i] +"</span></h3>" +
+									"<h3>" + reviews[i].rating + "/5    by <span id='reviewerName"+i+"'>"+ names[i] +"</span></h3>" +
 										"<p id='review"+i+"'>" + reviews[i].review + "</p>" +
 								"</div>" + 
-							"</div>"
+							"</div>";
 			}
 			
 			document.getElementById("reviewContainer").innerHTML = results;
+		}
+		
+		function submitReview() {
+			var reviewScore = document.getElementById("reviewScore").value;
+			var review = document.getElementById("review").value;
+			var bookID = document.getElementById("productID").innerHTML;
+			var userNumber = ${userNumber};
+			
+			$.ajax({
+	            url: 'SubmitReview',
+	            data: {
+	                reviewScore: reviewScore,
+	                review: review,
+	                userNumber: userNumber,
+	                bookID: bookID
+	            },
+	            type: 'POST',
+				success:function(jsonobject){
+					if(jsonobject=="true") {
+						var newReview = "<div class='row'>" +
+											"<div class='well'>" +
+											"<h3>" + reviewScore + "/5    by <span id='reviewerNameNew'> ${userFirstName} ${userLastName}</span></h3>" +
+												"<p id='newReview'>" + review + "</p>" +
+											"</div>" + 
+										"</div>";
+						
+						document.getElementById("reviewContainer").innerHTML = newReview + document.getElementById("reviewContainer").innerHTML;
+					}
+					else
+						alert("Review was not submitted, please try again");
+				}
+	        });
 		}
 		</script>
 	</head>
@@ -61,15 +90,15 @@
 		
 		<div class="container">
 			<div class="row">
-				<h2 id="productTitle">BOOK TITLE</h2>
+				<h2 id="productTitle"></h2>
 			</div>
 			<div class="row">
 				<div class="col-sm-3">
 					<div class="well" style="min-height:200px">
 						<p>Author: <span id="productAuthor"></span></p>
-						<p>Published by:  <span id="productPublisher">Some people</span></p>
-						<p>Type:  <span id="productType">Book</span></p>
-						<p>DDC: <span id="productID">123412341234</span></p>
+						<p>Published by:  <span id="productPublisher"></span></p>
+						<p>Type:  <span id="productType"></span></p>
+						<p>DDC: <span id="productID"></span></p>
 					</div>
 					<div class="well">
 						<button type="button" class="btn btn-primary" style="width:100%" id="reserve">Reserve a Copy</button>
@@ -79,11 +108,7 @@
 				<div class="col-sm-9">
 					<div class="well" style="min-height:300px">
 						<h3>Description:</h3>
-						<p id="productDesc">
-						Some sort of description here about the product. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-						</p>
+						<p id="productDesc"></p>
 					</div>
 				</div>
 			</div>
@@ -92,11 +117,24 @@
 		<div class="container">
 			<div class="row well">
 				<div class="col-sm-12">
-					<h1>Write your review:</h1>
-					<textarea class="form-control" rows="5" id="review"></textarea>
-					<div style="margin-top:5px">
-						<button type="button" class="btn btn-primary" id="submitReview">Submit Review</button>
-					</div>
+					<c:choose>
+					  	<c:when test="${empty userID}">
+					    	<h1>Write your review:</h1>
+							<span>Score: <input type="number" name="quantity" min="1" max="5" style="max-width:50px" disabled></span>
+							<textarea class="form-control" rows="5" id="review" style="margin-top:10px" disabled>Please login to submite review</textarea>
+							<div style="margin-top:5px">
+								<button type="button" class="btn btn-primary" id="submitReview" disabled>Submit Review</button>
+							</div>
+					  	</c:when>
+					  	<c:otherwise>
+					  		<h1>Write your review:</h1>
+							<span>Score: <input id="reviewScore" type="number" name="quantity" min="1" max="5" style="max-width:50px"></span>
+							<textarea class="form-control" rows="5" id="review" style="margin-top:10px"></textarea>
+							<div style="margin-top:5px">
+								<button type="button" class="btn btn-primary" id="submitReview" onclick="submitReview()">Submit Review</button>
+							</div>
+					  	</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 			
