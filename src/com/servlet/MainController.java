@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -224,15 +225,22 @@ public class MainController{
 			String reviewsJSON = new Gson().toJson(reviews);
 			
 			ArrayList<String> names = new ArrayList();
+			boolean isDone=false;
+			
+			User myUser = UserService.getUser((Integer)(request.getSession().getAttribute("userID")));
 			for(int i = 0; i < reviews.size(); i++) {
 				User user = UserService.whoseUserNumber(reviews.get(i).getUserID());
 				names.add(user.getFirstName() + " " + user.getLastName());
+				System.out.println(myUser.getUserNumber()+" "+reviews.get(i).getUserID());
+				if(myUser.getUserNumber().equals(reviews.get(i).getUserID()+""))
+					isDone =true;
 			}
 			String namesJSON = new Gson().toJson(names);
 			
 			request.setAttribute("bookJSON", productJSON);
 			request.setAttribute("reviewsJSON", reviewsJSON);
 			request.setAttribute("namesJSON", namesJSON);
+			request.setAttribute("isDone", new Gson().toJson(isDone));
 			request.getRequestDispatcher("ProductPage.jsp").forward(request, response);
 		}
 	}
@@ -363,7 +371,7 @@ public class MainController{
 	//DONE
 	@RequestMapping(value="/Register", method = RequestMethod.POST)
 	@ResponseBody
-	public String register(HttpServletRequest request,@ModelAttribute("User") User newUser,@RequestParam("grecaptcharesponse") String cap )throws ServletException, IOException{
+	public String register(HttpServletRequest request, @ModelAttribute("User") User newUser,@RequestParam("grecaptcharesponse") String cap )throws ServletException, IOException{
 		System.out.println("Register");
 		//System.out.println(cap);
 		newUser.setNewId();

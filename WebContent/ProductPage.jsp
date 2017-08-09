@@ -74,7 +74,7 @@
 												"<p id='newReview'>" + review + "</p>" +
 											"</div>" + 
 										"</div>";
-						
+										document.getElementById("reviewBox").innerHTML = '<h4>Already Reviewed</h4>';
 						document.getElementById("reviewContainer").innerHTML = newReview + document.getElementById("reviewContainer").innerHTML;
 					}
 					else
@@ -116,23 +116,28 @@
 		
 		<div class="container">
 			<div class="row well">
-				<div class="col-sm-12">
+				<div class="col-sm-12" id='reviewBox'>
 					<c:choose>
 					  	<c:when test="${empty userID}">
 					    	<h1>Write your review:</h1>
 							<span>Score: <input type="number" name="quantity" min="1" max="5" style="max-width:50px" disabled></span>
-							<textarea class="form-control" rows="5" id="review" style="margin-top:10px" disabled>Please login to submite review</textarea>
+							<textarea class="form-control" rows="5" id="review" style="margin-top:10px" disabled>Please login to submit review</textarea>
 							<div style="margin-top:5px">
 								<button type="button" class="btn btn-primary" id="submitReview" disabled>Submit Review</button>
 							</div>
 					  	</c:when>
 					  	<c:otherwise>
-					  		<h1>Write your review:</h1>
-							<span>Score: <input id="reviewScore" type="number" name="quantity" min="1" max="5" style="max-width:50px"></span>
-							<textarea class="form-control" rows="5" id="review" style="margin-top:10px"></textarea>
-							<div style="margin-top:5px">
-								<button type="button" class="btn btn-primary" id="submitReview" onclick="submitReview()">Submit Review</button>
-							</div>
+					  	<c:if test="${not isDone}">
+						  		<h1>Write your review:</h1>
+								<span>Score: <input id="reviewScore" type="number" name="quantity" min="1" max="5" style="max-width:50px"></span>
+								<textarea class="form-control" rows="5" id="review" style="margin-top:10px"></textarea>
+								<div style="margin-top:5px">
+									<button type="button" class="btn btn-primary" id="submitReview" onclick="submitReview()">Submit Review</button>
+								</div>
+							</c:if>
+							<c:if test="${isDone}">
+								<h4>Already Reviewed</h4>
+							</c:if>
 					  	</c:otherwise>
 					</c:choose>
 				</div>
