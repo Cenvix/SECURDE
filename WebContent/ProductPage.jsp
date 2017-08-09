@@ -55,7 +55,7 @@
 			var reviewScore = document.getElementById("reviewScore").value;
 			var review = document.getElementById("review").value;
 			var bookID = document.getElementById("productID").innerHTML;
-			var userNumber = ${userNumber};
+			var userNumber = "${userNumber}";
 			
 			$.ajax({
 	            url: 'SubmitReview',
