@@ -27,7 +27,7 @@
 		            type: 'POST',
 					success:function(jsonobject) {
 						document.getElementById("QAContainer").style.visibility = "visible";
-						document.getElementById("question").innerHTML = jsonobject;
+						document.getElementById("question").innerHTML = "Security Question: " + jsonobject;
 					}
 		        });
 			}
@@ -35,12 +35,14 @@
 			function submitAnswer() {
 				var email = document.getElementById("email").value;
 				var answer = document.getElementById("answer").value;
+				var newPass = document.getElementById("newPassword").value;
 				
 				$.ajax({
 		            url: 'ForgotPasswordAnswer',
 		            data: {
 		                email: email,
-		                answer: answer
+		                answer: answer,
+		                newPass: newPass
 		            },
 		            type: 'POST',
 					success:function(jsonobject){
@@ -67,10 +69,10 @@
 	
 			<div class="row well" id="QAContainer" style="visibility:hidden">
 				<div class="col-sm-12">
-					<h4>Security Question:</h4>
-					<h3 id="question"></h3>
-					
+					<h4 id="question"></h4>
 					<textarea id="answer" class="form-control" rows="5"></textarea>
+					<h4>Enter new password to set:</h4>
+					<input type="text" class="form-control" id="newPassword">
 					<button type="button" class="btn btn-primary" id="submitAnswer" style="margin-top:10px" onclick="submitAnswer()">Submit</button>
 				</div>
 			</div>

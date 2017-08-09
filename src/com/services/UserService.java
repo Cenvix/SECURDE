@@ -330,4 +330,36 @@ public class UserService {
 		
 		return user;
     }
+    
+    public static boolean passwordChange(String newPass, int userID){
+		String sql = "UPDATE" + User.TABLE_NAME + " SET" + User.COLUMN_PASSWORD + "= ? WHERE " + User.COLUMN_ID + "= ?";
+		
+		User user = new User();
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		boolean success = false;
+		
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, newPass);
+			pstmt.setInt(2, userID);
+			rs = pstmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				success = true;
+				rs.close();
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return success;
+    }
 }

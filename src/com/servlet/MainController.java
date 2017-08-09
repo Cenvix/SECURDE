@@ -9,7 +9,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -286,24 +287,37 @@ public class MainController{
 													@RequestParam("password") String password,
 													@RequestParam("grecaptcharesponse") String cap ){
 		System.out.println("Login");
+		
+		Pattern p = Pattern.compile("([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})");
+		Matcher m = p.matcher(email);
+		boolean validEmail = m.matches();
 
 		User user = new User();
 		user.setEmail(email);
 		user.setPassword(password);
-		
-		
-		if((Integer)request.getSession().getAttribute("attemps")==null)
-		setAttempsSessions(request,1);
-		else
-			setAttempsSessions(request, (Integer)request.getSession().getAttribute("attemps")+1);
-		
-		ArrayList<String> out = UserService.loginUser(user);
-		
-		
 		ResponseOut resp = new ResponseOut();
 		
-		if((Integer)request.getSession().getAttribute("attemps")>3){
-			if(this.processCaptcha(request, cap)){
+		if(validEmail) {
+			if((Integer)request.getSession().getAttribute("attemps")==null)
+			setAttempsSessions(request,1);
+			else
+				setAttempsSessions(request, (Integer)request.getSession().getAttribute("attemps")+1);
+			
+			ArrayList<String> out = UserService.loginUser(user);
+			
+			if((Integer)request.getSession().getAttribute("attemps")>3){
+				if(this.processCaptcha(request, cap)){
+					if(out.size()>0){
+						user.setId(Integer.parseInt(out.get(0)));
+						
+						setUserSessions(request, user);
+						resp.setSucess(true);
+					}else{
+						resp.setMessage("Wrong Username or Password");
+					}
+				}else
+					resp.setMessage("Please verify your humanity");
+			}else{
 				if(out.size()>0){
 					user.setId(Integer.parseInt(out.get(0)));
 					
@@ -312,18 +326,12 @@ public class MainController{
 				}else{
 					resp.setMessage("Wrong Username or Password");
 				}
-			}else
-				resp.setMessage("Please verify your humanity");
-		}else{
-			if(out.size()>0){
-				user.setId(Integer.parseInt(out.get(0)));
-				
-				setUserSessions(request, user);
-				resp.setSucess(true);
-			}else{
-				resp.setMessage("Wrong Username or Password");
 			}
 		}
+		else {
+			resp.setMessage("Invalid Email");
+		}
+		
 		return new Gson().toJson(resp);
 
 	}
@@ -347,24 +355,42 @@ public class MainController{
 		newUser.setNewId();
 		newUser.setUserType("0");
 		
-		EncryptionService encode = new EncryptionService();
-		newUser.setPassword(encode.encryptPass(newUser.getPassword()));
-		newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
+		boolean validEmail;
+		boolean validPass;
+		boolean isMissingInput;
+		
+		Pattern p = Pattern.compile("([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})");
+		Matcher m = p.matcher(newUser.getEmail());
+		validEmail = m.matches();
+		
+		p = Pattern.compile(".{8,}");
+		m = p.matcher(newUser.getPassword());
+		validPass = m.matches();
+		
+		isMissingInput = newUser.getFirstName().equals("") || newUser.getLastName().equals("") || newUser.getEmail().equals("") || newUser.getPassword().equals("")
+				|| newUser.getSecretQuestion().equals("") || newUser.getSecretAnswer().equals("") || newUser.getUserNumber().equals("") || newUser.getUserType().equals("");
 		
 		ResponseOut out = new ResponseOut();
 		
-		if(this.processCaptcha(request, cap)){
-			if(UserService.checkUser(newUser)){
-				if(UserService.addUser(newUser)){
-					out.setSucess(true);
+		if(validEmail && validPass && !isMissingInput) {
+			EncryptionService encode = new EncryptionService();
+			newUser.setPassword(encode.encryptPass(newUser.getPassword()));
+			newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
+			
+			if(this.processCaptcha(request, cap)){
+				if(UserService.checkUser(newUser)){
+					if(UserService.addUser(newUser)){
+						out.setSucess(true);
+					}else
+						out.setMessage("Check the ID Number or Email, Account might exist already");
 				}else
 					out.setMessage("Check the ID Number or Email, Account might exist already");
 			}else
-				out.setMessage("Check the ID Number or Email, Account might exist already");
-			//new Gson().toJson(book)
-		}else
-			out.setMessage("Please Verify your Humanity");
-
+				out.setMessage("Please Verify that you are a person");
+		}
+		else
+			out.setMessage("One or more of your entries is invalid, try again");
+		
 		if(out.isSucess())
 		setUserSessions(request, newUser);
 
@@ -602,7 +628,7 @@ public class MainController{
 	
 	@RequestMapping(value="/ForgotPasswordAnswer", method=RequestMethod.POST)
 	@ResponseBody
-	public String forgotPasswordAnswer(@RequestParam("email") String email, @RequestParam("answer") String answer, HttpServletRequest request, HttpServletResponse response) {
+	public String forgotPasswordAnswer(@RequestParam("email") String email, @RequestParam("answer") String answer, @RequestParam("newPass") String newPass, HttpServletRequest request, HttpServletResponse response) {
 		
 		ResponseOut resp = new ResponseOut();
 		
