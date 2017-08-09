@@ -643,22 +643,37 @@ public class MainController{
 	
 	@RequestMapping(value="/ForgotPasswordAnswer", method=RequestMethod.POST)
 	@ResponseBody
-	public String forgotPasswordAnswer(@RequestParam("email") String email, @RequestParam("answer") String answer, @RequestParam("newPass") String newPass, HttpServletRequest request, HttpServletResponse response) {
+	public String forgotPasswordAnswer(	@RequestParam("email") String email, 
+										@RequestParam("answer") String answer, 
+										@RequestParam("newPass") String newPass,
+										@RequestParam("grecaptcharesponse") String cap,
+										HttpServletRequest request,
+										HttpServletResponse response) {
 		
 		ResponseOut resp = new ResponseOut();
 		
 		User user = UserService.whoseEmail(email);
 		user.setSecretAnswer(answer);
 		
+		if(this.processCaptcha(request, cap)){
 		ArrayList<String> out = UserService.loginUserSecret(user);
-		
-		if(out.size()>0){
-			user.setId(Integer.parseInt(out.get(0)));
-			
-			setUserSessions(request, user);
-			resp.setSucess(true);
+			if(out.size()>0){
+
+				EncryptionService encode = new EncryptionService();
+				
+				user.setId(Integer.parseInt(out.get(0)));
+
+				user.setPassword(encode.encryptPass(newPass));
+				
+				UserService.passwordChange(user.getPassword(), user.getId());
+				
+				setUserSessions(request, user);
+				resp.setSucess(true);
+			}else{
+				resp.setMessage("Wrong Answer");
+			}
 		}else{
-			resp.setMessage("Wrong Username or Password");
+			resp.setMessage("Verify yourself earthling!");
 		}
 		
 		

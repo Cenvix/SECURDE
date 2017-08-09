@@ -31,7 +31,7 @@
 						  4: "Strong"
 						}
 				
-				var password = document.getElementById('registerPassword');
+				var password = document.getElementById('newPassword');
 				var meter = document.getElementById('password-strength-meter');
 				var text = document.getElementById('password-strength-text');
 
@@ -50,6 +50,16 @@
 				  }
 				});
 			});
+			
+			
+			var regCap;
+			var onloadCallback = function() {
+				
+				
+				regCap = grecaptcha.render(document.getElementById('regCap'), {'sitekey' : '6LeDJywUAAAAADtpcpPKf3jRUv9lNi4dgHo9S86A'});
+				
+			  };
+		    
 			
 			function submitEmail() {
 				var email = document.getElementById("email").value;
@@ -71,25 +81,34 @@
 				var email = document.getElementById("email").value;
 				var answer = document.getElementById("answer").value;
 				var newPass = document.getElementById("newPassword").value;
+				var passCon = document.getElementById("confirmPassword").value;
 				
-				$.ajax({
-		            url: 'ForgotPasswordAnswer',
-		            data: {
-		                email: email,
-		                answer: answer,
-		                newPass: newPass
-		            },
-		            type: 'POST',
-					success:function(jsonobject){
-						jsonobject = JSON.parse(jsonobject);
-						if(jsonobject.sucess){
-							window.location = "Home";
-						} else{
-							alert(jsonobject.message);
-							window.location = "LoginPage.jsp";
+				if(!/.{8,}$/.test(newPass)||$('#password-strength-meter').val()<3){ //REGEX FOR 8 Char min
+					alert("Your password is too weak!");
+				}else if(newPass != passCon){
+					alert("Confirm Password does not match!");
+				}else{
+					$.ajax({
+			            url: 'ForgotPasswordAnswer',
+			            data: {
+			                email: email,
+			                answer: answer,
+			                newPass: newPass,
+				            grecaptcharesponse:grecaptcha.getResponse(regCap)
+			            },
+			            type: 'POST',
+						success:function(jsonobject){
+							jsonobject = JSON.parse(jsonobject);
+							if(jsonobject.sucess){
+								window.location = "Home";
+							} else{
+								alert(jsonobject.message);
+							}
 						}
-					}
-		        });
+			        });
+				}
+
+				grecaptcha.reset(regCap);
 			}
 		</script>
 
@@ -112,6 +131,11 @@
 					<p id="password-strength-text"></p>
 					<h4>Confirm new password:</h4>
 					<input type="password" class="form-control" id="confirmPassword">
+					<br>
+					<div id="regCap"></div>
+					
+        			<span id="captchaError" class="alert alert-danger col-sm-4" style="display:none"></span><br>
+					
 					<button type="button" class="btn btn-primary" id="submitAnswer" style="margin-top:10px" onclick="submitAnswer()">Submit</button>
 				</div>
 			</div>
