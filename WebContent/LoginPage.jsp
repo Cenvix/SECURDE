@@ -142,8 +142,6 @@
 					alert("Confirm Password does not match!");
 				}else if($sQuestion==""){ //REGEX FOR 8 Char min
 					alert("Input Secret Question");
-				}else if(!/.{8,}$/.test($pass)){ //REGEX FOR 8 Char min
-					alert("Input Password with 8 or more characters!");
 				}else if($sAnswer==""){
 					alert("No answer to Secret Question!");
 				}else if($sAnswer != $sCAnswer){
