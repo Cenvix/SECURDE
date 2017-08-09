@@ -6,9 +6,7 @@
   
   	<session-config>
 		<session-timeout>20</session-timeout>
-		<cookie-config>
-			<secure>true</secure>
-		</cookie-config>
+		
 	</session-config>
 
 	<servlet>

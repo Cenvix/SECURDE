@@ -310,12 +310,13 @@ public class MainController{
 		user.setPassword(password);
 		ResponseOut resp = new ResponseOut();
 		
-		if(validEmail) {
 			if((Integer)request.getSession().getAttribute("attemps")==null)
 			setAttempsSessions(request,1);
 			else
 				setAttempsSessions(request, (Integer)request.getSession().getAttribute("attemps")+1);
 			
+
+			if(validEmail) {
 			ArrayList<String> out = UserService.loginUser(user);
 			
 			if((Integer)request.getSession().getAttribute("attemps")>3){
@@ -414,8 +415,9 @@ public class MainController{
 	public void setUserSessions(HttpServletRequest request, User user){
 		
 		HttpSession session;
-		session = request.getSession(true);
 		
+		session = request.getSession();
+
 		// Get session creation time.
 	    Date createTime = new Date(session.getCreationTime());
 	         
@@ -424,7 +426,6 @@ public class MainController{
 	    User sessionUser = UserService.getUser(user.getId());
 	    
 
-		session.setAttribute("attemps", 0);
         session.setAttribute("userID", sessionUser.getId());
         session.setAttribute("userType", sessionUser.getUserType());
         session.setAttribute("userNumber", sessionUser.getUserNumber());
@@ -432,11 +433,13 @@ public class MainController{
         session.setAttribute("userLastName", sessionUser.getLastName());
         
 	}
+
+	
 	
 	public void setAttempsSessions(HttpServletRequest request, int a){
 		
 		HttpSession session;
-		session = request.getSession(true);
+		session = request.getSession();
 		
 		// Get session creation time.
 	    Date createTime = new Date(session.getCreationTime());
@@ -444,7 +447,6 @@ public class MainController{
 	    // Get last access time of this web page.
 	    Date lastAccessTime = new Date(session.getLastAccessedTime());
 	   session.setAttribute("attemps", a);
-        
 	}
 	
 	

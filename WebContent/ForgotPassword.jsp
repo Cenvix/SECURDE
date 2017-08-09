@@ -7,6 +7,10 @@
 		
 		
 		<%@ include file="header.jsp" %>
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
+		
 	</head>
 
 	<body>
@@ -14,6 +18,37 @@
 			$(document).ready(function(){
 				var userID ='<%= session.getAttribute("userID")%>';
 				console.log(userID);
+				
+				
+				/******************************************************************************
+				PASSWORD STUFF
+				*******************************************************************************/
+				var strength = {
+						  0: "Worst",
+						  1: "Bad",
+						  2: "Weak",
+						  3: "Good",
+						  4: "Strong"
+						}
+				
+				var password = document.getElementById('registerPassword');
+				var meter = document.getElementById('password-strength-meter');
+				var text = document.getElementById('password-strength-text');
+
+				password.addEventListener('input', function() {
+				  var val = password.value;
+				  var result = zxcvbn(val);
+
+				  // Update the password strength meter
+				  meter.value = result.score;
+
+				  // Update the text indicator
+				  if (val !== "") {
+				    text.innerHTML = "Strength: " + strength[result.score]; 
+				  } else {
+				    text.innerHTML = "";
+				  }
+				});
 			});
 			
 			function submitEmail() {
@@ -72,7 +107,11 @@
 					<h4 id="question"></h4>
 					<textarea id="answer" class="form-control" rows="5"></textarea>
 					<h4>Enter new password to set:</h4>
-					<input type="text" class="form-control" id="newPassword">
+					<input type="password" class="form-control" id="newPassword">
+					<meter max="4" id="password-strength-meter"></meter>
+					<p id="password-strength-text"></p>
+					<h4>Confirm new password:</h4>
+					<input type="password" class="form-control" id="confirmPassword">
 					<button type="button" class="btn btn-primary" id="submitAnswer" style="margin-top:10px" onclick="submitAnswer()">Submit</button>
 				</div>
 			</div>
@@ -82,5 +121,9 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
+
+		
 	</body>
 </html>
