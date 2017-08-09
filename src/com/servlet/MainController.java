@@ -168,10 +168,11 @@ public class MainController{
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookings();
 		request.setAttribute("bookings", bookings);
-		if(request.getAttribute("userType")!=null){
+		if(request.getSession().getAttribute("userType")!=null){
 			request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
 		}else{
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+			
 		}
 
 	}
@@ -188,40 +189,52 @@ public class MainController{
 			out = BookService.reserveBook(idbook);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
 		
 		return out+"";
 	}
 
 	@RequestMapping(value="/Library", method = RequestMethod.GET)
 	private void libraryInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayList<Book> books = BookService.getAllBooks();
-		request.setAttribute("books", books);
-		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
-	}
+	
+		if(request.getSession().getAttribute("userID")==null){
+			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+		}
+		else {
+			ArrayList<Book> books = BookService.getAllBooks();
+			
+			request.setAttribute("books", books);
+			request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
+		}
+		
+}
 	
 	@RequestMapping(value="/ViewProduct", method = RequestMethod.POST)
 	private void viewProduct(@RequestParam("bookID") int id, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	//private void viewProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("VIEWING PRODUCT");
-		
-		Book product = BookService.getBook(id);
-		String productJSON = new Gson().toJson(product);
-		
-		ArrayList<Review> reviews = ReviewService.getBookReviews(id);
-		String reviewsJSON = new Gson().toJson(reviews);
-		
-		ArrayList<String> names = new ArrayList();
-		for(int i = 0; i < reviews.size(); i++) {
-			User user = UserService.whoseUserNumber(reviews.get(i).getUserID());
-			names.add(user.getFirstName() + " " + user.getLastName());
+		if(request.getSession().getAttribute("userID")==null){
+			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
 		}
-		String namesJSON = new Gson().toJson(names);
-		
-		request.setAttribute("bookJSON", productJSON);
-		request.setAttribute("reviewsJSON", reviewsJSON);
-		request.setAttribute("namesJSON", namesJSON);
-		request.getRequestDispatcher("ProductPage.jsp").forward(request, response);
+		else {
+			Book product = BookService.getBook(id);
+			String productJSON = new Gson().toJson(product);
+			
+			ArrayList<Review> reviews = ReviewService.getBookReviews(id);
+			String reviewsJSON = new Gson().toJson(reviews);
+			
+			ArrayList<String> names = new ArrayList();
+			for(int i = 0; i < reviews.size(); i++) {
+				User user = UserService.whoseUserNumber(reviews.get(i).getUserID());
+				names.add(user.getFirstName() + " " + user.getLastName());
+			}
+			String namesJSON = new Gson().toJson(names);
+			
+			request.setAttribute("bookJSON", productJSON);
+			request.setAttribute("reviewsJSON", reviewsJSON);
+			request.setAttribute("namesJSON", namesJSON);
+			request.getRequestDispatcher("ProductPage.jsp").forward(request, response);
+		}
 	}
 
 	@RequestMapping(value="/AdminInit", method = RequestMethod.GET)

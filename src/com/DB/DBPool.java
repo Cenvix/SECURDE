@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 
 public class DBPool {
-	public final static String url = "jdbc:mysql://localhost:3340/securde";
+	public final static String url = "jdbc:mysql://localhost:3306/securde";
 	public final static String username = "securde";
 	public final static String password = "DGOsecurde17";
 	public final static String  driver = "com.mysql.jdbc.Driver";

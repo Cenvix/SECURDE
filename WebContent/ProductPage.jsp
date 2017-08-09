@@ -24,7 +24,7 @@
 		
 		function initBook() {
 			var book = (JSON.parse('${bookJSON}'));
-			
+			console.log("yalla" +book.name);
 			document.getElementById("productAuthor").innerHTML = book.author;
 			document.getElementById("productTitle").innerHTML = book.name;
 			document.getElementById("productType").innerHTML = book.type;
@@ -55,7 +55,7 @@
 			var reviewScore = document.getElementById("reviewScore").value;
 			var review = document.getElementById("review").value;
 			var bookID = document.getElementById("productID").innerHTML;
-			var userNumber = "${userNumber}";
+			var userNumber = ${userNumber};
 			
 			$.ajax({
 	            url: 'SubmitReview',
