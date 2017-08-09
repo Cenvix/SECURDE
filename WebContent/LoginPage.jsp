@@ -8,8 +8,9 @@
 		
 		<%@ include file="header.jsp" %>
 	
-	<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
 		
 		<script type="text/javascript">
 		
@@ -25,6 +26,36 @@
 				setLogMessage("Wrong Username OR Password");
 			}
 			
+			
+			/******************************************************************************
+			PASSWORD STUFF
+			*******************************************************************************/
+			var strength = {
+					  0: "Worst",
+					  1: "Bad",
+					  2: "Weak",
+					  3: "Good",
+					  4: "Strong"
+					}
+			
+			var password = document.getElementById('registerPassword');
+			var meter = document.getElementById('password-strength-meter');
+			var text = document.getElementById('password-strength-text');
+
+			password.addEventListener('input', function() {
+			  var val = password.value;
+			  var result = zxcvbn(val);
+
+			  // Update the password strength meter
+			  meter.value = result.score;
+
+			  // Update the text indicator
+			  if (val !== "") {
+			    text.innerHTML = "Strength: " + strength[result.score]; 
+			  } else {
+			    text.innerHTML = "";
+			  }
+			});
 			
 		});
 		
@@ -105,14 +136,12 @@
 				else if(!/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test($email))//REGEX for EMAILL
 				{
 					alert("Input Valid Email!");
-				}else if(!/.{8,}$/.test($pass)){ //REGEX FOR 8 Char min
-					alert("Input Password with 8 or more characters!");
+				}else if(!/.{8,}$/.test($pass)||$('#password-strength-meter').val()<3){ //REGEX FOR 8 Char min
+					alert("Your password is too weak!");
 				}else if($pass != $passCon){
 					alert("Confirm Password does not match!");
 				}else if($sQuestion==""){ //REGEX FOR 8 Char min
 					alert("Input Secret Question");
-				}else if(!/.{8,}$/.test($pass)){ //REGEX FOR 8 Char min
-					alert("Input Password with 8 or more characters!");
 				}else if($sAnswer==""){
 					alert("No answer to Secret Question!");
 				}else if($sAnswer != $sCAnswer){
@@ -166,6 +195,9 @@
 				$("#logMessage").show();
 				$("#logMessage").html(mes);
 			}
+			
+			
+
 		</script>
 	
 	</head>
@@ -213,10 +245,15 @@
 					<input class="form-control" type="text" id="registerIDNumber" placeholder="ID Number" value=""><br>
 					
 					Password
-					<input class="form-control" type="password" id="registerPassword" placeholder="Password" value=""><br>
+					<input class="form-control col-sm-1" type="password" id="registerPassword" placeholder="Password" value=""><br>
+					<meter max="4" id="password-strength-meter"></meter>
+					<p id="password-strength-text"></p>
+					
 					
 					Confirm Password
 					<input class="form-control" type="password" id="registerConfirmPassword" placeholder="Confirm Password" value=""><br>
+					
+					
 					
 					Secret Question
 					<input class="form-control" type="text" id="sQuestion" placeholder="E.g. What is the name of my 1st Pet?" value=""><br>
@@ -243,6 +280,7 @@
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
 		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
 		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
 	
 		

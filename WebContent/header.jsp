@@ -2,7 +2,7 @@
 
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="stylesheet.css" rel="stylesheet">
-		<script type="text/javascript" src="js/jquery-3.0.0.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-3.0.0.min.js" ></script>	
 		<%@  taglib  prefix="c"   uri="http://java.sun.com/jsp/jstl/core"  %>
 		
 		

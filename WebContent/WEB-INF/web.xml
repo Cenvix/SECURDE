@@ -3,6 +3,13 @@
   
   <display-name>SECURDE</display-name>
   
+  
+  	<session-config>
+		<session-timeout>20</session-timeout>
+		<cookie-config>
+			<secure>true</secure>
+		</cookie-config>
+	</session-config>
 
 	<servlet>
 		<servlet-name>spring-dispatcher</servlet-name>
