@@ -677,6 +677,53 @@ public class MainController{
 	public void loginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
 	}
+	
+	@RequestMapping(value="/EditEmployee", method=RequestMethod.POST)
+	public void editEmployee(@RequestParam("employeeID") int id, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		User employee = UserService.whoseUserNumber(id);
+		employee = UserService.getUser(employee.getId());
+		
+		String employeeJSON = new Gson().toJson(employee);
+		System.out.println(employeeJSON);
+		request.setAttribute("employeeJSON", employeeJSON);
+		request.getRequestDispatcher("EmployeeEdit.jsp").forward(request, response);
+	}
+	
+	@RequestMapping(value="/EmployEdit", method=RequestMethod.POST)
+	@ResponseBody
+	public String editedEmployee(@ModelAttribute("employee") User employee, @RequestParam("isDelete") boolean isDelete,
+									@RequestParam("isAnswerChanged") boolean isAnswerChanged, @RequestParam("isQuestionChanged") boolean isQuestionChanged,
+									@RequestParam("isPasswordChanged") boolean isPasswordChanged) {
+		System.out.println("EDITING EMPLOYEE");
+		boolean success = false;
+		EncryptionService encode = new EncryptionService();
+		
+		if(!isDelete) {
+			success = UserService.editEmployee(employee);
+			
+			if(isPasswordChanged) {
+				System.out.println("CHANGED PASSWORD");
+				String password = encode.encryptPass(employee.getPassword());
+				success = success && UserService.passwordChange(password, employee.getId());
+			}
+			if(isQuestionChanged) {
+				System.out.println("CHANGED QUESTION");
+				success = success && UserService.questionChange(employee.getSecretQuestion(), employee.getId());
+			}
+			if(isAnswerChanged) {
+				System.out.println("CHANGED ANSWER");
+				String answer = encode.encryptPass(employee.getSecretAnswer());
+				success = success && UserService.answerChange(answer, employee.getId());
+			}
+		}
+		else {
+			System.out.println("DELETING EMPLOYEE");
+			System.out.println(employee.getId());
+			success = UserService.deleteEmployee(employee.getId());
+		}
+		
+		return ""+success;
+	}
 //	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
 //	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 //		System.out.println("EditProduct");
