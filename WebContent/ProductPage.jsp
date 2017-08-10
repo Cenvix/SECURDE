@@ -60,9 +60,9 @@
 			$.ajax({
 	            url: 'SubmitReview',
 	            data: {
-	                reviewScore: reviewScore,
+	                rating: reviewScore,
 	                review: review,
-	                userNumber: userNumber,
+	                userID: userNumber,
 	                bookID: bookID
 	            },
 	            type: 'POST',

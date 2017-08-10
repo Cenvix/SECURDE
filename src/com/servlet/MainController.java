@@ -614,18 +614,10 @@ public class MainController{
 	
 	@RequestMapping(value="/SubmitReview", method=RequestMethod.POST)
 	@ResponseBody
-	public String submitReview(@RequestParam("userNumber") int userNumber, @RequestParam("reviewScore") int score, 
-								@RequestParam("bookID") int bookID, @RequestParam("review") String review,
+	public String submitReview(@ModelAttribute("review") Review r,
 								HttpServletRequest request, HttpServletResponse response) {
 		
 		System.out.println("SUBMITTING REVIEW");
-		
-		Review r = new Review();
-		
-		r.setBookID(bookID);
-		r.setRating(score);
-		r.setReview(review);
-		r.setUserID(userNumber);
 		
 		boolean isSuccess = ReviewService.addReview(r);
 		
