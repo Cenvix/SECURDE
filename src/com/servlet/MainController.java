@@ -122,7 +122,6 @@ public class MainController{
 			mrb.setIduser(Integer.parseInt(userID));
 			mrb.setId((int)(Math.random()*100));
 			
-			System.out.println(mrb.getIduser());
 			boolean out = false;
 			if(!MeetingRoomService.checkDoubleBook(userID)){
 				out = MeetingRoomService.addMeetingRoomBooking(mrb);
@@ -130,16 +129,16 @@ public class MainController{
 			return out+"";
 		}
 		
-		//DONE
-				@RequestMapping(value="/RemoveRoom", method = RequestMethod.POST)
-				@ResponseBody
-				private String removeRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
-				
-					boolean out = false;
-					out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
-					
-					return out+"";
-				}
+	//DONE
+	@RequestMapping(value="/RemoveRoom", method = RequestMethod.POST)
+	@ResponseBody
+	private String removeRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
+		System.out.println("im in");
+		boolean out = false;
+		out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
+			
+		return out+"";
+	}
 	//DONE
 	@RequestMapping(value="/AddProduct", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -160,7 +159,8 @@ public class MainController{
 
 	@RequestMapping(value="/Bookings", method = RequestMethod.GET)
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookings();
+		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookingsToday();
+
 		request.setAttribute("bookings", bookings);
 		if(request.getSession().getAttribute("userType")!=null){
 			request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);

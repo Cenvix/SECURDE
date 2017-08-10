@@ -139,6 +139,7 @@
 							}
 	            });
 			}else{
+
 				$.ajax({
 	                url: 'RemoveRoom',
 	                data: {
