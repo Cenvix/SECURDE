@@ -1,5 +1,7 @@
 package com.beans;
 
+import com.services.Sanitizer;
+
 public class ResponseOut {
 
 
@@ -15,7 +17,7 @@ public class ResponseOut {
 		return message;
 	}
 	public void setMessage(String message) {
-		this.message = message;
+		this.message = Sanitizer.sanitizeXSS(message);
 	}
 	public boolean isSucess() {
 		return sucess;

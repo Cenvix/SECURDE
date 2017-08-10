@@ -7,6 +7,8 @@ import java.util.Random;
 
 import org.springframework.security.crypto.encrypt.Encryptors;
 
+import com.services.Sanitizer;
+
 //import com.mysql.fabric.xmlrpc.base.Array;
 
 public class User implements Serializable {
@@ -73,7 +75,7 @@ public class User implements Serializable {
 
 
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		this.firstName = Sanitizer.sanitizeXSS(firstName);
 	}
 
 
@@ -83,7 +85,7 @@ public class User implements Serializable {
 
 
 	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
+		this.middleName = Sanitizer.sanitizeXSS(middleName);
 	}
 
 
@@ -93,7 +95,7 @@ public class User implements Serializable {
 
 
 	public void setLastName(String lastName) {
-		this.lastName = lastName;
+		this.lastName = Sanitizer.sanitizeXSS(lastName);
 	}
 
 
@@ -103,7 +105,7 @@ public class User implements Serializable {
 
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = Sanitizer.sanitizeXSS(email);
 	}
 
 
@@ -122,7 +124,7 @@ public class User implements Serializable {
 
 
 	public void setUserNumber(String userNumber) {
-		this.userNumber = userNumber;
+		this.userNumber = Sanitizer.sanitizeXSS(userNumber);
 	}
 
 
@@ -132,7 +134,7 @@ public class User implements Serializable {
 
 
 	public void setUserType(String userType) {
-		this.userType = userType;
+		this.userType = Sanitizer.sanitizeXSS(userType);
 	}
 
 
@@ -142,7 +144,7 @@ public class User implements Serializable {
 
 
 	public void setSecretQuestion(String secretQuestion) {
-		this.secretQuestion = secretQuestion;
+		this.secretQuestion = Sanitizer.sanitizeXSS(secretQuestion);
 	}
 
 
@@ -152,7 +154,7 @@ public class User implements Serializable {
 
 
 	public void setSecretAnswer(String secretAnswer) {
-		this.secretAnswer = secretAnswer;
+		this.secretAnswer = Sanitizer.sanitizeXSS(secretAnswer);
 	}
 
 	

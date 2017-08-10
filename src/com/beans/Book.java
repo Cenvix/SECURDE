@@ -3,6 +3,8 @@ package com.beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.services.Sanitizer;
+
 //import com.mysql.fabric.xmlrpc.base.Array;
 
 
@@ -54,7 +56,7 @@ public class Book implements Serializable {
 	}
 
 	public void setDds(String dds) {
-		this.dds = dds;
+		this.dds = Sanitizer.sanitizeXSS(dds);
 	}
 
 	public String getType() {
@@ -62,14 +64,14 @@ public class Book implements Serializable {
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		this.type = Sanitizer.sanitizeXSS(type);
 	}
 
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
-		this.description = description;
+		this.description = Sanitizer.sanitizeXSS(description);
 	}
 	public int getId() {
 		return id;
@@ -84,7 +86,7 @@ public class Book implements Serializable {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = Sanitizer.sanitizeXSS(name);
 	}
 
 	public String getAuthor() {
@@ -92,7 +94,7 @@ public class Book implements Serializable {
 	}
 
 	public void setAuthor(String author) {
-		this.author = author;
+		this.author = Sanitizer.sanitizeXSS(author);
 	}
 
 	public String getPublisher() {
@@ -100,7 +102,7 @@ public class Book implements Serializable {
 	}
 
 	public void setPublisher(String publisher) {
-		this.publisher = publisher;
+		this.publisher =Sanitizer.sanitizeXSS(publisher);
 	}
 
 	public String getYear() {
@@ -108,7 +110,7 @@ public class Book implements Serializable {
 	}
 
 	public void setYear(String year) {
-		this.year = year;
+		this.year = Sanitizer.sanitizeXSS(year);
 	}
 
 	public String getStatus() {
@@ -116,7 +118,7 @@ public class Book implements Serializable {
 	}
 
 	public void setStatus(String status) {
-		this.status = status;
+		this.status = Sanitizer.sanitizeXSS(status);
 	}
 
 	

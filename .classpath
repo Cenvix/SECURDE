@@ -30,5 +30,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-security-config-4.2.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/esapi-2.1.0.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -42,14 +42,17 @@ import com.beans.GoogleResponse;
 import com.beans.MeetingRoomBooking;
 import com.beans.ResponseOut;
 import com.beans.Review;
+import com.beans.Transaction;
 import com.beans.User;
 import com.google.gson.Gson;
 
 import com.services.AuthorityCheckerService;
 import com.services.BookService;
 import com.services.EncryptionService;
+import com.services.LogsService;
 import com.services.MeetingRoomService;
 import com.services.ReviewService;
+import com.services.TransactionService;
 import com.services.UserService;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -122,7 +125,6 @@ public class MainController{
 			mrb.setIduser(Integer.parseInt(userID));
 			mrb.setId((int)(Math.random()*100));
 			
-			System.out.println(mrb.getIduser());
 			boolean out = false;
 			if(!MeetingRoomService.checkDoubleBook(userID)){
 				out = MeetingRoomService.addMeetingRoomBooking(mrb);
@@ -130,16 +132,16 @@ public class MainController{
 			return out+"";
 		}
 		
-		//DONE
-				@RequestMapping(value="/RemoveRoom", method = RequestMethod.POST)
-				@ResponseBody
-				private String removeRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
-				
-					boolean out = false;
-					out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
-					
-					return out+"";
-				}
+	//DONE
+	@RequestMapping(value="/RemoveRoom", method = RequestMethod.POST)
+	@ResponseBody
+	private String removeRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
+		System.out.println("im in");
+		boolean out = false;
+		out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
+			
+		return out+"";
+	}
 	//DONE
 	@RequestMapping(value="/AddProduct", method = RequestMethod.GET)
 	private void productAddInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -160,7 +162,8 @@ public class MainController{
 
 	@RequestMapping(value="/Bookings", method = RequestMethod.GET)
 	private void bookingsInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookings();
+		ArrayList<MeetingRoomBooking> bookings = MeetingRoomService.getMeetingRoomBookingsToday();
+
 		request.setAttribute("bookings", bookings);
 		if(request.getSession().getAttribute("userType")!=null){
 			request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
@@ -176,7 +179,25 @@ public class MainController{
 	@ResponseBody
 	private String reserveBook(@RequestParam("idbook")String idbook, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
+		Transaction t = new Transaction();
 		boolean out = false;
+		boolean transaction = false;
+		Book book = BookService.getBook(Integer.parseInt(idbook));
+		t.setIdBook(book.getId());
+		t.setIdUser(Integer.parseInt(request.getSession().getAttribute("userID").toString()));
+		t.setStatus("borrowed");
+		//borrow date 
+		
+		if(request.getSession().getAttribute("userID") != null) {
+			System.out.println("ReserveBook");
+			out = BookService.reserveBook(idbook);
+			transaction = TransactionService.addTransaction(t);
+		}
+		else
+			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+		
+		return out+"";
+		/*boolean out = false;
 		
 		if(request.getSession().getAttribute("userID") != null) {
 			System.out.println("ReserveBook");
@@ -185,7 +206,7 @@ public class MainController{
 		else
 			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
 		
-		return out+"";
+		return out+"";*/
 	}
 
 	@RequestMapping(value="/Library", method = RequestMethod.GET)
@@ -316,17 +337,21 @@ public class MainController{
 			else
 				setAttempsSessions(request, (Integer)request.getSession().getAttribute("attemps")+1);
 			
+		
+			LogsService.logAction("Login", "[LOGIN ATTEMP] IP: "+ request.getRemoteAddr()+" email: " +email +": Attemps = "+request.getSession().getAttribute("attemps"), 0);
 
 			if(validEmail) {
 			ArrayList<String> out = UserService.loginUser(user);
+			
 			
 			if((Integer)request.getSession().getAttribute("attemps")>3){
 				if(this.processCaptcha(request, cap)){
 					if(out.size()>0){
 						user.setId(Integer.parseInt(out.get(0)));
-						
 						setUserSessions(request, user);
 						resp.setSucess(true);
+						LogsService.logAction("Login", "[LOGIN SUCESS] Email = "+ user.getEmail(), user.getId());
+
 					}else{
 						resp.setMessage("Wrong Username or Password");
 					}
@@ -395,6 +420,8 @@ public class MainController{
 			if(this.processCaptcha(request, cap)){
 				if(UserService.checkUser(newUser)){
 					if(UserService.addUser(newUser)){
+
+						LogsService.logAction("Register", "[Register SUCESS]", newUser.getId());
 						out.setSucess(true);
 					}else
 						out.setMessage("Check the ID Number or Email, Account might exist already");
@@ -516,6 +543,8 @@ public class MainController{
 				if(!BookService.checkBook(book.getId())){
 					if(BookService.addBook(book)){
 						status = true;
+
+						LogsService.logAction("AddBook", "[Added Book] "+book.getName()+" w/ ID: "+book.getId(), (Integer)request.getSession().getAttribute("userID"));
 					}
 				}
 			}
@@ -544,6 +573,8 @@ public class MainController{
 					if(BookService.editBook(editedBook)){
 						status = true;
 						System.out.println("Edited");
+
+						LogsService.logAction("EditBook", "[Edited Book] "+editedBook.getName()+" w/ ID: "+editedBook.getId(), (Integer)request.getSession().getAttribute("userID"));
 					}
 				}
 			}
@@ -591,6 +622,9 @@ public class MainController{
 					if(BookService.deleteBook(bookid)){
 						status = true;
 						System.out.println("deleted");
+
+						LogsService.logAction("DeleteBook", "[Deleted Book] w/ ID: "+bookid, (Integer)request.getSession().getAttribute("userID"));
+
 					}
 				}
 			}
@@ -613,6 +647,9 @@ public class MainController{
 		System.out.println("SUBMITTING REVIEW");
 		
 		boolean isSuccess = ReviewService.addReview(r);
+
+		LogsService.logAction("SubmitReview", "[Review]"+r.getReview(), (Integer)request.getSession().getAttribute("userID"));
+
 		
 		return ""+isSuccess;
 	}
@@ -631,6 +668,9 @@ public class MainController{
 		request.setAttribute("userQuestion", user.getSecretQuestion());
 		isSuccess = true;
 		
+		LogsService.logAction("ForgotPasswordEmail", "[Secret Question] IP: "+ request.getRemoteAddr()+" email: " +email +" asked for secret question", user.getId());
+
+		
 		return ""+user.getSecretQuestion();
 	}
 	
@@ -647,7 +687,8 @@ public class MainController{
 		
 		User user = UserService.whoseEmail(email);
 		user.setSecretAnswer(answer);
-		
+		LogsService.logAction("ForgotPasswordAnswer", "[Change Password Attemp]IP: "+ request.getRemoteAddr()+" email: " +email +" attemps to change password", user.getId());
+
 		if(this.processCaptcha(request, cap)){
 		ArrayList<String> out = UserService.loginUserSecret(user);
 			if(out.size()>0){
@@ -662,8 +703,12 @@ public class MainController{
 				
 				setUserSessions(request, user);
 				resp.setSucess(true);
+				
+
+				LogsService.logAction("ForgotPasswordAnswer", "[Password Change Success] email: " +email +" changed passwords", user.getId());
 			}else{
 				resp.setMessage("Wrong Answer");
+				LogsService.logAction("ForgotPasswordAnswer", "[Wrong Secret Answer] IP: "+ request.getRemoteAddr()+" email: " +email +" got a wrong answer", user.getId());
 			}
 		}else{
 			resp.setMessage("Verify yourself earthling!");
