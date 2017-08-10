@@ -82,6 +82,25 @@
 				}
 	        });
 		}
+		function reserveBook(){
+			var bookid = document.getElementById("productID").innerHTML;
+			$.ajax({
+                url: 'ReserveBook',
+                data: {
+                    idbook: bookid
+                },
+                type: 'POST',
+				success:function(jsonobject){
+					
+							if(jsonobject=="true"){
+	   		            	 	document.getElementById("reserve_"+id).innerHTML="RESERVED";
+	   		               		document.getElementById("reserve_"+id).disabled=true;
+							} else
+								alert("Reservation Failed");
+						   	
+						}
+            });
+		}
 		</script>
 	</head>
 
@@ -101,7 +120,7 @@
 						<p>DDC: <span id="productID"></span></p>
 					</div>
 					<div class="well">
-						<button type="button" class="btn btn-primary" style="width:100%" id="reserve">Reserve a Copy</button>
+						<button type="button" class="btn btn-primary" style="width:100%" id="reserve" onclick = "reserveBook()">Reserve a Copy</button>
 					</div>
 				</div>
 				

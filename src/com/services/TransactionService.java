@@ -57,7 +57,7 @@ public class TransactionService {
 	}
 	public static boolean addTransaction(Transaction t){
 		boolean success = false;
-		String sql = "Insert into "+Transaction.TABLE_NAME + " Values(?,?,?,?,?,?);";
+		String sql = "Insert into "+Transaction.TABLE_NAME + " Values(?,?,?,CURDATE(),DATE_ADD(CURDATE(), INTERVAL 10 DAY),?);";
 		Connection connection = DBPool.getInstance().getConnection();
 		PreparedStatement pstmt = null;
 
@@ -66,9 +66,7 @@ public class TransactionService {
 			pstmt.setInt(1, t.getId());
 			pstmt.setInt(2, t.getIdBook());
 			pstmt.setInt(3, t.getIdUser());
-			pstmt.setDate(4, t.getBorrowDate());
-			pstmt.setDate(5, t.getReturnDate());
-			pstmt.setString(6, t.getStatus());
+			pstmt.setString(4, t.getStatus());
 			
 			pstmt.executeUpdate();
 			success=true;
