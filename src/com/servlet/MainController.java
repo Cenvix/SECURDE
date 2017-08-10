@@ -48,6 +48,7 @@ import com.google.gson.Gson;
 import com.services.AuthorityCheckerService;
 import com.services.BookService;
 import com.services.EncryptionService;
+import com.services.LogsService;
 import com.services.MeetingRoomService;
 import com.services.ReviewService;
 import com.services.UserService;
@@ -316,17 +317,21 @@ public class MainController{
 			else
 				setAttempsSessions(request, (Integer)request.getSession().getAttribute("attemps")+1);
 			
+		
+			LogsService.logAction("Login", "[LOGIN ATTEMP] IP: "+ request.getRemoteAddr()+" email: " +email +": Attemps = "+request.getSession().getAttribute("attemps"), 0);
 
 			if(validEmail) {
 			ArrayList<String> out = UserService.loginUser(user);
+			
 			
 			if((Integer)request.getSession().getAttribute("attemps")>3){
 				if(this.processCaptcha(request, cap)){
 					if(out.size()>0){
 						user.setId(Integer.parseInt(out.get(0)));
-						
 						setUserSessions(request, user);
 						resp.setSucess(true);
+						LogsService.logAction("Login", "[LOGIN SUCESS] Email = "+ user.getEmail(), user.getId());
+
 					}else{
 						resp.setMessage("Wrong Username or Password");
 					}
@@ -395,6 +400,8 @@ public class MainController{
 			if(this.processCaptcha(request, cap)){
 				if(UserService.checkUser(newUser)){
 					if(UserService.addUser(newUser)){
+
+						LogsService.logAction("Register", "[Register SUCESS]", newUser.getId());
 						out.setSucess(true);
 					}else
 						out.setMessage("Check the ID Number or Email, Account might exist already");
@@ -516,6 +523,8 @@ public class MainController{
 				if(!BookService.checkBook(book.getId())){
 					if(BookService.addBook(book)){
 						status = true;
+
+						LogsService.logAction("AddBook", "[Added Book] "+book.getName()+" w/ ID: "+book.getId(), (Integer)request.getSession().getAttribute("userID"));
 					}
 				}
 			}
@@ -544,6 +553,8 @@ public class MainController{
 					if(BookService.editBook(editedBook)){
 						status = true;
 						System.out.println("Edited");
+
+						LogsService.logAction("EditBook", "[Edited Book] "+editedBook.getName()+" w/ ID: "+editedBook.getId(), (Integer)request.getSession().getAttribute("userID"));
 					}
 				}
 			}
@@ -591,6 +602,9 @@ public class MainController{
 					if(BookService.deleteBook(bookid)){
 						status = true;
 						System.out.println("deleted");
+
+						LogsService.logAction("DeleteBook", "[Deleted Book] w/ ID: "+bookid, (Integer)request.getSession().getAttribute("userID"));
+
 					}
 				}
 			}
@@ -613,6 +627,9 @@ public class MainController{
 		System.out.println("SUBMITTING REVIEW");
 		
 		boolean isSuccess = ReviewService.addReview(r);
+
+		LogsService.logAction("SubmitReview", "[Review]"+r.getReview(), (Integer)request.getSession().getAttribute("userID"));
+
 		
 		return ""+isSuccess;
 	}
@@ -631,6 +648,9 @@ public class MainController{
 		request.setAttribute("userQuestion", user.getSecretQuestion());
 		isSuccess = true;
 		
+		LogsService.logAction("ForgotPasswordEmail", "[Secret Question] IP: "+ request.getRemoteAddr()+" email: " +email +" asked for secret question", user.getId());
+
+		
 		return ""+user.getSecretQuestion();
 	}
 	
@@ -647,7 +667,8 @@ public class MainController{
 		
 		User user = UserService.whoseEmail(email);
 		user.setSecretAnswer(answer);
-		
+		LogsService.logAction("ForgotPasswordAnswer", "[Change Password Attemp]IP: "+ request.getRemoteAddr()+" email: " +email +" attemps to change password", user.getId());
+
 		if(this.processCaptcha(request, cap)){
 		ArrayList<String> out = UserService.loginUserSecret(user);
 			if(out.size()>0){
@@ -662,8 +683,12 @@ public class MainController{
 				
 				setUserSessions(request, user);
 				resp.setSucess(true);
+				
+
+				LogsService.logAction("ForgotPasswordAnswer", "[Password Change Success] email: " +email +" changed passwords", user.getId());
 			}else{
 				resp.setMessage("Wrong Answer");
+				LogsService.logAction("ForgotPasswordAnswer", "[Wrong Secret Answer] IP: "+ request.getRemoteAddr()+" email: " +email +" got a wrong answer", user.getId());
 			}
 		}else{
 			resp.setMessage("Verify yourself earthling!");
