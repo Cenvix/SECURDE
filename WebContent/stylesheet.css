@@ -4,6 +4,11 @@ body{
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
+	padding: 2.5em 2em 0em;
+    background: #f5f7f9;
+    font-size: 1.5em;
+    color: #346;
+   	font-family: Signika, -apple-system, sans-serif;
 }
 
 .libraryButtons{
@@ -14,14 +19,6 @@ body{
 
 * {
     box-sizing: border-box;
-}
-
-body {
-    padding: 2.5em 2em 0em;
-    background: #f5f7f9;
-        font-size: 1.5em;
-        color: #346;
-        font-family: Signika, -apple-system, sans-serif;
 }
 
 section {
