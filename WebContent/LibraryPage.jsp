@@ -61,7 +61,6 @@
 			<c:forEach items="${books}" var="b">
         	addBook("${b.name}", "${b.publisher}", "${b.author}", "${b.id}", "${b.status}");
         	</c:forEach>
-        	
         }
 		
 		function loadBooks() {
@@ -131,27 +130,19 @@
             });
 		}
 		
-		function searchBooks() {
+		function searchBooks() {			
 			$.ajax({
                 url: 'SearchBooks',
                 data: {
                 	query: document.getElementById("searchQuery").value,
-                    filterMagazine: $('filterMagazine').is(':checked'),
-					filterThesis: $('filterThesis').is(':checked'),
-					filterBook: $('filterBook').is(':checked')
+                    filterMagazine: document.getElementById('filterMagazine').checked,
+					filterThesis: document.getElementById('filterThesis').checked,
+					filterBook: document.getElementById('filterBook').checked
                 },
                 type: 'POST',
                 success:function(jsonobject){
-					
-					if(jsonobject=="true"){
-						initBooks();
-		            	loadBooks();
-					} else {
-						alert("Search Failed");
-					initBooks();
+					books = (JSON.parse(jsonobject));
 					loadBooks();
-					}
-				   	
 				}
             });
 			
@@ -163,11 +154,11 @@
 		<div class="container">    
 		  <div class="row">
 			<div class="col-sm-3">
-				<form action="SearchBooks" method="post" class="well">
+				<div class="well">
 					<div class="input-group">
 						<input type="text" class="form-control" placeholder="Search" id="searchQuery" name="query">
 						<div class="input-group-btn">
-							<button class="btn btn-default" type="submit" id="searchSubmit">
+							<button class="btn btn-default" id="searchSubmit" onClick="searchBooks()">
 								<i class="glyphicon glyphicon-search"></i>
 							</button>
 						</div>
@@ -184,7 +175,7 @@
 							<label><input type="checkbox" value="filterThesis" id="filterThesis" name="filterThesis">Thesis</label>
 						</div>
 					</div>
-				</form>
+				</div>
 				
 				<div id="addBookContainer"></div>
 			</div>

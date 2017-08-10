@@ -34,7 +34,7 @@
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>
 						  	<c:when test="${empty userID}">
-						    	<li><a href="LoginPage.jsp"><span class="glyphicon glyphicon-log-in"></span> Login / Register</a></li>
+						    	<li><a href="LoginPage"><span class="glyphicon glyphicon-log-in"></span> Login / Register</a></li>
 						  	</c:when>
 						  	<c:otherwise>
 						  		<li><a href="Logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
