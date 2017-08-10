@@ -1,5 +1,7 @@
 package com.beans;
 
+import com.services.Sanitizer;
+
 public class Review {
 	public final static String COLUMN_ID = "reviewid";
 	public final static String COLUMN_USERID = "userid";
@@ -28,7 +30,7 @@ public class Review {
 		return review;
 	}
 	public void setReview(String review) {
-		this.review = review;
+		this.review = Sanitizer.sanitizeXSS(review);
 	}
 	public int getReviewID() {
 		return reviewID;
