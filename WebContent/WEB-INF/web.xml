@@ -8,6 +8,11 @@
 		<session-timeout>20</session-timeout>
 		
 	</session-config>
+	
+	<context-param>
+    	<param-name>defaultHtmlEscape</param-name>
+    	<param-value>true</param-value>
+	</context-param>
 
 	<servlet>
 		<servlet-name>spring-dispatcher</servlet-name>
@@ -45,7 +50,4 @@
 	    <servlet-name>default</servlet-name>
 	    <url-pattern>*.woff2</url-pattern>
 	</servlet-mapping>
-	
-
-
 </web-app>

@@ -99,22 +99,15 @@ public class MainController{
 	//DONE - Review if time later
 	@RequestMapping(value="/SearchBooks", method = RequestMethod.POST)
 	@ResponseBody
-	private void searchBooks(HttpServletRequest request, HttpServletResponse response,
-								@RequestParam("query") String query, @RequestParam("filterMagazine") String magazineFilter, 
-								@RequestParam("filterThesis") String thesisFilter, @RequestParam("filterBook") String bookFilter)throws ServletException, IOException{
+	private String searchBooks(HttpServletRequest request, HttpServletResponse response,
+								@RequestParam("query") String query, @RequestParam("filterMagazine") boolean magazineFilter, 
+								@RequestParam("filterThesis") boolean thesisFilter, @RequestParam("filterBook") boolean bookFilter)throws ServletException, IOException{
 		System.out.println("SEARCH BOOKS");
-		
-		boolean filterMagazine = thesisFilter != null;
-		boolean filterThesis = magazineFilter != null;
-		boolean filterBook = bookFilter != null;
 
-		ArrayList<Book> books = BookService.searchBooks(query, filterMagazine, filterThesis, filterBook);
+		ArrayList<Book> books = BookService.searchBooks(query, magazineFilter, thesisFilter, bookFilter);
 		
-		request.setAttribute("books", books);
-		request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
-		
-		PrintWriter pw = response.getWriter();
-		pw.write("true");
+		String booksJSON = new Gson().toJson(books);
+		return booksJSON;
 	}
 
 	//DONE
@@ -686,6 +679,11 @@ public class MainController{
 		
 		
 		return new Gson().toJson(resp);
+	}
+	
+	@RequestMapping(value="/LoginPage", method=RequestMethod.GET)
+	public void loginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
 	}
 //	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
 //	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
