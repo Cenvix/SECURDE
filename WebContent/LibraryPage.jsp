@@ -171,7 +171,7 @@
 						<div class="checkbox">
 							<label><input type="checkbox" value="filterMagazine" id="filterMagazine" name="filterMagazine">Magazine</label>
 						</div>
-						<div class="checkbox disabled">
+						<div class="checkbox">
 							<label><input type="checkbox" value="filterThesis" id="filterThesis" name="filterThesis">Thesis</label>
 						</div>
 					</div>
