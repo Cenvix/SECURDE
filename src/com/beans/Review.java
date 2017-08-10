@@ -30,7 +30,12 @@ public class Review {
 		return review;
 	}
 	public void setReview(String review) {
-		this.review = Sanitizer.sanitizeXSS(review);
+		String yes = Sanitizer.sanitizeXSS(review);
+		
+		if (review.equals(yes))
+		this.review = yes;
+		else
+		this.review = yes +" I am a dirty Hackerman";
 	}
 	public int getReviewID() {
 		return reviewID;
