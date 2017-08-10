@@ -23,6 +23,7 @@
 		
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
+			var userType ='<%= session.getAttribute("userType")%>';
 			console.log(userID);
 			
 			initBookings();
