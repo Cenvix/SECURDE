@@ -42,6 +42,7 @@ import com.beans.GoogleResponse;
 import com.beans.MeetingRoomBooking;
 import com.beans.ResponseOut;
 import com.beans.Review;
+import com.beans.Transaction;
 import com.beans.User;
 import com.google.gson.Gson;
 
@@ -51,6 +52,7 @@ import com.services.EncryptionService;
 import com.services.LogsService;
 import com.services.MeetingRoomService;
 import com.services.ReviewService;
+import com.services.TransactionService;
 import com.services.UserService;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -177,7 +179,25 @@ public class MainController{
 	@ResponseBody
 	private String reserveBook(@RequestParam("idbook")String idbook, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
+		Transaction t = new Transaction();
 		boolean out = false;
+		boolean transaction = false;
+		Book book = BookService.getBook(Integer.parseInt(idbook));
+		t.setIdBook(book.getId());
+		t.setIdUser(Integer.parseInt(request.getSession().getAttribute("userID").toString()));
+		t.setStatus("borrowed");
+		//borrow date 
+		
+		if(request.getSession().getAttribute("userID") != null) {
+			System.out.println("ReserveBook");
+			out = BookService.reserveBook(idbook);
+			transaction = TransactionService.addTransaction(t);
+		}
+		else
+			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+		
+		return out+"";
+		/*boolean out = false;
 		
 		if(request.getSession().getAttribute("userID") != null) {
 			System.out.println("ReserveBook");
@@ -186,7 +206,7 @@ public class MainController{
 		else
 			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
 		
-		return out+"";
+		return out+"";*/
 	}
 
 	@RequestMapping(value="/Library", method = RequestMethod.GET)
