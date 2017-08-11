@@ -149,14 +149,14 @@ public class MainController{
 			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
 			
 			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
-				response.sendRedirect("ProductAdd.jsp");
+				request.getRequestDispatcher("WEB-INF/ProductAdd.jsp").forward(request, response);
 			}
 			else {
-				response.sendRedirect("AccessDenied.jsp");
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 			}
 		}
 		else {
-			response.sendRedirect("AccessDenied.jsp");
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 	}
 
@@ -166,9 +166,9 @@ public class MainController{
 
 		request.setAttribute("bookings", bookings);
 		if(request.getSession().getAttribute("userType")!=null){
-			request.getRequestDispatcher("RoomReservations.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/RoomReservations.jsp").forward(request, response);
 		}else{
-			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
 			
 		}
 
@@ -194,7 +194,7 @@ public class MainController{
 			transaction = TransactionService.addTransaction(t);
 		}
 		else
-			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
 		
 		return out+"";
 		/*boolean out = false;
@@ -204,7 +204,7 @@ public class MainController{
 			out = BookService.reserveBook(idbook);
 		}
 		else
-			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
 		
 		return out+"";*/
 	}
@@ -213,13 +213,13 @@ public class MainController{
 	private void libraryInit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		if(request.getSession().getAttribute("userID")==null){
-			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
 		}
 		else {
 			ArrayList<Book> books = BookService.getAllBooks();
 			
 			request.setAttribute("books", books);
-			request.getRequestDispatcher("LibraryPage.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/LibraryPage.jsp").forward(request, response);
 		}
 		
 }
@@ -229,7 +229,7 @@ public class MainController{
 	//private void viewProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("VIEWING PRODUCT");
 		if(request.getSession().getAttribute("userID")==null){
-			request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
 		}
 		else {
 			Book product = BookService.getBook(id);
@@ -255,7 +255,7 @@ public class MainController{
 			request.setAttribute("reviewsJSON", reviewsJSON);
 			request.setAttribute("namesJSON", namesJSON);
 			request.setAttribute("isDone", new Gson().toJson(isDone));
-			request.getRequestDispatcher("ProductPage.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/ProductPage.jsp").forward(request, response);
 		}
 	}
 
@@ -268,13 +268,13 @@ public class MainController{
 				ArrayList<User> admins = UserService.getAllAdmins();
 				String json = new Gson().toJson(admins);
 				request.setAttribute("admins", json);
-				request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AdminPage.jsp").forward(request, response);
 			}
 			else
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 	}
 	
 	@RequestMapping(value="/AddEmployees", method = RequestMethod.GET)
@@ -283,14 +283,13 @@ public class MainController{
 			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
 			
 			if(AuthorityCheckerService.isAdmin(type)) {
-				request.getRequestDispatcher("EmployeeAdd.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/EmployeeAdd.jsp").forward(request, response);
 			}
 			else {
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 			}
 		}
 		else {
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 		}
 	}
 	
@@ -304,14 +303,14 @@ public class MainController{
 				request.getRequestDispatcher("AdminInit").forward(request, response);
 			}
 			else if(AuthorityCheckerService.isManager(type)) {
-				request.getRequestDispatcher("ManagementPage.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/ManagementPage.jsp").forward(request, response);
 			}
 			else {
-				request.getRequestDispatcher("Home.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/Home.jsp").forward(request, response);
 			}
 		}
 		else {
-			request.getRequestDispatcher("Home.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/Home.jsp").forward(request, response);
 		}
 	}
 	
@@ -382,7 +381,7 @@ public class MainController{
 		HttpSession session = request.getSession();
 		System.out.println("Sign Out: "+session.getAttribute(sessionUserID));
 		session.invalidate();
-		response.sendRedirect("Home.jsp");
+		request.getRequestDispatcher("WEB-INF/Home.jsp").forward(request, response);
 	}
 	
 	
@@ -501,6 +500,8 @@ public class MainController{
 		
 		if(request.getSession().getAttribute("userID") != null) {
 			if(AuthorityCheckerService.isAdmin(Integer.parseInt(request.getSession().getAttribute("userType").toString()))) {
+				
+				newUser.setNewId();
 				EncryptionService encode = new EncryptionService();
 				newUser.setPassword(encode.encryptPass(newUser.getPassword()));
 				newUser.setSecretAnswer(encode.encryptPass(newUser.getSecretAnswer()));
@@ -519,10 +520,10 @@ public class MainController{
 				}
 			}
 			else
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 
 		return new Gson().toJson(status);
 	}
@@ -549,10 +550,10 @@ public class MainController{
 				}
 			}
 			else
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		
 		return status+"";
 	}
@@ -579,10 +580,10 @@ public class MainController{
 				}
 			}
 			else
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		
 		
 		
@@ -629,10 +630,10 @@ public class MainController{
 				}
 			}
 			else
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		
 		//setUserSessions(request, response, newUser);
 
@@ -656,7 +657,7 @@ public class MainController{
 	
 	@RequestMapping(value="/ForgotPassword", method=RequestMethod.GET)
 	public void forgotPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("ForgotPassword.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/ForgotPassword.jsp").forward(request, response);
 	}
 
 	@RequestMapping(value="/ForgotPasswordEmail", method=RequestMethod.POST)
@@ -720,7 +721,7 @@ public class MainController{
 	
 	@RequestMapping(value="/LoginPage", method=RequestMethod.GET)
 	public void loginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
 	}
 //	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
 //	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{

@@ -95,7 +95,7 @@
 										window.location = "Home";
 									} else{
 										alert(jsonobject.message);
-										window.location = "LoginPage.jsp";
+										window.location = "LoginPage";
 								}
 						
 						},
