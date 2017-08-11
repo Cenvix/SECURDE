@@ -116,7 +116,7 @@ public class MainController{
 	//DONE
 		@RequestMapping(value="/ReserveRoom", method = RequestMethod.POST)
 		@ResponseBody
-		private String reserveRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room,@RequestParam("userID") String userID) throws IOException {
+		private String reserveRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room,@RequestParam("userID") String userID, HttpServletRequest request) throws IOException {
 			MeetingRoomBooking mrb = new MeetingRoomBooking();
 			mrb.setTimeStart(Integer.parseInt(timeStart));
 			mrb.setTimeEnd(Integer.parseInt(timeStart)+100);
@@ -126,19 +126,34 @@ public class MainController{
 			mrb.setId((int)(Math.random()*100));
 			
 			boolean out = false;
-			if(!MeetingRoomService.checkDoubleBook(userID)){
-				out = MeetingRoomService.addMeetingRoomBooking(mrb);
+			if(request.getSession().getAttribute("userID")!=null) {
+				if(!MeetingRoomService.checkDoubleBook(userID)){
+					out = MeetingRoomService.addMeetingRoomBooking(mrb);
+				}
 			}
+			else
+				out = false;
 			return out+"";
 		}
 		
 	//DONE
 	@RequestMapping(value="/RemoveRoom", method = RequestMethod.POST)
 	@ResponseBody
-	private String removeRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room) throws IOException {
+	private String removeRoom(@RequestParam("timeStart") String timeStart, @RequestParam("room") String room, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		System.out.println("im in");
 		boolean out = false;
-		out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
+		
+		if(request.getSession().getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			
+			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
+					out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
+			}
+			else
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		}
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
 			
 		return out+"";
 	}
@@ -197,16 +212,7 @@ public class MainController{
 			request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
 		
 		return out+"";
-		/*boolean out = false;
-		
-		if(request.getSession().getAttribute("userID") != null) {
-			System.out.println("ReserveBook");
-			out = BookService.reserveBook(idbook);
-		}
-		else
-			request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
-		
-		return out+"";*/
+
 	}
 
 	@RequestMapping(value="/Library", method = RequestMethod.GET)
@@ -722,6 +728,73 @@ public class MainController{
 	@RequestMapping(value="/LoginPage", method=RequestMethod.GET)
 	public void loginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("WEB-INF/LoginPage.jsp").forward(request, response);
+	}
+	
+	@RequestMapping(value="/EditEmployee", method=RequestMethod.POST)
+	public void editEmployee(@RequestParam("employeeID") int id, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getSession().getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			
+			if(AuthorityCheckerService.isAdmin(type)) {
+				User employee = UserService.whoseUserNumber(id);
+				employee = UserService.getUser(employee.getId());
+				
+				String employeeJSON = new Gson().toJson(employee);
+				System.out.println(employeeJSON);
+				request.setAttribute("employeeJSON", employeeJSON);
+				request.getRequestDispatcher("EmployeeEdit.jsp").forward(request, response);
+			}
+			else
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		}
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+	}
+	
+	@RequestMapping(value="/EmployEdit", method=RequestMethod.POST)
+	@ResponseBody
+	public String editedEmployee(@ModelAttribute("employee") User employee, @RequestParam("isDelete") boolean isDelete,
+									@RequestParam("isAnswerChanged") boolean isAnswerChanged, @RequestParam("isQuestionChanged") boolean isQuestionChanged,
+									@RequestParam("isPasswordChanged") boolean isPasswordChanged, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("EDITING EMPLOYEE");
+		boolean success = false;
+		if(request.getSession().getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			
+			if(AuthorityCheckerService.isAdmin(type)) {
+				EncryptionService encode = new EncryptionService();
+				
+				if(!isDelete) {
+					success = UserService.editEmployee(employee);
+					
+					if(isPasswordChanged) {
+						System.out.println("CHANGED PASSWORD");
+						String password = encode.encryptPass(employee.getPassword());
+						success = success && UserService.passwordChange(password, employee.getId());
+					}
+					if(isQuestionChanged) {
+						System.out.println("CHANGED QUESTION");
+						success = success && UserService.questionChange(employee.getSecretQuestion(), employee.getId());
+					}
+					if(isAnswerChanged) {
+						System.out.println("CHANGED ANSWER");
+						String answer = encode.encryptPass(employee.getSecretAnswer());
+						success = success && UserService.answerChange(answer, employee.getId());
+					}
+				}
+				else {
+					System.out.println("DELETING EMPLOYEE");
+					System.out.println(employee.getId());
+					success = UserService.deleteEmployee(employee.getId());
+				}
+			}
+			else
+				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		}
+		else
+			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+		
+		return ""+success;
 	}
 //	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
 //	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{

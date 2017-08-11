@@ -360,4 +360,128 @@ public class UserService {
 		
 		return success;
     }
+    
+    public static boolean questionChange(String newQuestion, int userID){
+		String sql = "UPDATE " + User.TABLE_NAME + " SET " + User.COLUMN_SECRETQUESTION + " = ? WHERE " + User.COLUMN_ID + "= ?";
+		
+		User user = new User();
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		boolean success = false;
+		
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, newQuestion);
+			pstmt.setInt(2, userID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				success = true;
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return success;
+    }
+    
+    public static boolean answerChange(String newAnswer, int userID){
+		String sql = "UPDATE " + User.TABLE_NAME + " SET " + User.COLUMN_SECRETANSWER + " = ? WHERE " + User.COLUMN_ID + "= ?";
+		
+		User user = new User();
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		boolean success = false;
+		
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, newAnswer);
+			pstmt.setInt(2, userID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				success = true;
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return success;
+    }
+    
+    public static boolean editEmployee(User employee){
+		String sql = "UPDATE " + User.TABLE_NAME + " SET " + User.COLUMN_FIRSTNAME + "=?, " + User.COLUMN_MIDDLENAME + "=?, " + User.COLUMN_LASTNAME + "=?, " + 
+					User.COLUMN_EMAIL + "=?, " + User.COLUMN_USERTYPE + "=? WHERE " + User.COLUMN_ID + "= ?";
+		
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		boolean success = false;
+		
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, employee.getFirstName());
+			pstmt.setString(2, employee.getMiddleName());
+			pstmt.setString(3, employee.getLastName());
+			pstmt.setString(4, employee.getEmail());
+			pstmt.setString(5, employee.getUserType());
+			pstmt.setInt(6, employee.getId());
+			
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				success = true;
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return success;
+    }
+    
+    public static boolean deleteEmployee(int userID){
+		String sql = "DELETE FROM " + User.TABLE_NAME + " WHERE " + User.COLUMN_ID + "=? ";
+		
+		Connection connection = DBPool.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		boolean success = false;
+		
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setInt(1, userID);
+			
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				success = true;
+				pstmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return success;
+    }
 }
