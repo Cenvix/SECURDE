@@ -105,7 +105,7 @@
                 },
                 type: 'POST',
 				success:function(jsonobject){
-						window.location = "ProductEdit.jsp";
+						window.location = "ProductEdit";
 					}
             });
 		}

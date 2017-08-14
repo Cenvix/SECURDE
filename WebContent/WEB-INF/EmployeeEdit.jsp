@@ -134,7 +134,8 @@
 			                isDelete: isDelete,
 			                isPasswordChanged: isPasswordChanged,
 			                isQuestionChanged: isQuestionChanged, 
-			                isAnswerChanged: isAnswerChanged
+			                isAnswerChanged: isAnswerChanged,
+				            grecaptcharesponse:grecaptcha.getResponse(captcha)
 			            },
 			            type: 'POST',
 						success:function(jsonobject){
@@ -148,6 +149,8 @@
 						}
 			        });
 				}
+
+				grecaptcha.reset(captcha);
 			}
 		</script>
 	</head>
@@ -185,6 +188,7 @@
 						</select>
 					</div>
 					<label><input type="checkbox" value="delete" id="delete" name="delete">Delete Employee</label>
+					<div id="captcha"></div>
 					
 					<button class="btn btn-primary" id="submitEmployee" onclick="employeeEdit()">Save</button>
 				</div>
