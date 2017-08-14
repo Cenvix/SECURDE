@@ -98,16 +98,8 @@
 		}
 		
 		function editBook(id){
-			$.ajax({
-                url: 'EditProduct',
-                data: {
-                    bookID: id
-                },
-                type: 'POST',
-				success:function(jsonobject){
-						window.location = "ProductEdit";
-					}
-            });
+			document.getElementById("invisFormContainer").innerHTML = "<form id='invisForm' action='EditProduct' method='post'><input type='hidden' name='bookID' value='"+id+"''></form>";
+			document.getElementById("invisForm").submit();
 		}
 		
 		

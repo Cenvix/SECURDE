@@ -151,10 +151,10 @@ public class MainController{
 					out = MeetingRoomService.removeMeetingRoomBooking(Integer.parseInt(timeStart), Integer.parseInt(room));
 			}
 			else
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 			
 		return out+"";
 	}
@@ -747,15 +747,15 @@ public class MainController{
 				String employeeJSON = new Gson().toJson(employee);
 				System.out.println(employeeJSON);
 				request.setAttribute("employeeJSON", employeeJSON);
-				request.getRequestDispatcher("EmployeeEdit.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/EmployeeEdit.jsp").forward(request, response);
 				
 
 			}
 			else
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 	}
 	
 	@RequestMapping(value="/EmployEdit", method=RequestMethod.POST)
@@ -808,10 +808,10 @@ public class MainController{
 				}
 			}
 			else
-				request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		}
 		else
-			request.getRequestDispatcher("AccessDenied.jsp").forward(request, response);
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 		
 		return ""+success;
 	}
@@ -819,10 +819,19 @@ public class MainController{
 	@RequestMapping(value="/EditProduct", method = RequestMethod.POST)
 	public void editProduct(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
 		System.out.println("EditProduct");
-
-		request.getSession().setAttribute("productID", request.getParameter("bookID"));
-
-	
+		
+		if(request.getSession().getAttribute("userType")!=null) {
+			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+			
+			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
+				request.getSession().setAttribute("productID", request.getParameter("bookID"));
+				request.getRequestDispatcher("WEB-INF/ProductEdit.jsp").forward(request, response);;
+			}
+			else
+				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
+		}
+		else
+			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 	}
 
 }
