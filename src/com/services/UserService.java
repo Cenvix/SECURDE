@@ -174,7 +174,7 @@ public class UserService {
     public static ArrayList<User> getAllAdmins(){
     	
     	ArrayList<User> admins = new ArrayList();
-		String sql = "SELECT * FROM "+ User.TABLE_NAME+" where "+ User.COLUMN_USERTYPE +" <>'student' ;";
+		String sql = "SELECT * FROM "+ User.TABLE_NAME+" where "+ User.COLUMN_USERTYPE +" <> 0 ;";
 		
 		Connection connection = DBPool.getInstance().getConnection();
 		PreparedStatement pstmt = null;

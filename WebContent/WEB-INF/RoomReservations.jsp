@@ -24,7 +24,6 @@
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
 			var userType ='<%= session.getAttribute("userType")%>';
-			console.log(userID);
 			
 			initBookings();
 			loadBookings();
@@ -36,11 +35,8 @@
 		});
 		
 		function initBookings() {
-			console.log("Initializing books");
 			<c:forEach items="${bookings}" var="b">
-			console.log("----------");
-			console.log("${b}");
-			console.log("----------");
+
         	addBooking("${b.timeStart}", "${b.idUser}", "${b.idMeetingRoom}");
         	</c:forEach>
 		}
@@ -108,7 +104,6 @@
 			*/
 			
 			for(var i = 0; i < bookings.length; i++) {
-				console.log(bookings[i].timeStart);
 				document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).innerHTML = "RESERVED";
 				document.getElementById("room"+bookings[i].room+"_"+bookings[i].timeStart).disabled = true;
 			}

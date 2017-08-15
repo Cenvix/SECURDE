@@ -4,19 +4,16 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-<<<<<<< HEAD:WebContent/WEB-INF/EmployeeEdit.jsp
-	
+
 		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 	
-=======
+
 		<%@ include file="header.jsp" %>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
-		
->>>>>>> f98712ae690ba1a77d576ea6320782f1e2d0050c:WebContent/EmployeeEdit.jsp
-		<script type="text/javascript">
+				<script type="text/javascript">
 			$(document).ready(function(){
 				var userID ='<%= session.getAttribute("userID")%>';
-				console.log(userID);
+			
 				
 				initEmployee();
 				
@@ -41,7 +38,7 @@
 
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
-			console.log(userID);
+
 		});
 		
 		var captcha

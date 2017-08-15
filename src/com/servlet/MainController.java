@@ -107,7 +107,14 @@ public class MainController{
 								@RequestParam("filterThesis") boolean thesisFilter, @RequestParam("filterBook") boolean bookFilter)throws ServletException, IOException{
 		System.out.println("SEARCH BOOKS");
 
-		ArrayList<Book> books = BookService.searchBooks(query, magazineFilter, thesisFilter, bookFilter);
+		ArrayList<Book> books;
+		
+		if(query.equalsIgnoreCase("")) {
+			books = BookService.getAllBooks();
+		}
+		else {
+			books = BookService.searchBooks(query, magazineFilter, thesisFilter, bookFilter);
+		}
 		
 		String booksJSON = new Gson().toJson(books);
 		return booksJSON;
@@ -573,34 +580,38 @@ public class MainController{
 	//DONE
 	@RequestMapping(value="/EditBook", method = RequestMethod.POST)
 	@ResponseBody
-	public String editBook(@ModelAttribute("Book") Book editedBook, HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	public String editBook(@ModelAttribute("Book") Book editedBook, HttpServletRequest request, HttpServletResponse response, @RequestParam("grecaptcharesponse") String cap)throws ServletException, IOException{
 		System.out.println("EditBook");
 		
-		boolean status=false;
+			ResponseOut status = new ResponseOut();
 
-		if(request.getSession().getAttribute("userID") != null) {
-			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
-			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
-				if(BookService.checkBook(editedBook.getId())){
-					if(BookService.editBook(editedBook)){
-						status = true;
-						System.out.println("Edited");
-
-						LogsService.logAction("EditBook", "[Edited Book] "+editedBook.getName()+" w/ ID: "+editedBook.getId(), (Integer)request.getSession().getAttribute("userID"));
+		
+			if(request.getSession().getAttribute("userID") != null) {
+				int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
+				if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
+					if(BookService.checkBook(editedBook.getId())){
+						
+						if(processCaptcha(request, cap)){
+							if(BookService.editBook(editedBook)){
+								status.setSucess(true);
+								System.out.println("Edited");
+		
+								LogsService.logAction("EditBook", "[Edited Book] "+editedBook.getName()+" w/ ID: "+editedBook.getId(), (Integer)request.getSession().getAttribute("userID"));
+							}else
+								status.setMessage("Error in Editing Book, check the information");
+						}status.setMessage("Verify your Humanity");
 					}
 				}
+				else
+					request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
 			}
 			else
 				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
-		}
-		else
-			request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
-		
-		
+			
 		
 		//setUserSessions(request, response, newUser);
 
-		return status +"";
+		return new Gson().toJson(status);
 	}
 
 	@RequestMapping(value="/GetBook", method = RequestMethod.POST)
@@ -622,23 +633,29 @@ public class MainController{
 		
 	@RequestMapping(value="/DeleteBook", method = RequestMethod.POST)
 	@ResponseBody
-	public String deleteBook(@RequestParam("bookid") int bookid, HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+	public String deleteBook(@RequestParam("bookid") int bookid, HttpServletRequest request, HttpServletResponse response, @RequestParam("grecaptcharesponse") String cap)throws ServletException, IOException{
 		System.out.println("DeleteBook");
 		
-		boolean status=false;
+		ResponseOut status = new ResponseOut();
 		
 		if(request.getSession().getAttribute("userID") != null) {
 			int type = Integer.parseInt(request.getSession().getAttribute("userType").toString());
 			if(AuthorityCheckerService.isManager(type) || AuthorityCheckerService.isStaff(type)) {
-				if(BookService.checkBook(bookid)){
-					if(BookService.deleteBook(bookid)){
-						status = true;
-						System.out.println("deleted");
-
-						LogsService.logAction("DeleteBook", "[Deleted Book] w/ ID: "+bookid, (Integer)request.getSession().getAttribute("userID"));
-
-					}
+				if(processCaptcha(request, cap)){
+					if(BookService.checkBook(bookid)){
+						if(BookService.deleteBook(bookid)){
+							status.setSucess(true);
+							System.out.println("deleted");
+	
+							LogsService.logAction("DeleteBook", "[Deleted Book] w/ ID: "+bookid, (Integer)request.getSession().getAttribute("userID"));
+	
+						}else
+							status.setMessage("Error deleting book");
+					}else
+						status.setMessage("Error deleting book");
 				}
+				else
+					status.setMessage("Verify Humanity");
 			}
 			else
 				request.getRequestDispatcher("WEB-INF/AccessDenied.jsp").forward(request, response);
@@ -648,7 +665,7 @@ public class MainController{
 		
 		//setUserSessions(request, response, newUser);
 
-		return(status+"");
+		return new Gson().toJson(status);
 	}
 	
 	@RequestMapping(value="/SubmitReview", method=RequestMethod.POST)

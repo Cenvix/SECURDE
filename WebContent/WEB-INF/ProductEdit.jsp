@@ -14,10 +14,9 @@
 
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
-			console.log(userID);
 			var bookID = '<%= session.getAttribute("productID")%>';
 			
-			console.log(bookID);
+
 			initBook(bookID);
 		});
 
@@ -61,6 +60,7 @@
 							}
 					}
 		        });
+				
 			}
 		
 
@@ -72,21 +72,25 @@
 					$.ajax({
 			            url: 'DeleteBook',
 			            data: {
-			              bookid:$bookid
+			              bookid:$bookid,
+				          grecaptcharesponse:grecaptcha.getResponse(captcha),
 			            },
 			            type: 'POST',
 						success:function(jsonobject){
-									if(jsonobject=="true"){
-										window.location = "LibraryInit";
+								jsonobject =JSON.parse(jsonobject);
+									if(jsonobject.sucess){
+										alert("Removed Book!");
+										window.location = "Library";
 									} else{
-									setLogMessage("Book Cannot be Found");
-								   	
+									setLogMessage(jsonobject.message);
+								   	alert(jsonobject.message);
 								}
 						}
 			        });
 					
 				}
-				
+
+				grecaptcha.reset(captcha);
 			}		
 			function editbook(bookID){
 				$bookid = bookID;
@@ -102,7 +106,6 @@
 				else
 				$bookstatus = "Reserved";
 				$bookdescription = $("#productDescription").val();
-				console.log($bookid);
 				if($bookid == "" ||$bookdds == "" || $bookname=="" ||$bookauthor==""||$bookpublisher == "" ||$booktype==""||$bookyear==""||$bookstatus==""||$bookdescription=="")					
 					setLogMessage("One or more fields are left blank.");
 				else{
@@ -118,22 +121,26 @@
 			              type:$booktype,
 			              year:$bookyear,
 			              status:$bookstatus,
-			              description:$bookdescription
+			              description:$bookdescription,
+				          grecaptcharesponse:grecaptcha.getResponse(captcha),
 			          		
 			            },
 			            type: 'POST',
 						success:function(jsonobject){
-									if(jsonobject=="true"){
-										window.location = "LibraryInit";
+
+							jsonobject =JSON.parse(jsonobject);
+									if(jsonobject.sucess){
+										window.location = "Library";
 									} else{
 									setLogMessage("Book Cannot be Found");
-								   	
+								   	alert(jsonobject.message);
 								}
 						}
 			        });
 					
 					
 				}
+				grecaptcha.reset(captcha);
 			}
 			
 			

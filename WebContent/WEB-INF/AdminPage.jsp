@@ -10,12 +10,12 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				var userID ='<%= session.getAttribute("userID")%>';
-				console.log(userID);
+				
 				$admins = (JSON.parse('${admins}'));
-				console.log($admins);
+			
 				
 				var userType = '<%= session.getAttribute("userType")%>';
-				console.log(userType);
+			
 				if(userType!=3){
 					window.location="AccessDenied.jsp";
 				}
@@ -57,7 +57,7 @@
 			}
 			
 			function editEmployee(employeeNumber) {
-				console.log("EDIT EMPLOYEE: " + employeeNumber);
+				
 				document.getElementById("invisFormContainer").innerHTML = "<form id='invisForm' action='EditEmployee' method='post'><input type='hidden' name='employeeID' value='"+employeeNumber+"''></form>";
 				document.getElementById("invisForm").submit();
 			}

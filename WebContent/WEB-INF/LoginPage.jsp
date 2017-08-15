@@ -24,6 +24,7 @@
 			if(parseInt('<%= session.getAttribute("attemps")%>')>=3){
 				
 				setLogMessage("Wrong Username OR Password");
+				
 			}
 			
 			
@@ -71,9 +72,10 @@
 	      };
 	      
 	      
-		
+
 			function login(){
-				
+
+				$("#loadingScreen").show();
 				
 				$email = $("#loginEmail").val();
 				$pass = $("#loginPassword").val();
@@ -166,7 +168,6 @@
 			            type: 'POST',
 						success:function(jsonobject){
 							jsonobject = JSON.parse(jsonobject);
-								//console.log(jsonobject);
 									if(jsonobject.sucess){
 										window.location = "Home";
 									} else{
@@ -183,7 +184,6 @@
 				}
 				grecaptcha.reset(regCap);
 
-				//console.log(grecaptcha.getResponse(regCap));
 			}
 			
 			function setRegMessage(mes){
@@ -283,5 +283,6 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
 	
 		
+		<div class='loadingScreen' id='loadingScreen' style=' display:none; position: absolute; top: 0; color:#AAAAAA;opacity:100%; width: 100%;height: 100%;'></div>
 	</body>
 </html>

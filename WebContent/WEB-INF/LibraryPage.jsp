@@ -13,8 +13,7 @@
 
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
-			console.log(userID);
-			
+	
 			if(canUserModify()) {
 				document.getElementById('addBookContainer').innerHTML = "<div class='well'><button type='button' class='btn btn-primary' style='width:100%;' id='save' onclick='addProduct()'>Add a Book!</button></div>";
 			}
@@ -57,7 +56,6 @@
 		
 		function initBooks(){
 			books = [];
-			console.log("Initializing books");
 			<c:forEach items="${books}" var="b">
         	addBook("${b.name}", "${b.publisher}", "${b.author}", "${b.id}", "${b.status}");
         	</c:forEach>
@@ -122,7 +120,7 @@
             });
 		}
 		
-		function searchBooks() {			
+		function searchBooks() {
 			$.ajax({
                 url: 'SearchBooks',
                 data: {
@@ -134,6 +132,7 @@
                 type: 'POST',
                 success:function(jsonobject){
 					books = (JSON.parse(jsonobject));
+				
 					loadBooks();
 				}
             });

@@ -321,13 +321,13 @@ public class BookService {
 			String[] authorTags = allBooks.get(i).getAuthor().split(" ");
 			String[] publishTags = allBooks.get(i).getPublisher().split(" ");
 			
-			if(allBooks.get(i).getType().equals("magazine") && filterMagazine == true) {
+			if(allBooks.get(i).getType().equalsIgnoreCase("magazine") && filterMagazine == true) {
 				validType = true;
 			}
-			if(allBooks.get(i).getType().equals("thesis") && filterThesis == true) {
+			if(allBooks.get(i).getType().equalsIgnoreCase("thesis") && filterThesis == true) {
 				validType = true;
 			}
-			if(allBooks.get(i).getType().equals("book") && filterBook == true) {
+			if(allBooks.get(i).getType().equalsIgnoreCase("book") && filterBook == true) {
 				validType = true;
 			}
 			

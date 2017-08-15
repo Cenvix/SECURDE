@@ -14,7 +14,7 @@
 
 		$(document).ready(function(){
 			var userID ='<%= session.getAttribute("userID")%>';
-			console.log(userID);
+			
 			
 			
 			/******************************************************************************

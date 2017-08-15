@@ -11,9 +11,7 @@
 
 		$(document).ready(function(){
 			var userID = '<%= session.getAttribute("userID")%>';
-			console.log(userID);
 			
-			console.log("PRODUCT PAGE");
 			init();
 		});
 		
@@ -24,7 +22,6 @@
 		
 		function initBook() {
 			var book = (JSON.parse('${bookJSON}'));
-			console.log("yalla" +book.name);
 			document.getElementById("productAuthor").innerHTML = book.author;
 			document.getElementById("productTitle").innerHTML = book.name;
 			document.getElementById("productType").innerHTML = book.type;
@@ -34,7 +31,6 @@
 		}
 		
 		function initReviews() {
-			console.log("INIT REVIEWS");
 			var reviews = (JSON.parse('${reviewsJSON}'));
 			var names = (JSON.parse('${namesJSON}'));
 			var results = "";
